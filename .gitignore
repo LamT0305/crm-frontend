@@ -1,0 +1,37 @@
+### Node.js ###
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Build output ###
+build/
+dist/
+.next/
+.out/
+.vercel/
+.netlify/
+
+### Environment variables ###
+.env*
+!.env.example
+
+### Editor & System Files ###
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+### Logs ###
+logs/
+*.log
+
+### Misc ###
+coverage/
+*.bak
+*.swp
+
+### Dependencies ###
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
