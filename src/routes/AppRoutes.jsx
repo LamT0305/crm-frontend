@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import AuthSuccess from "../pages/AuthSuccess";
 import Profile from "../pages/Profile";
+import Layout from "../layouts/Layout";
 
 function App() {
   return (
@@ -14,9 +15,12 @@ function App() {
         <Route path="/auth-success" element={<AuthSuccess />} />
 
         {/* Protected Routes */}
-        <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
+        <Route element={<Layout />}>
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/leads" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Route>
 
         {/* Default Route */}

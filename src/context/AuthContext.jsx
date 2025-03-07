@@ -7,7 +7,7 @@ import {
 } from "react";
 import { GET_API, POST_API } from "../services/APIs";
 import axiosInstance from "../services/Axios";
-import { getToken } from "../utils/auth";
+import { getToken, removeToken } from "../utils/auth";
 
 const AuthContext = createContext();
 const baseURL = "https://crm-backend-bz03.onrender.com/api/v1";
@@ -55,9 +55,10 @@ export const AuthProvider = ({ children }) => {
 
   // ✅ Logout user & clear token
   const logout = () => {
-    localStorage.removeItem(TOKEN_KEY); // ❌ Remove token
+    removeToken();
     setUser(null);
     setAuthenticated(false);
+    window.location.reload();
   };
 
   return (
@@ -68,6 +69,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         loginWithGoogle,
         logout,
+        setAuthenticated,
       }}
     >
       {children}

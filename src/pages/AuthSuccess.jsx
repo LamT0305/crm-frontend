@@ -2,8 +2,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { storeToken } from "../utils/auth";
+import { useAuth } from "../context/AuthContext";
 
 const AuthSuccess = () => {
+  const { setAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,7 +14,8 @@ const AuthSuccess = () => {
 
     if (token) {
       storeToken(token);
-      navigate("/dashboard"); // Redirect to dashboard
+      setAuthenticated(true);
+      navigate("/leads"); // Redirect to dashboard
     } else {
       navigate("/login");
     }
