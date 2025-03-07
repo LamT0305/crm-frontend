@@ -8,6 +8,8 @@ import { FilterOptions } from "../utils/filter";
 import useLead from "../hooks/useLead";
 
 function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
+  const { handleFilterleads, handleSortLeads, handleSetLeads } = useLead();
+
   //column
   const [isOpenColumn, setIsOpenColumn] = useState(false);
   //filter
@@ -22,6 +24,19 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
   const [sortBy, setSortBy] = useState({ key: "", value: "" });
   const [order, setOrder] = useState("asc");
 
+  //reset
+  const handleReset = () => {
+    setIsOpenColumn(false);
+    setOpenFilter(false);
+    setOpenOptions(false);
+    setIsSelectedFilter(false);
+    setFilterBy("");
+    setFilterValue("");
+    setIsOpenSort(false);
+    setSortBy({ key: "", value: "" });
+    setOrder("asc");
+    handleSetLeads();
+  };
   //ref
   const dropdownRef = useRef(null);
   const filterRef = useRef(null);
@@ -47,8 +62,6 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const { handleFilterleads, handleSortLeads } = useLead();
-
   useEffect(() => {
     handleSortLeads(sortBy.key, order);
   }, [sortBy, order]);
@@ -66,7 +79,7 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
         className="border border-gray-300 rounded-lg px-3 py-1 w-50 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200"
       />
       <ul className="flex items-center w-120 justify-evenly">
-        <li>
+        <li onClick={handleReset}>
           <img
             src={Clear}
             alt=""
