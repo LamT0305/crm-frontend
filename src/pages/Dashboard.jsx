@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LeadHeader from "../components/LeadHeader";
 import Filter from "../components/Filter";
 import LeadBody from "../components/LeadBody";
+import CreateLeadForm from "../components/CreateLeadForm";
 
 function Dashboard() {
+  const [isOpen, setIsOpen] = useState(false);
   const STORAGE_KEY = "selectedColumns";
 
   const defaultColumns = [
@@ -41,7 +43,9 @@ function Dashboard() {
   };
   return (
     <div className="w-[80%] bg-white">
-      <LeadHeader />
+      {isOpen && <CreateLeadForm setIsOpen={setIsOpen} />}
+
+      <LeadHeader setIsOpen={setIsOpen} />
       <Filter
         addColumn={addColumn}
         removeColumn={removeColumn}
