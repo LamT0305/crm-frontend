@@ -5,6 +5,7 @@ import {
   filterLead,
   searchLeads,
   addNewLead,
+  deleteLead,
 } from "../redux/slice/LeadSlice";
 
 const data = [
@@ -180,6 +181,16 @@ const useLead = () => {
     }
   };
 
+  const handleDeleteLead = async (id) => {
+    try {
+      if (!id) return;
+
+      dispatch(deleteLead(id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     isLoading,
     leads: filteredLeads,
@@ -188,6 +199,7 @@ const useLead = () => {
     handleSortLeads,
     handleSearchLead,
     handleAddNewLead,
+    handleDeleteLead,
   };
 };
 

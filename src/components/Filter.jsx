@@ -72,12 +72,7 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
     }
   }, [filterBy, filterValue]);
   return (
-    <div className="flex items-center justify-between my-5 px-5">
-      <input
-        type="text"
-        placeholder="Name"
-        className="border border-gray-300 rounded-lg px-3 py-1 w-50 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200"
-      />
+    <div className="flex justify-end my-5 px-5">
       <ul className="flex items-center w-120 justify-evenly">
         <li onClick={handleReset}>
           <img

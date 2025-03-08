@@ -194,9 +194,19 @@ const leadSlice = createSlice({
       state.leads.unshift(action.payload);
       state.filteredLeads = [...state.leads];
     },
+    deleteLead: (state, action) => {
+      state.leads = state.leads.filter((i) => i.id !== action.payload);
+      state.filteredLeads = [...state.leads];
+    },
   },
 });
 
-export const { setLeads, sortLead, filterLead, searchLeads, addNewLead } =
-  leadSlice.actions;
+export const {
+  setLeads,
+  sortLead,
+  filterLead,
+  searchLeads,
+  addNewLead,
+  deleteLead,
+} = leadSlice.actions;
 export default leadSlice.reducer;

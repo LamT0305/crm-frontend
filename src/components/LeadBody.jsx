@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useLead from "../hooks/useLead";
+import close from "../assets/closeBtn.png";
 
 function LeadBody({ columns }) {
   const [data, setData] = useState([
@@ -115,7 +116,7 @@ function LeadBody({ columns }) {
     },
   ]);
 
-  const { leads, handleSetLeads } = useLead();
+  const { leads, handleSetLeads, handleDeleteLead } = useLead();
 
   useEffect(() => {
     handleSetLeads();
@@ -132,6 +133,7 @@ function LeadBody({ columns }) {
                   {col.value}
                 </th>
               ))}
+              <th className="p-2 relative">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -145,6 +147,17 @@ function LeadBody({ columns }) {
                     {row[col.key] || "-"}
                   </td>
                 ))}
+                <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
+                  <div className="flex justify-center">
+                    <img
+                      onClick={() => handleDeleteLead(row.id)}
+                      src={close}
+                      alt=""
+                      style={{ width: 25, height: 25 }}
+                      className="bg-gray-300 p-1 rounded-md"
+                    />
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
