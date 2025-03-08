@@ -6,128 +6,28 @@ import {
   searchLeads,
   addNewLead,
   deleteLead,
+  getLeadById,
 } from "../redux/slice/LeadSlice";
 
-const data = [
-  {
-    id: 1,
-    lastName: "Doe",
-    firstName: "John",
-    email: "john1@example.com",
-    phone: "1234567891",
-    gender: "Male",
-    monthlyIncome: "3500",
-    source: "Referral",
-    industry: "IT",
-  },
-  {
-    id: 2,
-    lastName: "Smith",
-    firstName: "Jane",
-    email: "jane2@example.com",
-    phone: "1234567892",
-    gender: "Female",
-    monthlyIncome: "4000",
-    source: "Social Media",
-    industry: "Marketing",
-  },
-  {
-    id: 3,
-    lastName: "Brown",
-    firstName: "Michael",
-    email: "michael3@example.com",
-    phone: "1234567893",
-    gender: "Male",
-    monthlyIncome: "4500",
-    source: "Website",
-    industry: "Finance",
-  },
-  {
-    id: 4,
-    lastName: "Johnson",
-    firstName: "Emily",
-    email: "emily4@example.com",
-    phone: "1234567894",
-    gender: "Female",
-    monthlyIncome: "3200",
-    source: "Advertisement",
-    industry: "Education",
-  },
-  {
-    id: 5,
-    lastName: "Davis",
-    firstName: "Chris",
-    email: "chris5@example.com",
-    phone: "1234567895",
-    gender: "Male",
-    monthlyIncome: "5000",
-    source: "Networking",
-    industry: "Healthcare",
-  },
-  {
-    id: 6,
-    lastName: "Martinez",
-    firstName: "Sophia",
-    email: "sophia6@example.com",
-    phone: "1234567896",
-    gender: "Female",
-    monthlyIncome: "3800",
-    source: "Referral",
-    industry: "Retail",
-  },
-  {
-    id: 7,
-    lastName: "Anderson",
-    firstName: "David",
-    email: "david7@example.com",
-    phone: "1234567897",
-    gender: "Male",
-    monthlyIncome: "4300",
-    source: "Cold Call",
-    industry: "Real Estate",
-  },
-  {
-    id: 8,
-    lastName: "Taylor",
-    firstName: "Olivia",
-    email: "olivia8@example.com",
-    phone: "1234567898",
-    gender: "Female",
-    monthlyIncome: "4700",
-    source: "Email Campaign",
-    industry: "Hospitality",
-  },
-  {
-    id: 9,
-    lastName: "Wilson",
-    firstName: "Ethan",
-    email: "ethan9@example.com",
-    phone: "1234567899",
-    gender: "Male",
-    monthlyIncome: "5200",
-    source: "Event",
-    industry: "Automotive",
-  },
-  {
-    id: 10,
-    lastName: "Moore",
-    firstName: "Ava",
-    email: "ava10@example.com",
-    phone: "1234567890",
-    gender: "Female",
-    monthlyIncome: "3600",
-    source: "Website",
-    industry: "Fashion",
-  },
-];
+import axiosInstance from "../services/Axios";
+import { DELETE_API, GET_API, POST_API } from "../services/APIs";
+import { getToken } from "../utils/auth";
 
 const useLead = () => {
-  const { filteredLeads, isLoading } = useSelector((state) => state.lead);
+  const { filteredLeads, isLoading, lead } = useSelector((state) => state.lead);
   const dispatch = useDispatch();
+  const token = getToken();
 
-  const handleSetLeads = () => {
+  const handleSetLeads = async () => {
     try {
-      dispatch(setLeads(data));
+      const res = await axiosInstance.get(GET_API().getLeads, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        dispatch(setLeads(res.data.data));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -157,25 +57,21 @@ const useLead = () => {
     }
   };
 
-  const handleSearchLead = (field, value) => {
-    try {
-      const payload = {
-        field,
-        value,
-      };
-      dispatch(searchLeads(payload));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleAddNewLead = async (lead) => {
     try {
       if (!lead) {
         return;
       }
+      const res = await axiosInstance.post(POST_API().createlead, lead, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      dispatch(addNewLead(lead));
+      if (res.status === 200) {
+        console.log(res.data);
+        dispatch(addNewLead(res.data.data));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -184,22 +80,46 @@ const useLead = () => {
   const handleDeleteLead = async (id) => {
     try {
       if (!id) return;
-
-      dispatch(deleteLead(id));
+      const res = await axiosInstance.delete(DELETE_API(id).deleteCustomer, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        dispatch(deleteLead(id));
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleGetCustomerById = async (id) => {
+    try {
+      if (!id) return;
+      const res = await axiosInstance.get(GET_API(id).getCustomerById, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        // console.log(res.data.data);
+        dispatch(getLeadById(res.data.data));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     isLoading,
     leads: filteredLeads,
+    lead,
     handleSetLeads,
     handleFilterleads,
     handleSortLeads,
-    handleSearchLead,
     handleAddNewLead,
     handleDeleteLead,
+    handleGetCustomerById,
   };
 };
 

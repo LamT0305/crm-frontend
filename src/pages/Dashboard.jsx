@@ -15,7 +15,7 @@ function Dashboard() {
     { key: "phone", value: "Phone" },
     { key: "gender", value: "Gender" },
     { key: "monthlyIncome", value: "Monthly income" },
-    { key: "source", value: "Source" },
+    { key: "sourceId.name", value: "Source" },
     { key: "industry", value: "Industry" },
   ];
 

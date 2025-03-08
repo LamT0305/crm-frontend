@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard";
 import AuthSuccess from "../pages/AuthSuccess";
 import Profile from "../pages/Profile";
 import Layout from "../layouts/Layout";
+import CustomerInfo from "../pages/CustomerInfo";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/leads" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/customerinfo/:id" element={<CustomerInfo />} />
           </Route>
         </Route>
 

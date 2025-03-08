@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import close from "../assets/closeBtn.png";
 import useLead from "../hooks/useLead";
+import useSource from "../hooks/useSource";
+import { Source } from "../utils/source";
 
 const CreateLeadForm = ({ setIsOpen }) => {
+  const { sources, handleGetSources } = useSource();
   const { handleAddNewLead } = useLead();
   const createRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -12,10 +15,11 @@ const CreateLeadForm = ({ setIsOpen }) => {
     phone: "",
     gender: "",
     monthlyIncome: "",
-    source: "",
+    sourceId: { key: "", value: "" },
     industry: "",
   });
 
+  const [openSourceDropdown, setOpenSourceDropdown] = useState(false);
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -23,8 +27,16 @@ const CreateLeadForm = ({ setIsOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    handleAddNewLead(formData);
+    const form = new FormData();
+    form.append("firstName", formData.firstName);
+    form.append("lastName", formData.lastName);
+    form.append("email", formData.email);
+    form.append("phone", formData.phone);
+    form.append("gender", formData.gender);
+    form.append("monthlyIncome", formData.monthlyIncome);
+    form.append("sourceId", formData.sourceId.key);
+    form.append("industry", formData.industry);
+    handleAddNewLead(form);
     setFormData({
       lastName: "",
       firstName: "",
@@ -37,6 +49,10 @@ const CreateLeadForm = ({ setIsOpen }) => {
     });
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    handleGetSources();
+  }, []);
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (createRef.current && !createRef.current.contains(e.target)) {
@@ -47,6 +63,7 @@ const CreateLeadForm = ({ setIsOpen }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center  bg-black/10 ">
       <div
@@ -152,17 +169,32 @@ const CreateLeadForm = ({ setIsOpen }) => {
               />
             </label>
 
-            <label className="flex flex-col ">
+            <label
+              className="flex flex-col relative"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenSourceDropdown((prev) => !prev);
+              }}
+            >
               Source
               <input
-                value={formData.source}
-                onChange={(e) => handleChangeValue(e)}
+                value={formData.sourceId.value}
+                readOnly
                 required
                 type="text"
                 placeholder="Source"
                 name="source"
-                className=" py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm"
+                className="py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm"
               />
+              {openSourceDropdown && (
+                <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-xl z-20 mt-2">
+                  <Source
+                    sources={sources}
+                    setFormData={setFormData}
+                    setOpenSourceDropdown={setOpenSourceDropdown}
+                  />
+                </div>
+              )}
             </label>
 
             <label className="flex flex-col ">
