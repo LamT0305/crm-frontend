@@ -16,7 +16,7 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
   const [openFilter, setOpenFilter] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
   const [isSelectedFilter, setIsSelectedFilter] = useState(false);
-  const [filterBy, setFilterBy] = useState("");
+  const [filterBy, setFilterBy] = useState({ key: "", value: "" });
   const [filterValue, setFilterValue] = useState("");
 
   //sort
@@ -68,7 +68,7 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
 
   useEffect(() => {
     if (filterBy && filterValue !== undefined) {
-      handleFilterleads(filterBy, filterValue);
+      handleFilterleads(filterBy.key, filterValue);
     }
   }, [filterBy, filterValue]);
   return (
@@ -110,6 +110,7 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
                 setFilterBy={setFilterBy}
                 input={filterValue}
                 setInput={setFilterValue}
+                defaultColumns={defaultColumns}
               />
             </div>
           )}

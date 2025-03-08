@@ -9,10 +9,14 @@ function Dashboard() {
   const STORAGE_KEY = "selectedColumns";
 
   const defaultColumns = [
-    { key: "name", value: "Name" },
+    { key: "firstName", value: "First name" },
+    { key: "lastName", value: "Last name" },
     { key: "email", value: "Email" },
     { key: "phone", value: "Phone" },
-    { key: "sourceName", value: "Source" },
+    { key: "gender", value: "Gender" },
+    { key: "monthlyIncome", value: "Monthly income" },
+    { key: "source", value: "Source" },
+    { key: "industry", value: "Industry" },
   ];
 
   const getStoredColumns = () => {

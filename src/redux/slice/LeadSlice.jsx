@@ -190,9 +190,13 @@ const leadSlice = createSlice({
         lead[field].toLowerCase().includes(value.toLowerCase())
       );
     },
+    addNewLead: (state, action) => {
+      state.leads.unshift(action.payload);
+      state.filteredLeads = [...state.leads];
+    },
   },
 });
 
-export const { setLeads, sortLead, filterLead, searchLeads } =
+export const { setLeads, sortLead, filterLead, searchLeads, addNewLead } =
   leadSlice.actions;
 export default leadSlice.reducer;

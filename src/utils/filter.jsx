@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dropdown from "../assets/dropdown30.png";
+import Clear from "../assets/clear.png";
 
 export const FilterOptions = ({
   openOptions,
@@ -10,6 +11,7 @@ export const FilterOptions = ({
   setFilterBy,
   input,
   setInput,
+  defaultColumns,
 }) => {
   return (
     <>
@@ -22,13 +24,17 @@ export const FilterOptions = ({
           setIsSelected={setIsSelected}
           setOpenOptions={setOpenOptions}
           openOptions={openOptions}
+          defaultColumns={defaultColumns}
         />
       ) : (
         <div onClick={(e) => e.stopPropagation()} className="relative">
           <p className="pb-5">Empty - choose a field to filter by</p>
-          <button onClick={() => setOpenOptions(!openOptions)}>
+          <p
+            className="bg-gray-500 text-white w-fit px-2 py-1 rounded-lg"
+            onClick={() => setOpenOptions(!openOptions)}
+          >
             + Add filter
-          </button>
+          </p>
 
           {openOptions && (
             <div className="absolute left-0">
@@ -37,6 +43,7 @@ export const FilterOptions = ({
                 setFilterBy={setFilterBy}
                 openOptions={openOptions}
                 setOpenOptions={setOpenOptions}
+                defaultColumns={defaultColumns}
               />
             </div>
           )}
@@ -46,22 +53,15 @@ export const FilterOptions = ({
   );
 };
 
-const defaultColumns = [
-  { key: "name", value: "Name" },
-  { key: "email", value: "Email" },
-  { key: "phone", value: "Phone" },
-  { key: "gender", value: "Gender" },
-  { key: "sourceName", value: "Address" },
-];
-
 const ListOptions = ({
   setIsSelected,
   setFilterBy,
   openOptions,
   setOpenOptions,
+  defaultColumns,
 }) => {
   const handleSelect = (e) => {
-    setFilterBy(e);
+    setFilterBy({ key: e.key, value: e.value });
     setIsSelected(true);
     setOpenOptions(!openOptions);
   };
@@ -69,7 +69,7 @@ const ListOptions = ({
     <div className="flex flex-col items-start bg-white p-2  mt-2 shadow-xl rounded-xl w-40">
       {defaultColumns.map((item) => (
         <p
-          onClick={() => handleSelect(item.key)}
+          onClick={() => handleSelect(item)}
           className="bg-gray-200 w-full py-1 px-2 rounded-lg mt-1 hover:bg-gray-100 cursor-pointer"
           key={item.key}
         >
@@ -88,6 +88,7 @@ const FilterValue = ({
   setIsSelected,
   setOpenOptions,
   openOptions,
+  defaultColumns,
 }) => {
   const handleClick = () => {
     setIsSelected(false);
@@ -98,7 +99,7 @@ const FilterValue = ({
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="flex items-center justify-evenly w-120 "
+      className="flex items-center justify-evenly w-140 "
     >
       <p>Where</p>
       <div>
@@ -106,7 +107,7 @@ const FilterValue = ({
           onClick={() => setOpenOptions(!openOptions)}
           className="bg-gray-200 px-7 py-1 rounded-lg hover:shadow-xl flex items-center"
         >
-          {filterBy}
+          {filterBy.value}
           <img
             src={dropdown}
             alt=""
@@ -121,6 +122,7 @@ const FilterValue = ({
               setFilterBy={setFilterBy}
               openOptions={openOptions}
               setOpenOptions={setOpenOptions}
+              defaultColumns={defaultColumns}
             />
           </div>
         )}
@@ -137,7 +139,7 @@ const FilterValue = ({
         onClick={handleClick}
         className="text-gray-400 text-sm cursor-pointer hover:text-black"
       >
-        Clear filter
+        <img src={Clear} alt="" />
       </p>
     </div>
   );
