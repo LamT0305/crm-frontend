@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import useLead from "../hooks/useLead";
-import close from "../assets/closeBtn.png";
 import { useNavigate } from "react-router-dom";
+import CloseIcon from "../assets/CloseIcon";
 
 function LeadBody({ columns }) {
   const navigate = useNavigate();
 
   const { leads, handleSetLeads, handleDeleteLead } = useLead();
-  console.log(leads);
   useEffect(() => {
     handleSetLeads();
   }, []);
   return (
     <div>
       {/* Table */}
-      <div className="overflow-x-auto px-5">
+      <div className="overflow-x-auto px-2">
         <table className="table-auto border-collapse w-full  ">
           <thead>
             <tr className="bg-gray-100 text-gray-500 text-md font-thin">
@@ -48,13 +47,16 @@ function LeadBody({ columns }) {
                 ))}
                 <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
                   <div className="flex justify-center">
-                    <img
+                    <div
                       onClick={() => handleDeleteLead(row._id)}
-                      src={close}
-                      alt=""
-                      style={{ width: 25, height: 25 }}
-                      className="bg-gray-300 p-1 rounded-md"
-                    />
+                      className="w-fit"
+                    >
+                      <CloseIcon
+                        className={
+                          "w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer"
+                        }
+                      />
+                    </div>
                   </div>
                 </td>
               </tr>

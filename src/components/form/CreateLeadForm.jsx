@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import close from "../assets/closeBtn.png";
-import useLead from "../hooks/useLead";
-import useSource from "../hooks/useSource";
-import { Source } from "../utils/source";
+import useLead from "../../hooks/useLead";
+import useSource from "../../hooks/useSource";
+import { Source } from "../../utils/source";
+import CloseIcon from "../../assets/CloseIcon";
 
 const CreateLeadForm = ({ setIsOpen }) => {
   const { sources, handleGetSources } = useSource();
@@ -72,20 +72,11 @@ const CreateLeadForm = ({ setIsOpen }) => {
       >
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold mb-4">Create Lead</h2>
-          <img
-            onClick={() => setIsOpen(false)}
-            src={close}
-            alt=""
-            style={{
-              width: 25,
-              height: 25,
-              padding: 5,
-              backgroundColor: "grey",
-              borderRadius: 10,
-              filter: "invert(1)",
-              cursor: "pointer",
-            }}
-          />
+          <div className="w-fit" onClick={() => setIsOpen(false)}>
+            <CloseIcon
+              className={"w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer"}
+            />
+          </div>
         </div>
         <form action="" onSubmit={handleSubmit}>
           <div className="grid grid-cols-3 gap-4 ">

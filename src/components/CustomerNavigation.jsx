@@ -3,7 +3,7 @@ import React from "react";
 function CustomerNavigation({ tagName, setTagName }) {
   return (
     <div className="w-[100%]">
-      <ul className="flex items-center justify-start w-[100%] bg-white border-r border-gray-300 px-4 py-1">
+      <ul className="flex items-center justify-start w-[100%] bg-white  px-4 py-1">
         <li
           onClick={() => setTagName("activity")}
           className={`px-6 py-4 hover:bg-gray-200 cursor-pointer rounded-t-lg  ${

@@ -5,6 +5,7 @@ import { getToken } from "../utils/auth";
 function Profile() {
   const { user, getUser } = useAuth();
   const tk = getToken();
+  console.log(user);
   return (
     <div className="" onClick={getUser}>
       Profile

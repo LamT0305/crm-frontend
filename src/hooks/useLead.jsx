@@ -14,7 +14,9 @@ import { DELETE_API, GET_API, POST_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
 
 const useLead = () => {
-  const { filteredLeads, isLoading, lead } = useSelector((state) => state.lead);
+  const { filteredLeads, isLoading, customer } = useSelector(
+    (state) => state.lead
+  );
   const dispatch = useDispatch();
   const token = getToken();
 
@@ -69,7 +71,6 @@ const useLead = () => {
       });
 
       if (res.status === 200) {
-        console.log(res.data);
         dispatch(addNewLead(res.data.data));
       }
     } catch (error) {
@@ -103,7 +104,6 @@ const useLead = () => {
       });
 
       if (res.status === 200) {
-        // console.log(res.data.data);
         dispatch(getLeadById(res.data.data));
       }
     } catch (error) {
@@ -113,7 +113,7 @@ const useLead = () => {
   return {
     isLoading,
     leads: filteredLeads,
-    lead,
+    customer,
     handleSetLeads,
     handleFilterleads,
     handleSortLeads,

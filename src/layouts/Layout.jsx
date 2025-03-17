@@ -2,14 +2,20 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "./Sidebar";
+import { useEffect } from "react";
 
 const Layout = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login"); // Redirect inside useEffect to avoid render issues
+    }
+  }, [isAuthenticated, navigate]);
+
   if (!isAuthenticated) {
-    navigate("/login"); // Redirect to login if not authenticated
-    return null;
+    return null; // Prevent rendering while redirecting
   }
 
   return (

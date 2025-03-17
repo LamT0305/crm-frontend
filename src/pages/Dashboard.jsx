@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import LeadHeader from "../components/LeadHeader";
 import Filter from "../components/Filter";
 import LeadBody from "../components/LeadBody";
-import CreateLeadForm from "../components/CreateLeadForm";
+import CreateLeadForm from "../components/form/CreateLeadForm";
 
 function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);

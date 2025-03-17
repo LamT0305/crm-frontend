@@ -5,7 +5,7 @@ const initialState = {
   filteredLeads: [],
   totalPages: 0,
   isLoading: false,
-  lead: {},
+  customer: {},
 };
 
 const leadSlice = createSlice({
@@ -77,7 +77,7 @@ const leadSlice = createSlice({
       state.filteredLeads = [...state.leads];
     },
     getLeadById: (state, action) => {
-      state.lead = action.payload;
+      state.customer = action.payload;
     },
   },
 });
