@@ -12,8 +12,10 @@ import {
 import axiosInstance from "../services/Axios";
 import { DELETE_API, GET_API, POST_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
+import useActivity from "./useActivity";
 
 const useLead = () => {
+  const { handleAddActivity } = useActivity();
   const { filteredLeads, isLoading, customer } = useSelector(
     (state) => state.lead
   );
@@ -72,9 +74,21 @@ const useLead = () => {
 
       if (res.status === 200) {
         dispatch(addNewLead(res.data.data));
+        const activity = new FormData();
+        activity.append("customerId", res.data.data._id);
+        activity.append("type", "create_customer");
+        activity.append("subject", "Created this lead");
+        handleAddActivity(activity);
+        console.log(res.data.data);
       }
     } catch (error) {
       console.log(error);
+      if (
+        error.response.status === 400 &&
+        error.response.data.message === "Email already exists"
+      ) {
+        alert("Customer already exists");
+      }
     }
   };
 

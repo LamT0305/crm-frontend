@@ -3,6 +3,7 @@ import useLead from "../../hooks/useLead";
 import useSource from "../../hooks/useSource";
 import { Source } from "../../utils/source";
 import CloseIcon from "../../assets/CloseIcon";
+import useActivity from "../../hooks/useActivity";
 
 const CreateLeadForm = ({ setIsOpen }) => {
   const { sources, handleGetSources } = useSource();
@@ -36,6 +37,7 @@ const CreateLeadForm = ({ setIsOpen }) => {
     form.append("monthlyIncome", formData.monthlyIncome);
     form.append("sourceId", formData.sourceId.key);
     form.append("industry", formData.industry);
+
     handleAddNewLead(form);
     setFormData({
       lastName: "",

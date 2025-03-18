@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import noti from "../assets/notifications.png";
-import lead from "../assets/lead.png";
 import deal from "../assets/deal.png";
-import note from "../assets/note.png";
-import task from "../assets/task.png";
 import logo from "../assets/logo.png";
 import product from "../assets/product.png";
 import logoutImg from "../assets/logout.png";
 import { useAuth } from "../context/AuthContext";
+import UserIcon from "../assets/UserIcon";
+import TodoIcon from "../assets/TodoIcon";
+import NoteIcon from "../assets/NoteIcon";
 
 const Sidebar = () => {
   const { logout } = useAuth();
@@ -34,7 +34,7 @@ const Sidebar = () => {
               to="/leads"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
-              <img src={lead} alt="" className="mr-2" />
+              <UserIcon className={"w-[30px] h-[30px] mr-2"} />
               Leads
             </Link>
           </li>
@@ -52,8 +52,7 @@ const Sidebar = () => {
               to="/deals"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
-              <img src={lead} alt="" className="mr-2" />
-              Customers
+              <UserIcon className={"w-[30px] h-[30px] mr-2"} /> Customers
             </Link>
           </li>
           <li>
@@ -70,7 +69,7 @@ const Sidebar = () => {
               to="/tasks"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
-              <img src={task} alt="" className="mr-2" />
+              <TodoIcon className={"w-[30px] h-[30px] mr-2 "} />
               Tasks
             </Link>
           </li>
@@ -79,7 +78,7 @@ const Sidebar = () => {
               to="/tasks"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
-              <img src={note} alt="" className="mr-2" />
+              <NoteIcon className={"w-[30px] h-[30px] mr-2 "} />
               Notes
             </Link>
           </li>

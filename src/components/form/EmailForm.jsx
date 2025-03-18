@@ -2,9 +2,11 @@ import React, { useState, useRef } from "react";
 import AttachIcon from "../../assets/AttachIcon";
 import clearIcon from "../../assets/clear.png";
 import useEmail from "../../hooks/useEmail";
+import useActivity from "../../hooks/useActivity";
 
-function EmailForm({ customerEmail, setOpenEmail }) {
+function EmailForm({ customerEmail, setOpenEmail, customerId }) {
   const { handleSendEmail } = useEmail();
+  const { handleAddActivity } = useActivity();
   const [subject, setSubject] = useState("");
   const [text, setText] = useState("");
   const textAreaRef = useRef(null);
@@ -15,17 +17,29 @@ function EmailForm({ customerEmail, setOpenEmail }) {
   };
 
   const handleSend = (e) => {
-    e.preventDefault();
-    const email = new FormData();
-    email.append("to", customerEmail);
-    email.append("subject", subject);
-    email.append("message", text);
-    selectedFiles.forEach((file) => email.append("files", file));
-    handleSendEmail(email);
-    setSubject("");
-    setText("");
-    setSelectedFiles([]);
-    setView(false);
+    if (customerId) {
+      e.preventDefault();
+      const email = new FormData();
+      email.append("to", customerEmail);
+      email.append("subject", subject);
+      email.append("message", text);
+      selectedFiles.forEach((file) => email.append("files", file));
+      handleSendEmail(email);
+
+      // activity
+
+      const activity = {
+        customerId: customerId,
+        type: "email",
+        subject: "has sent an email",
+      };
+      handleAddActivity(activity);
+
+      setSubject("");
+      setText("");
+      setSelectedFiles([]);
+      setView(false);
+    }
   };
 
   return (

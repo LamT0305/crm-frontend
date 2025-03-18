@@ -10,7 +10,11 @@ function CustomerFooter({ customerEmail, id }) {
   return (
     <>
       {openForm && !openComment ? (
-        <EmailForm customerEmail={customerEmail} setOpenEmail={setOpen} />
+        <EmailForm
+          customerEmail={customerEmail}
+          setOpenEmail={setOpen}
+          customerId={id}
+        />
       ) : null}
 
       {!openForm && openComment ? (

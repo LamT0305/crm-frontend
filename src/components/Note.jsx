@@ -56,38 +56,39 @@ function Note({ customerId }) {
         <div className="flex flex-col h-full mt-5">
           <div className="max-h-[75vh] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto px-4">
             {notes.map((note) => (
-              <div
-                onClick={() => handleOpenForm(note._id)}
-                className="flex flex-col justify-between border border-gray-300 shadow-lg rounded-xl p-4 bg-white cursor-pointer"
-                key={note._id}
-              >
-                <div className="flex justify-between">
-                  <p className="font-semibold text-lg w-[85%] break-words">
-                    {note.title}
-                  </p>
-                  <div
-                    onClick={() => handleDeleteNote(note._id)}
-                    className="w-fit"
-                  >
-                    <CloseIcon
-                      className={
-                        "hover:bg-gray-200 h-6 w-6 p-1 cursor-pointer rounded-md"
-                      }
-                    />
-                  </div>
+              <div className="relative" key={note._id}>
+                <div
+                  onClick={() => handleDeleteNote(note._id)}
+                  className="w-fit absolute top-2 right-2 z-100"
+                >
+                  <CloseIcon
+                    className={
+                      "hover:bg-gray-200 h-6 w-6 p-1 cursor-pointer rounded-md"
+                    }
+                  />
                 </div>
+                <div
+                  onClick={() => handleOpenForm(note._id)}
+                  className="flex flex-col justify-between border border-gray-300 shadow-lg rounded-xl p-4 bg-white cursor-pointer"
+                >
+                  <div className="flex justify-between">
+                    <p className="font-semibold text-lg w-[85%] break-words">
+                      {note.title}
+                    </p>
+                  </div>
 
-                <p className="h-32 md:max-h-24 w-full break-words overflow-y-auto my-3 text-gray-700">
-                  {note.content}
-                </p>
-                <div className="flex items-center justify-between text-sm text-gray-600 md:flex-col md:items-start md:justify-start md:mt-2">
-                  <p className="py-1 px-4 bg-gray-100 rounded-xl md:mb-2">
-                    {"Mr. "}
-                    {note.customerId.firstName}
+                  <p className="h-32 md:max-h-24 w-full break-words overflow-y-auto my-3 text-gray-700">
+                    {note.content}
                   </p>
-                  <p className="py-1 px-4 bg-gray-100 rounded-xl">
-                    {formatDate(note.createdAt)}
-                  </p>
+                  <div className="flex items-center justify-between text-sm text-gray-600 md:flex-col md:items-start md:justify-start md:mt-2">
+                    <p className="py-1 px-4 bg-gray-100 rounded-xl md:mb-2">
+                      {"Mr. "}
+                      {note.customerId.firstName}
+                    </p>
+                    <p className="py-1 px-4 bg-gray-100 rounded-xl">
+                      {formatDate(note.createdAt)}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}

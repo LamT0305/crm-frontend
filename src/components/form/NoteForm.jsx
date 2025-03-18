@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import CloseIcon from "../../assets/CloseIcon";
 import useNote from "../../hooks/useNote";
+import useActivity from "../../hooks/useActivity";
 
 function NoteForm({ setOpenForm, customerId, noteId, setNoteId }) {
   const { note, handleAddNote, handleGetNoteById } = useNote();
-
+  const { handleAddActivity } = useActivity();
   const onCloseForm = () => {
     setOpenForm(false);
     setNoteId(null);
@@ -33,7 +34,17 @@ function NoteForm({ setOpenForm, customerId, noteId, setNoteId }) {
     form.append("content", description);
     form.append("customerId", customerId);
 
+    const activity = {
+      customerId: customerId,
+      type: "note",
+      subject: "added a note",
+    };
+
     handleAddNote(form);
+
+    if (customerId) {
+      handleAddActivity(activity);
+    }
 
     setTitle("");
     setDescription("");
@@ -78,13 +89,14 @@ function NoteForm({ setOpenForm, customerId, noteId, setNoteId }) {
               required
             />
           </label>
-
-          <button
-            type="submit"
-            className="w-full bg-black text-white rounded-lg py-1 mt-5 cursor-pointer active:bg-gray-400 active:text-black active:border-white"
-          >
-            Create
-          </button>
+          {!noteId ? (
+            <button
+              type="submit"
+              className="w-full bg-black text-white rounded-lg py-1 mt-5 cursor-pointer active:bg-gray-400 active:text-black active:border-white"
+            >
+              Create
+            </button>
+          ) : null}
         </form>
       </div>
     </div>

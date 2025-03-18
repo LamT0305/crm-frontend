@@ -10,8 +10,7 @@ function Email({ customer }) {
     if (customer) handleGetEmails(customer.email);
   }, [customer]);
 
-
-
+  console.log(emails);
   return (
     <div className="bg-white h-full flex flex-col">
       {/* Header */}

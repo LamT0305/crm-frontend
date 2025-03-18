@@ -6,6 +6,7 @@ import DoneIcon from "../../assets/DoneIcon";
 import CanceledIcon from "../../assets/CancelIcon";
 import { useEffect, useRef, useState } from "react";
 import useTask from "../../hooks/useTask";
+import useActivity from "../../hooks/useActivity";
 
 export const TaskForm = ({
   taskId,
@@ -25,6 +26,8 @@ export const TaskForm = ({
   const [description, setDescription] = useState("");
 
   const { task, handleGetTaskById, handleUpdateTask } = useTask();
+
+  const { handleAddActivity } = useActivity();
 
   //get task
 
@@ -61,10 +64,19 @@ export const TaskForm = ({
     form.append("priority", priority);
     form.append("status", status);
 
+    const activity = {
+      customerId: customerId,
+      type: "task",
+      subject: "created a task",
+    };
     if (taskId) {
       handleUpdateTask(taskId, form);
     } else {
       handleCreateTask(form);
+    }
+
+    if (customerId) {
+      handleAddActivity(activity);
     }
     setOpenForm(false);
   };
