@@ -9,6 +9,7 @@ import noteSLice from "./slice/noteSlice";
 import productSlice from "./slice/productSlice";
 import quotaionSlice from "./slice/quotationSlice";
 import dealSlice from "./slice/dealSlice";
+import customerSlice from "./slice/customerSlice";
 
 export const configStore = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const configStore = configureStore({
     product: productSlice,
     quotation: quotaionSlice,
     deal: dealSlice,
+    customer: customerSlice,
   },
 });
 

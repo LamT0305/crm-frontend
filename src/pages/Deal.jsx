@@ -59,7 +59,7 @@ function Deal() {
       )}
       {/* header */}
       <div className="flex items-center justify-between border-b border-gray-300 shadow-sm bg-white px-5 py-3">
-        <p className="text-lg font-bold">Product Service</p>
+        <p className="text-lg font-bold">Deals</p>
       </div>
       <Filter
         addColumn={addColumn}

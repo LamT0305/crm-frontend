@@ -18,7 +18,6 @@ const AttachIcon = ({ onFilesSelect }) => {
     if (files.length > 0) {
       onFilesSelect(files);
     }
-
   };
 
   return (

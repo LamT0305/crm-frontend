@@ -31,7 +31,7 @@ function EmailForm({ customerEmail, setOpenEmail, customerId }) {
       const activity = {
         customerId: customerId,
         type: "email",
-        subject: "has sent an email",
+        subject: "has sent an email with subject: " + '"' + subject + '"',
       };
       handleAddActivity(activity);
 

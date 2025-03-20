@@ -5,6 +5,7 @@ import ChatIcon from "../assets/commentIcon";
 import NoteIcon from "../assets/NoteIcon";
 import MailIcon from "../assets/mailIcon";
 import UserIcon from "../assets/UserIcon";
+import DealIcon from "../assets/DealIcon";
 
 function Activity({ id }) {
   const { activities, handleGetActivities } = useActivity();
@@ -52,6 +53,11 @@ function Activity({ id }) {
                 <p>
                   {activity.type === "create_customer" ? (
                     <UserIcon className={"mr-2 w-5 h-5 text-gray-400"} />
+                  ) : null}
+                </p>
+                <p>
+                  {activity.type === "deal" ? (
+                    <DealIcon className={"mr-2 w-5 h-5 text-gray-400"} />
                   ) : null}
                 </p>
                 <p className="font-semibold mr-2">{activity.userId.name}</p>

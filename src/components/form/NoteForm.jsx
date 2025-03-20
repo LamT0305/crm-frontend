@@ -37,7 +37,7 @@ function NoteForm({ setOpenForm, customerId, noteId, setNoteId }) {
     const activity = {
       customerId: customerId,
       type: "note",
-      subject: "added a note",
+      subject: "added a note: " + '"' + title + '"',
     };
 
     handleAddNote(form);

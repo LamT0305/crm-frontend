@@ -67,17 +67,26 @@ export const TaskForm = ({
     const activity = {
       customerId: customerId,
       type: "task",
-      subject: "created a task",
+      subject: "created a task: " + '"' + title + '"',
     };
     if (taskId) {
       handleUpdateTask(taskId, form);
+      const activity = {
+        customerId: customerId,
+        type: "task",
+        subject: "updated a task: " + '"' + title + '"',
+      };
+      handleAddActivity(activity);
     } else {
       handleCreateTask(form);
-    }
-
-    if (customerId) {
+      const activity = {
+        customerId: customerId,
+        type: "task",
+        subject: "created a task: " + '"' + title + '"',
+      };
       handleAddActivity(activity);
     }
+
     setOpenForm(false);
   };
 

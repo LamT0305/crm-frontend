@@ -2,16 +2,28 @@ import React, { useEffect } from "react";
 import useComment from "../hooks/useComment";
 import ChatIcon from "../assets/commentIcon";
 import CloseIcon from "../assets/CloseIcon";
+import useActivity from "../hooks/useActivity";
 
 function Comment({ customerId }) {
   const { isLoading, comments, handleGetComments, handleDeleteCmt } =
     useComment();
+  const { handleAddActivity } = useActivity();
   useEffect(() => {
     if (customerId) {
       handleGetComments(customerId);
     }
   }, [customerId]);
-  console.log(comments);
+
+  const onDelete = (id, content) => {
+    handleDeleteCmt(id);
+    const activity = {
+      customerId: customerId,
+      type: "comment",
+      subject: "has deleted comment: " + '"' + content + '"',
+    };
+    handleAddActivity(activity);
+  };
+
   return (
     <div className="bg-white h-full">
       {/* Header */}
@@ -46,7 +58,7 @@ function Comment({ customerId }) {
                   <p>{cmt.content}</p>
 
                   <div
-                    onClick={() => handleDeleteCmt(cmt._id)}
+                    onClick={() => onDelete(cmt._id, cmt.content)}
                     className="w-fit"
                   >
                     <CloseIcon

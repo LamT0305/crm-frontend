@@ -5,6 +5,7 @@ import CloseIcon from "../../assets/CloseIcon";
 import { notify } from "../../utils/Toastify";
 import ExportIcon from "../../assets/ExportIcon";
 import { exportToExcel } from "../../utils/exportQuotation";
+import useActivity from "../../hooks/useActivity";
 
 function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
   const {
@@ -15,6 +16,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
     handleUpdateDeal,
   } = useDeal();
   const { products, handleSetProducts } = useProduct();
+  const { handleAddActivity } = useActivity();
   const createRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -53,8 +55,23 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
 
     if (dealId) {
       handleUpdateDeal(dealId, dealData);
+      // activity
+      const activity = {
+        customerId: deal.customerId._id,
+        type: "deal",
+        subject: "has updated deal",
+      };
+      handleAddActivity(activity);
     } else {
       handleAddNewDeal(dealData);
+      // activity
+
+      const activity = {
+        customerId: customerId,
+        type: "deal",
+        subject: "has created a deal",
+      };
+      handleAddActivity(activity);
     }
 
     setFormData({
@@ -153,7 +170,6 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
     }
   };
 
-  console.log(deal);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/10 z-100">
       <div
@@ -173,7 +189,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                     exportToExcel(deal);
                   }
                 }}
-                className="bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-400"
+                className="bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-400 mr-3"
               >
                 <ExportIcon className={"w-4 h-4 "} color={"black"} />
               </div>

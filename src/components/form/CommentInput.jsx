@@ -14,7 +14,7 @@ function CommentForm({ setOpenCmt, customerId }) {
     const activity = {
       customerId: customerId,
       type: "comment",
-      subject: "added a comment",
+      subject: `added a comment "${text}"`,
     };
 
     if (customerId) {

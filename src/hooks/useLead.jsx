@@ -3,7 +3,6 @@ import {
   setLeads,
   sortLead,
   filterLead,
-  searchLeads,
   addNewLead,
   deleteLead,
   getLeadById,

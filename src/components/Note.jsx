@@ -3,9 +3,11 @@ import useNote from "../hooks/useNote";
 import NoteIcon from "../assets/NoteIcon";
 import NoteForm from "./form/NoteForm";
 import CloseIcon from "../assets/CloseIcon";
+import useActivity from "../hooks/useActivity";
 
 function Note({ customerId }) {
   const { notes, handleGetCustomerNotes, handleDeleteNote } = useNote();
+  const { handleAddActivity } = useActivity();
   const [openForm, setOpenForm] = useState(false);
   const [noteId, setNoteId] = useState(null);
 
@@ -21,6 +23,16 @@ function Note({ customerId }) {
   const handleOpenForm = (id) => {
     setNoteId(id);
     setOpenForm(true);
+  };
+
+  const onDelete = (id, content) => {
+    handleDeleteNote(id);
+    const activity = {
+      customerId: customerId,
+      type: "comment",
+      subject: "has deleted comment: " + '"' + content + '"',
+    };
+    handleAddActivity(activity);
   };
   return (
     <div className="bg-white h-full flex flex-col">
@@ -58,7 +70,7 @@ function Note({ customerId }) {
             {notes.map((note) => (
               <div className="relative" key={note._id}>
                 <div
-                  onClick={() => handleDeleteNote(note._id)}
+                  onClick={() => onDelete(note._id, note.title)}
                   className="w-fit absolute top-2 right-2 z-100"
                 >
                   <CloseIcon

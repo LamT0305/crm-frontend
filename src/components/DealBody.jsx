@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import CloseIcon from "../assets/CloseIcon";
 import useDeal from "../hooks/useDeal";
+import useActivity from "../hooks/useActivity";
 
 function DealBody({ columns, setOpenDealForm, setDealId }) {
   const { deals, handleSetDeals, handleDeleteDeal } = useDeal();
+  const { handleAddActivity } = useActivity();
 
   useEffect(() => {
     handleSetDeals();
@@ -41,7 +43,17 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
     return formatValue(value, key);
   };
 
-  console.log(deals)
+  const onDeleteDeal = (id, customerId) => {
+    handleDeleteDeal(id);
+    //activity
+    const activity = {
+      customerId: customerId,
+      type: "deal",
+      subject: "delete a deal",
+    };
+    handleAddActivity(activity);
+  };
+
   return (
     <div>
       <div className="overflow-x-auto px-2">
@@ -74,7 +86,9 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
                 <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
                   <div className="flex justify-center">
                     <div
-                      onClick={() => handleDeleteDeal(deal._id)}
+                      onClick={() =>
+                        onDeleteDeal(deal._id, deal.customerId._id)
+                      }
                       className="w-fit"
                     >
                       <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />

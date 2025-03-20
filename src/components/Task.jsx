@@ -8,6 +8,7 @@ import InProgressIcon from "../assets/InProgressIcon";
 import DoneIcon from "../assets/DoneIcon";
 import CanceledIcon from "../assets/CancelIcon";
 import CloseIcon from "../assets/CloseIcon";
+import useActivity from "../hooks/useActivity";
 
 function Task({ customerId, user }) {
   const {
@@ -17,6 +18,7 @@ function Task({ customerId, user }) {
     handleAddTask,
     handleDeleteTask,
   } = useTask();
+  const { handleAddActivity } = useActivity();
   const [openForm, setOpenForm] = useState(false);
   const [taskId, setTaskId] = useState("");
 
@@ -33,6 +35,16 @@ function Task({ customerId, user }) {
     const year = utcDate.getUTCFullYear();
 
     return `${day}/${month}/${year}`; // Format as "DD/MM/YYYY"
+  };
+
+  const onDelete = (id, content) => {
+    handleDeleteTask(id);
+    const activity = {
+      customerId: customerId,
+      type: "task",
+      subject: "has deleted comment: " + '"' + content + '"',
+    };
+    handleAddActivity(activity);
   };
   return (
     <div className="bg-white h-full flex flex-col relative">
@@ -123,7 +135,7 @@ function Task({ customerId, user }) {
                 </div>
               </div>
               <p
-                onClick={() => handleDeleteTask(task._id)}
+                onClick={() => onDelete(task._id, task.title)}
                 className="bg-white mr-4 text-xs text-gray-500 p-1 rounded-lg hover:bg-red-400 hover:text-white"
               >
                 <CloseIcon />
