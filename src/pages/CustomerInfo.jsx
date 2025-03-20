@@ -11,10 +11,13 @@ import Data from "../components/Data";
 import Task from "../components/Task";
 import Note from "../components/Note";
 import Comment from "../components/Comment";
+import DealForm from "../components/form/DealForm";
 function CustomerInfo() {
   const { id } = useParams();
   const { customer, handleGetCustomerById } = useLead();
   const [tagName, setTagName] = useState("activity"); // default
+  const [openDeal, setOpenDeal] = useState(false);
+
   useEffect(() => {
     if (id) {
       handleGetCustomerById(id);
@@ -22,18 +25,22 @@ function CustomerInfo() {
   }, [id]);
   return (
     <div className="w-[100%] h-full flex flex-col">
-      <CustomerHeader name={customer?.firstName} />
+      {openDeal && (
+        <DealForm setOpenDeal={setOpenDeal} customerId={customer._id} />
+      )}
+
+      <CustomerHeader name={customer?.firstName} setOpenDeal={setOpenDeal} />
       <div className="w-full h-full flex ">
         <div className="w-[80%] h-[100%] border-r border-gray-300 relative flex flex-col">
           <CustomerNavigation tagName={tagName} setTagName={setTagName} />
           {tagName === "activity" ? <Activity id={id} /> : null}
           {tagName === "email" ? <Email customer={customer} /> : null}
           {tagName === "comment" ? <Comment customerId={customer._id} /> : null}
-          {tagName === "data" ? <Data /> : null}
+          {/* {tagName === "data" ? <Data /> : null} */}
           {tagName === "task" ? (
             <Task customerId={customer._id} user={customer.userId} />
           ) : null}
-          {tagName === "note" ? <Note customerId={customer._id}/> : null}
+          {tagName === "note" ? <Note customerId={customer._id} /> : null}
 
           <div className="absolute bottom-0 w-[100%]">
             <CustomerFooter customerEmail={customer?.email} id={customer._id} />

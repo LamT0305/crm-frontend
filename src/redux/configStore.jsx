@@ -6,6 +6,9 @@ import emailSlice from "./slice/emailSlice";
 import commentSlice from "./slice/commentSlice";
 import taskSlice from "./slice/taskSlice";
 import noteSLice from "./slice/noteSlice";
+import productSlice from "./slice/productSlice";
+import quotaionSlice from "./slice/quotationSlice";
+import dealSlice from "./slice/dealSlice";
 
 export const configStore = configureStore({
   reducer: {
@@ -16,6 +19,9 @@ export const configStore = configureStore({
     comment: commentSlice,
     task: taskSlice,
     note: noteSLice,
+    product: productSlice,
+    quotation: quotaionSlice,
+    deal: dealSlice,
   },
 });
 

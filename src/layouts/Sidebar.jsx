@@ -49,7 +49,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/deals"
+              to="/customers"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
               <UserIcon className={"w-[30px] h-[30px] mr-2"} /> Customers
@@ -57,7 +57,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/deals"
+              to="/product-services"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
               <img src={product} alt="" className="mr-2" />
@@ -75,7 +75,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/tasks"
+              to="/notes"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
               <NoteIcon className={"w-[30px] h-[30px] mr-2 "} />

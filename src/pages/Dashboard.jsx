@@ -3,8 +3,11 @@ import LeadHeader from "../components/LeadHeader";
 import Filter from "../components/Filter";
 import LeadBody from "../components/LeadBody";
 import CreateLeadForm from "../components/form/CreateLeadForm";
+import useLead from "../hooks/useLead";
 
 function Dashboard() {
+  const { handleFilterleads, handleSortLeads, handleSetLeads } = useLead();
+
   const [isOpen, setIsOpen] = useState(false);
   const STORAGE_KEY = "selectedColumns";
 
@@ -45,6 +48,7 @@ function Dashboard() {
   const removeColumn = (key) => {
     setColumns(columns.filter((col) => col.key !== key));
   };
+
   return (
     <div className="w-[80%] bg-white">
       {isOpen && <CreateLeadForm setIsOpen={setIsOpen} />}
@@ -55,6 +59,9 @@ function Dashboard() {
         removeColumn={removeColumn}
         columns={columns}
         defaultColumns={defaultColumns}
+        handleSort={handleSortLeads}
+        handleFilter={handleFilterleads}
+        handleSetDefaultData={handleSetLeads}
       />
       <LeadBody columns={columns} />
     </div>

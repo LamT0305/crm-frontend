@@ -7,6 +7,11 @@ import AuthSuccess from "../pages/AuthSuccess";
 import Profile from "../pages/Profile";
 import Layout from "../layouts/Layout";
 import CustomerInfo from "../pages/CustomerInfo";
+import Deal from "../pages/Deal";
+import Customers from "../pages/Customers";
+import ProductService from "../pages/ProductService";
+import Task from "../pages/Task";
+import Note from "../pages/Note";
 
 function App() {
   return (
@@ -22,6 +27,11 @@ function App() {
             <Route path="/leads" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/customerinfo/:id" element={<CustomerInfo />} />
+            <Route path="/deals" element={<Deal />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/product-services" element={<ProductService />} />
+            <Route path="/tasks" element={<Task />} />
+            <Route path="/notes" element={<Note />} />
           </Route>
         </Route>
 

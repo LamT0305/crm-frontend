@@ -5,11 +5,16 @@ import ascSort from "../assets/ascsort.png";
 import dscSort from "../assets/dscsort.png";
 import Column from "../assets/column.png";
 import { FilterOptions } from "../utils/filter";
-import useLead from "../hooks/useLead";
 
-function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
-  const { handleFilterleads, handleSortLeads, handleSetLeads } = useLead();
-
+function Filter({
+  addColumn,
+  removeColumn,
+  columns,
+  defaultColumns,
+  handleSort,
+  handleFilter,
+  handleSetDefaultData,
+}) {
   //column
   const [isOpenColumn, setIsOpenColumn] = useState(false);
   //filter
@@ -26,16 +31,18 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
 
   //reset
   const handleReset = () => {
-    setIsOpenColumn(false);
-    setOpenFilter(false);
-    setOpenOptions(false);
-    setIsSelectedFilter(false);
-    setFilterBy("");
-    setFilterValue("");
-    setIsOpenSort(false);
-    setSortBy({ key: "", value: "" });
-    setOrder("asc");
-    handleSetLeads();
+    if (handleSetDefaultData) {
+      setIsOpenColumn(false);
+      setOpenFilter(false);
+      setOpenOptions(false);
+      setIsSelectedFilter(false);
+      setFilterBy("");
+      setFilterValue("");
+      setIsOpenSort(false);
+      setSortBy({ key: "", value: "" });
+      setOrder("asc");
+      handleSetDefaultData();
+    }
   };
   //ref
   const dropdownRef = useRef(null);
@@ -63,12 +70,14 @@ function Filter({ addColumn, removeColumn, columns, defaultColumns }) {
   }, []);
 
   useEffect(() => {
-    handleSortLeads(sortBy.key, order);
+    if (handleSort && sortBy.key) {
+      handleSort(sortBy.key, order);
+    }
   }, [sortBy, order]);
 
   useEffect(() => {
-    if (filterBy && filterValue !== undefined) {
-      handleFilterleads(filterBy.key, filterValue);
+    if (handleFilter && filterBy && filterValue !== undefined) {
+      handleFilter(filterBy.key, filterValue);
     }
   }, [filterBy, filterValue]);
   return (

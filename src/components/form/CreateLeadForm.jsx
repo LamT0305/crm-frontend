@@ -67,7 +67,7 @@ const CreateLeadForm = ({ setIsOpen }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center  bg-black/10 ">
+    <div className="fixed inset-0 flex items-center justify-center  bg-black/10 z-100">
       <div
         ref={createRef}
         className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl opacity-100"

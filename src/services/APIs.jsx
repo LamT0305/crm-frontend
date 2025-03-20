@@ -14,6 +14,12 @@ export const GET_API = (id) => {
     getAllNote: "/note/get-notes",
     getCustomerNote: `/note/get-customer-notes/${id}`,
     getNoteById: `/note/get-note/${id}`,
+    getAllproducts: "/product/products",
+    getProduct: `/product/get-product/${id}`,
+    getQuotations: "/quotation/quotations",
+    getQuotationById: `/quotation/get-quotation/${id}`,
+    getDeals: "/deal/get-deals",
+    getDealById: `/deal/get-deal/${id}`,
   };
 };
 
@@ -28,6 +34,8 @@ export const POST_API = () => {
     createComment: "/comment/create-comment",
     createTask: "/task/create-task",
     createNote: "/note/create-note",
+    createProduct: "/product/create-product",
+    createDeal: "/deal/create-deal",
   };
 };
 
@@ -36,6 +44,9 @@ export const PUT_API = (id) => {
     updateCustomer: `/customer/update-customer/${id}`,
     updateTask: `/task/update-task/${id}`,
     updateNote: `/note/update-note/${id}`,
+    updateProduct: `/product/update-product/${id}`,
+    updateQuotation: `/quotation/update-quotation/${id}`,
+    updateDeal: `/deal/update-deal/${id}`,
   };
 };
 
@@ -46,5 +57,8 @@ export const DELETE_API = (id) => {
     deleteComment: `/comment/delete-comment/${id}`,
     deleteTask: `/task/delete-task/${id}`,
     deleteNote: `/note/delete-note/${id}`,
+    deleteProduct: `/product/delete-product/${id}`,
+    deleteQuotation: `/quotation/delete-quotation/${id}`,
+    deleteDeal: `/deal/delete-deal/${id}`,
   };
 };
