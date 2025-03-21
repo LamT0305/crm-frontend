@@ -50,7 +50,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="w-[80%] bg-white">
+    <div className="w-[80%] bg-white flex flex-col">
       {isOpen && <CreateLeadForm setIsOpen={setIsOpen} />}
 
       <LeadHeader setIsOpen={setIsOpen} />

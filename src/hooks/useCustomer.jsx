@@ -7,6 +7,7 @@ import {
   clearCustomer,
   getCustomerById,
   updateCustomer,
+  setTotalPages,
 } from "../redux/slice/customerSlice";
 
 import axiosInstance from "../services/Axios";
@@ -17,21 +18,22 @@ import { notify } from "../utils/Toastify";
 
 const useCustomer = () => {
   const { handleAddActivity } = useActivity();
-  const { filteredCustomers, isLoading, customer } = useSelector(
+  const { filteredCustomers, isLoading, customer, totalPages } = useSelector(
     (state) => state.customer
   );
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetCustomers = async () => {
+  const handleSetCustomers = async (page) => {
     try {
-      const res = await axiosInstance.get(GET_API().getCustomers, {
+      const res = await axiosInstance.get(GET_API(0, page).getCustomers, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
-        dispatch(setCustomers(res.data.data));
+        dispatch(setCustomers(res.data.data.customers));
+        dispatch(setTotalPages(res.data.data.pagination.pages));
       }
     } catch (error) {
       console.log(error);
@@ -107,6 +109,7 @@ const useCustomer = () => {
         },
       });
       if (res.status === 200) {
+        ƒ;
         console.log(res.data.data);
         dispatch(updateCustomer(res.data.data));
         notify.success("Customer updated successfully");
@@ -125,6 +128,7 @@ const useCustomer = () => {
     isLoading,
     customers: filteredCustomers,
     customer,
+    totalPages,
     handleSetCustomers,
     handleFilterCustomers,
     handleSortCustomers,

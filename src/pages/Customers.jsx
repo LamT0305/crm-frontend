@@ -48,7 +48,7 @@ function Customers() {
     setColumns(columns.filter((col) => col.key !== key));
   };
   return (
-    <div className="w-[80%] bg-white">
+    <div className="w-[80%] bg-white flex flex-col">
       {/* header */}
       <div className="flex items-center justify-between border-b border-gray-300 shadow-sm bg-white px-5 py-3">
         <p className="text-lg font-bold">Customers</p>

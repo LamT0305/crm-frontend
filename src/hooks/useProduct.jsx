@@ -12,24 +12,26 @@ import {
   filterProducts,
   sortProducts,
   clearProduct,
+  setTotalPages,
 } from "../redux/slice/productSlice";
 
 const useProduct = () => {
-  const { filteredProducts, isLoading, product } = useSelector(
+  const { filteredProducts, isLoading, product, totalPages } = useSelector(
     (state) => state.product
   );
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetProducts = async () => {
+  const handleSetProducts = async (page) => {
     try {
-      const res = await axiosInstance.get(GET_API().getAllproducts, {
+      const res = await axiosInstance.get(GET_API(0, page).getAllproducts, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
-        dispatch(setProducts(res.data.data));
+        dispatch(setProducts(res.data.data.products));
+        dispatch(setTotalPages(res.data.data.pagination.pages));
       }
     } catch (error) {
       console.log(error);
@@ -145,6 +147,7 @@ const useProduct = () => {
     isLoading,
     products: filteredProducts,
     product,
+    totalPages,
     handleSetProducts,
     handleFilterProducts,
     handleSortProducts,

@@ -12,24 +12,26 @@ import {
   clearDeal,
   sortDeal,
   filterDeal,
+  setTotalPages,
 } from "../redux/slice/dealSlice";
 import { notify } from "../utils/Toastify";
 
 const useDeal = () => {
-  const { filteredDeals, isLoading, deal } = useSelector((state) => state.deal);
+  const { filteredDeals, isLoading, deal, totalPages } = useSelector((state) => state.deal);
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetDeals = async () => {
+  const handleSetDeals = async (page) => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API().getDeals, {
+      const res = await axiosInstance.get(GET_API(0, page).getDeals, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
-        dispatch(setDeals(res.data.data));
+        dispatch(setDeals(res.data.data.deals));
+        dispatch(setTotalPages(res.data.data.pagination.pages));
       }
     } catch (error) {
       console.log(error);
@@ -159,6 +161,7 @@ const useDeal = () => {
     isLoading,
     deals: filteredDeals,
     deal,
+    totalPages,
     handleSetDeals,
     handleGetDealById,
     handleAddNewDeal,

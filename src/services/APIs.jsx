@@ -1,25 +1,25 @@
-export const GET_API = (id) => {
+export const GET_API = (id, page) => {
   return {
     profile: "/auth/profile",
     login: "/auth/google",
-    getLeads: "/customer/get-all-leads",
-    getCustomers: "/customer/customers",
+    getLeads: `/customer/get-all-leads?page=${page}`,
+    getCustomers: `/customer/customers?page=${page}`,
     getCustomerById: `/customer/get-customer/${id}`,
     getSources: "/source/get-sources",
     getActivities: `/activity/get-activities/${id}`,
     getComments: `/comment/get-comments/${id}`,
-    getAllTasks: "/task/get-tasks",
+    getAllTasks: `/task/get-tasks`,
     getTasksOfCustomer: `/task/get-tasks-of-customer/${id}`,
     getTaskById: `/task/get-task/${id}`,
-    getAllNote: "/note/get-notes",
+    getAllNote: `/note/get-notes`,
     getCustomerNote: `/note/get-customer-notes/${id}`,
     getNoteById: `/note/get-note/${id}`,
-    getAllproducts: "/product/products",
+    getAllproducts: `/product/products?page=${page}`,
     getProduct: `/product/get-product/${id}`,
-    getQuotations: "/quotation/quotations",
-    getQuotationById: `/quotation/get-quotation/${id}`,
-    getDeals: "/deal/get-deals",
+    getDeals: `/deal/get-deals?page=${page}`,
     getDealById: `/deal/get-deal/${id}`,
+    getCustomerCareByCustomer: `/customer-care/${id}`,
+    getCustomerCareById: `/get-customer-care/${id}`,
   };
 };
 
@@ -36,6 +36,7 @@ export const POST_API = () => {
     createNote: "/note/create-note",
     createProduct: "/product/create-product",
     createDeal: "/deal/create-deal",
+    createCustomerCare: "/create-customer-care",
   };
 };
 
@@ -47,6 +48,7 @@ export const PUT_API = (id) => {
     updateProduct: `/product/update-product/${id}`,
     updateQuotation: `/quotation/update-quotation/${id}`,
     updateDeal: `/deal/update-deal/${id}`,
+    updateCustomerCare: `/update-customer-care/${id}`,
   };
 };
 
@@ -60,5 +62,6 @@ export const DELETE_API = (id) => {
     deleteProduct: `/product/delete-product/${id}`,
     deleteQuotation: `/quotation/delete-quotation/${id}`,
     deleteDeal: `/deal/delete-deal/${id}`,
+    deleteCustomerCare: `/delete-customer-care/${id}`,
   };
 };

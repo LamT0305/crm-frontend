@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "../assets/CloseIcon";
 import useDeal from "../hooks/useDeal";
 import useActivity from "../hooks/useActivity";
 
 function DealBody({ columns, setOpenDealForm, setDealId }) {
-  const { deals, handleSetDeals, handleDeleteDeal } = useDeal();
+  const { deals, totalPages, handleSetDeals, handleDeleteDeal } = useDeal();
   const { handleAddActivity } = useActivity();
+  const [page, setPage] = useState(1);
+  const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
-    handleSetDeals();
-  }, []);
+    handleSetDeals(page);
+  }, [page]);
 
   const onOpenForm = (id) => {
     setDealId(id);
@@ -53,11 +55,34 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
     };
     handleAddActivity(activity);
   };
+  // pagination
+  useEffect(() => {
+    const calculateDisplayedPages = () => {
+      let start, end;
+
+      // Calculate start and end based on current page
+      if (page <= 10) {
+        start = 1;
+        end = Math.min(10, totalPages);
+      } else {
+        start = Math.floor((page - 1) / 10) * 10 + 1;
+        end = Math.min(start + 9, totalPages);
+      }
+
+      const pages = [];
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      setDisplayedPages(pages);
+    };
+
+    calculateDisplayedPages();
+  }, [page, totalPages]);
 
   return (
-    <div>
-      <div className="overflow-x-auto px-2">
-        <table className="table-auto border-collapse w-full">
+    <div className="flex flex-col justify-between h-full">
+      <div className="overflow-x-auto px-2 max-h-[72vh]">
+        <table className="table-auto border-collapse w-full h-full">
           <thead>
             <tr className="bg-gray-100 text-gray-500 text-md font-thin">
               {columns.map((col) => (
@@ -68,17 +93,17 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
               <th className="p-2 relative">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {deals?.map((deal) => (
               <tr
                 key={deal._id}
-                className="border-b cursor-pointer hover:bg-gray-200"
+                className="border-b cursor-pointer hover:bg-gray-200 h-fit"
               >
                 {columns.map((col) => (
                   <td
                     onClick={() => onOpenForm(deal._id)}
                     key={col.key}
-                    className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center"
+                    className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center h-fit"
                   >
                     {renderCellContent(deal, col.key)}
                   </td>
@@ -99,6 +124,38 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
             ))}
           </tbody>
         </table>
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-center items-center gap-2 mb-5">
+        <button
+          onClick={() => setPage(page - 1)}
+          disabled={page === 1}
+          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+        >
+          {"<"}
+        </button>
+
+        {displayedPages.map((pageNum) => (
+          <button
+            key={pageNum}
+            onClick={() => setPage(pageNum)}
+            className={`px-3 py-1 rounded-lg cursor-pointer ${
+              pageNum === page
+                ? "bg-blue-400 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            {pageNum}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page >= totalPages}
+          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+        >
+          {">"}
+        </button>
       </div>
     </div>
   );

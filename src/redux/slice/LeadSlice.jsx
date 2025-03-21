@@ -6,6 +6,7 @@ const initialState = {
   totalPages: 0,
   isLoading: false,
   customer: {},
+  totalPages: 0,
 };
 
 const leadSlice = createSlice({
@@ -79,6 +80,9 @@ const leadSlice = createSlice({
     getLeadById: (state, action) => {
       state.customer = action.payload;
     },
+    setTotalPages: (state, action) => {
+      state.totalPages = action.payload;
+    },
   },
 });
 
@@ -90,5 +94,6 @@ export const {
   addNewLead,
   deleteLead,
   getLeadById,
+  setTotalPages,
 } = leadSlice.actions;
 export default leadSlice.reducer;

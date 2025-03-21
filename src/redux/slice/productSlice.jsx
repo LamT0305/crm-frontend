@@ -5,6 +5,7 @@ const initialState = {
   filteredProducts: [],
   isLoading: false,
   product: {},
+  totalPages: 0,
 };
 
 const productSlice = createSlice({
@@ -75,6 +76,9 @@ const productSlice = createSlice({
     clearProduct: (state) => {
       state.product = {};
     },
+    setTotalPages: (state, action) => {
+      state.totalPages = action.payload;
+    },
   },
 });
 
@@ -87,7 +91,8 @@ export const {
   updateProduct,
   sortProducts,
   filterProducts,
-  clearProduct
+  clearProduct,
+  setTotalPages,
 } = productSlice.actions;
 
 export default productSlice.reducer;

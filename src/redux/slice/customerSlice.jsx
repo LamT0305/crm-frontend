@@ -5,6 +5,7 @@ const initialState = {
   filteredCustomers: [],
   customer: {},
   isLoading: false,
+  totalPages: 0,
 };
 
 const customerSlice = createSlice({
@@ -70,6 +71,9 @@ const customerSlice = createSlice({
     updateCustomer: (state, action) => {
       state.customer = action.payload;
     },
+    setTotalPages: (state, action) => {
+      state.totalPages = action.payload;
+    },
   },
 });
 
@@ -81,7 +85,8 @@ export const {
   deleteCustomer,
   clearCustomer,
   getCustomerById,
-  updateCustomer
+  updateCustomer,
+  setTotalPages,
 } = customerSlice.actions;
 
 export default customerSlice.reducer;

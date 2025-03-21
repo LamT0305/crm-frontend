@@ -1,17 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useCustomer from "../hooks/useCustomer";
 import { useNavigate } from "react-router-dom";
 
 function CustomerBody({ columns }) {
   const navigate = useNavigate();
-  const { customers, handleSetCustomers, handleDeleteCustomer } = useCustomer();
-
+  const { customers, totalPages, handleSetCustomers, handleDeleteCustomer } =
+    useCustomer();
+  const [page, setPage] = useState(1);
+  const [displayedPages, setDisplayedPages] = useState([]);
   useEffect(() => {
     handleSetCustomers();
   }, []);
 
+  // pagination
+  useEffect(() => {
+    const calculateDisplayedPages = () => {
+      let start, end;
+
+      // Calculate start and end based on current page
+      if (page <= 10) {
+        start = 1;
+        end = Math.min(10, totalPages);
+      } else {
+        start = Math.floor((page - 1) / 10) * 10 + 1;
+        end = Math.min(start + 9, totalPages);
+      }
+
+      const pages = [];
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      setDisplayedPages(pages);
+    };
+
+    calculateDisplayedPages();
+  }, [page, totalPages]);
   return (
-    <div>
+    <div className="flex flex-col justify-between h-full">
       <div className="overflow-x-auto px-2">
         <table className="table-auto border-collapse w-full">
           <thead>
@@ -46,6 +71,38 @@ function CustomerBody({ columns }) {
             ))}
           </tbody>
         </table>
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-center items-center gap-2 mb-5">
+        <button
+          onClick={() => setPage(page - 1)}
+          disabled={page === 1}
+          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+        >
+          {"<"}
+        </button>
+
+        {displayedPages.map((pageNum) => (
+          <button
+            key={pageNum}
+            onClick={() => setPage(pageNum)}
+            className={`px-3 py-1 rounded-lg cursor-pointer ${
+              pageNum === page
+                ? "bg-blue-400 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            {pageNum}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page >= totalPages}
+          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+        >
+          {">"}
+        </button>
       </div>
     </div>
   );

@@ -16,22 +16,6 @@ const useNote = () => {
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleGetNotes = async (customerId) => {
-    try {
-      const res = await axiosInstance.get(GET_API().getAllNote, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.status === 200) {
-        dispatch(setNotes(res.data.data));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleGetCustomerNotes = async (id) => {
     try {
       const res = await axiosInstance.get(GET_API(id).getCustomerNote, {
@@ -58,22 +42,6 @@ const useNote = () => {
 
       if (res.status === 200) {
         dispatch(addNote(res.data.data));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleUpdateNote = async (id, note) => {
-    try {
-      const res = await axiosInstance.put(PUT_API(id).updateNote, note, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.status === 200) {
-        dispatch(updateNote(res.data.data));
       }
     } catch (error) {
       console.log(error);
@@ -115,10 +83,8 @@ const useNote = () => {
     isLoading,
     notes,
     note,
-    handleGetNotes,
     handleGetCustomerNotes,
     handleAddNote,
-    handleUpdateNote,
     handleDeleteNote,
     handleGetNoteById,
   };

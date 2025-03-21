@@ -6,6 +6,7 @@ import {
   addNewLead,
   deleteLead,
   getLeadById,
+  setTotalPages,
 } from "../redux/slice/LeadSlice";
 
 import axiosInstance from "../services/Axios";
@@ -15,21 +16,23 @@ import useActivity from "./useActivity";
 
 const useLead = () => {
   const { handleAddActivity } = useActivity();
-  const { filteredLeads, isLoading, customer } = useSelector(
+  const { filteredLeads, isLoading, customer, totalPages } = useSelector(
     (state) => state.lead
   );
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetLeads = async () => {
+  const handleSetLeads = async (page) => {
     try {
-      const res = await axiosInstance.get(GET_API().getLeads, {
+      const res = await axiosInstance.get(GET_API(0, page).getLeads, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
-        dispatch(setLeads(res.data.data));
+        console.log(res.data.data);
+        dispatch(setLeads(res.data.data.leads));
+        dispatch(setTotalPages(res.data.data.pagination.pages));
       }
     } catch (error) {
       console.log(error);
@@ -75,10 +78,9 @@ const useLead = () => {
         dispatch(addNewLead(res.data.data));
         const activity = new FormData();
         activity.append("customerId", res.data.data._id);
-        activity.append("type", "create_customer");
+        activity.append("type", "customer");
         activity.append("subject", "Created this lead");
         handleAddActivity(activity);
-        console.log(res.data.data);
       }
     } catch (error) {
       console.log(error);
@@ -127,6 +129,7 @@ const useLead = () => {
     isLoading,
     leads: filteredLeads,
     customer,
+    totalPages,
     handleSetLeads,
     handleFilterleads,
     handleSortLeads,

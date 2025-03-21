@@ -5,6 +5,7 @@ const initialState = {
   filteredDeals: [],
   deal: null,
   isLoading: false,
+  totalPages: 0,
 };
 
 const dealSlice = createSlice({
@@ -103,6 +104,9 @@ const dealSlice = createSlice({
     clearDeal: (state) => {
       state.deal = null;
     },
+    setTotalPages: (state, action) => {
+      state.totalPages = action.payload;
+    },
   },
 });
 
@@ -116,6 +120,7 @@ export const {
   updateDeal,
   deleteDeal,
   clearDeal,
+  setTotalPages
 } = dealSlice.actions;
 
 export default dealSlice.reducer;

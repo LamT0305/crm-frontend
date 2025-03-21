@@ -49,7 +49,7 @@ function Deal() {
     setColumns(columns.filter((col) => col.key !== key));
   };
   return (
-    <div className="w-[80%] bg-white">
+    <div className="w-[80%] bg-white flex flex-col">
       {openDealForm && (
         <DealForm
           setOpenDeal={setOpenDealForm}
