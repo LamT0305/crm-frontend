@@ -4,19 +4,21 @@ import MailIcon from "../assets/mailIcon";
 import userAvatar from "../assets/user-avatar.png";
 import customerAvatar from "../assets/user.png";
 
-function Email({ customer }) {
+function Email({ customer, setOpenEmailForm }) {
   const { emails, handleGetEmails } = useEmail();
   useState(() => {
     if (customer) handleGetEmails(customer.email);
   }, [customer]);
 
-  console.log(emails);
   return (
     <div className="bg-white h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between shadow-md py-2 px-8">
         <p className="font-bold text-lg">Emails</p>
-        <p className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white hover:bg-gray-200 hover:text-black">
+        <p
+          onClick={() => setOpenEmailForm(true)}
+          className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white hover:bg-gray-200 hover:text-black"
+        >
           + New email
         </p>
       </div>

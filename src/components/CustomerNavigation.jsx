@@ -28,14 +28,14 @@ function CustomerNavigation({ tagName, setTagName }) {
         >
           Comments
         </li>
-        {/* <li
+        <li
           onClick={() => setTagName("data")}
           className={`px-6 py-4 hover:bg-gray-200 cursor-pointer rounded-t-lg  ${
             tagName === "data" ? "text-black border-b" : "text-gray-400"
           }`}
         >
           Data
-        </li> */}
+        </li>
         <li
           onClick={() => setTagName("task")}
           className={`px-6 py-4 hover:bg-gray-200 cursor-pointer rounded-t-lg  ${
@@ -51,6 +51,16 @@ function CustomerNavigation({ tagName, setTagName }) {
           }`}
         >
           Notes
+        </li>
+        <li
+          onClick={() => setTagName("customer_care")}
+          className={`px-6 py-4 hover:bg-gray-200 cursor-pointer rounded-t-lg  ${
+            tagName === "customer_care"
+              ? "text-black border-b"
+              : "text-gray-400"
+          }`}
+        >
+          Customer Care
         </li>
       </ul>
     </div>

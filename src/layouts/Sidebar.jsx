@@ -64,24 +64,7 @@ const Sidebar = () => {
               Product Services
             </Link>
           </li>
-          <li>
-            <Link
-              to="/tasks"
-              className="block p-2 hover:bg-gray-200 rounded flex items-center"
-            >
-              <TodoIcon className={"w-[30px] h-[30px] mr-2 "} />
-              Tasks
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/notes"
-              className="block p-2 hover:bg-gray-200 rounded flex items-center"
-            >
-              <NoteIcon className={"w-[30px] h-[30px] mr-2 "} />
-              Notes
-            </Link>
-          </li>
+
           <li>
             <div
               className="block p-2 hover:bg-gray-200 rounded flex items-center cursor-pointer"

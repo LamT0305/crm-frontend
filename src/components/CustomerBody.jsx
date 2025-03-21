@@ -10,7 +10,6 @@ function CustomerBody({ columns }) {
     handleSetCustomers();
   }, []);
 
-  console.log(customers);
   return (
     <div>
       <div className="overflow-x-auto px-2">

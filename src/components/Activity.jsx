@@ -51,7 +51,7 @@ function Activity({ id }) {
                   ) : null}
                 </p>
                 <p>
-                  {activity.type === "create_customer" ? (
+                  {activity.type === "customer" ? (
                     <UserIcon className={"mr-2 w-5 h-5 text-gray-400"} />
                   ) : null}
                 </p>

@@ -4,8 +4,7 @@ import ChatIcon from "../assets/commentIcon";
 import EmailForm from "./form/EmailForm";
 import CommentForm from "./form/CommentInput";
 
-function CustomerFooter({ customerEmail, id }) {
-  const [openForm, setOpen] = useState(false);
+function CustomerFooter({ customerEmail, id, openForm, setOpen }) {
   const [openComment, setOpenCmt] = useState(false);
   return (
     <>

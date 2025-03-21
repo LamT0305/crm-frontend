@@ -10,8 +10,7 @@ import CustomerInfo from "../pages/CustomerInfo";
 import Deal from "../pages/Deal";
 import Customers from "../pages/Customers";
 import ProductService from "../pages/ProductService";
-import Task from "../pages/Task";
-import Note from "../pages/Note";
+
 
 function App() {
   return (
@@ -30,8 +29,6 @@ function App() {
             <Route path="/deals" element={<Deal />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/product-services" element={<ProductService />} />
-            <Route path="/tasks" element={<Task />} />
-            <Route path="/notes" element={<Note />} />
           </Route>
         </Route>
 

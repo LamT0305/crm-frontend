@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   customers: [],
   filteredCustomers: [],
-  customer: null,
+  customer: {},
   isLoading: false,
 };
 
@@ -64,6 +64,12 @@ const customerSlice = createSlice({
     clearCustomer: (state) => {
       state.customer = null;
     },
+    getCustomerById: (state, action) => {
+      state.customer = action.payload;
+    },
+    updateCustomer: (state, action) => {
+      state.customer = action.payload;
+    },
   },
 });
 
@@ -74,6 +80,8 @@ export const {
   filterCustomer,
   deleteCustomer,
   clearCustomer,
+  getCustomerById,
+  updateCustomer
 } = customerSlice.actions;
 
 export default customerSlice.reducer;

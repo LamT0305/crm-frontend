@@ -9,10 +9,12 @@ import {
   deleteTask,
   getTask,
   updateTask,
+  filterTask,
+  sortTask,
 } from "../redux/slice/taskSlice";
 
 const useTask = () => {
-  const { isLoading, tasks, task } = useSelector((state) => state.task);
+  const { isLoading, filteredTasks, task } = useSelector((state) => state.task);
   const dispatch = useDispatch();
   const token = getToken();
 
@@ -114,9 +116,30 @@ const useTask = () => {
       console.log(error);
     }
   };
+  const handleFilterTasks = async (field, value) => {
+    try {
+      if (!field || value === undefined) {
+        return;
+      }
+      dispatch(filterTask({ field, value }));
+    } catch (error) {
+      console.error("Error in handleFilterTasks:", error);
+    }
+  };
+
+  const handleSortTasks = async (field, order) => {
+    try {
+      if (!field || order === undefined) {
+        return;
+      }
+      dispatch(sortTask({ field, order }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     isLoading,
-    tasks,
+    tasks: filteredTasks,
     task,
     handleGetAllTasks,
     handleGetTasksOfCustomer,
@@ -124,6 +147,8 @@ const useTask = () => {
     handleUpdateTask,
     handleDeleteTask,
     handleGetTaskById,
+    handleFilterTasks,
+    handleSortTasks,
   };
 };
 

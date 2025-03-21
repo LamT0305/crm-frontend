@@ -1,7 +1,12 @@
 import { useState } from "react";
 import useSource from "../hooks/useSource";
 
-export const Source = ({ sources, setFormData, setOpenSourceDropdown }) => {
+export const Source = ({
+  sources,
+  setFormData,
+  setOpenSourceDropdown,
+  required,
+}) => {
   const { handleAddSource, handleDeleteSource } = useSource();
 
   const [newSource, setNewSource] = useState("");
@@ -12,7 +17,7 @@ export const Source = ({ sources, setFormData, setOpenSourceDropdown }) => {
         <input
           type="text"
           value={newSource}
-          required
+          required={required}
           onChange={(e) => setNewSource(e.target.value)}
           placeholder="Add new source"
           className="p-1 rounded-lg bg-gray-200"
@@ -20,8 +25,10 @@ export const Source = ({ sources, setFormData, setOpenSourceDropdown }) => {
         />
         <p
           onClick={() => {
-            handleAddSource(newSource);
-            setNewSource("");
+            if (newSource.trim().length > 0) {
+              handleAddSource(newSource);
+              setNewSource("");
+            }
           }}
           className="bg-black text-white px-2 py-1 rounded-lg ml-2 cursor-pointer"
         >
