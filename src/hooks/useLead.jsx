@@ -7,67 +7,77 @@ import {
   deleteLead,
   getLeadById,
   setTotalPages,
+  setLoading,
+  setCurrentPage,
+  resetFilter,
 } from "../redux/slice/LeadSlice";
-
 import axiosInstance from "../services/Axios";
 import { DELETE_API, GET_API, POST_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
 import useActivity from "./useActivity";
+import { notify } from "../utils/Toastify";
 
 const useLead = () => {
   const { handleAddActivity } = useActivity();
-  const { filteredLeads, isLoading, customer, totalPages } = useSelector(
-    (state) => state.lead
-  );
+  const { displayedLeads, isLoading, customer, totalPages, allLeads } =
+    useSelector((state) => state.lead);
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetLeads = async (page) => {
+  const handleSetLeads = async () => {
     try {
-      const res = await axiosInstance.get(GET_API(0, page).getLeads, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(GET_API(0).getLeads, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
-        console.log(res.data.data);
         dispatch(setLeads(res.data.data.leads));
-        dispatch(setTotalPages(res.data.data.pagination.pages));
+        const totalPages = Math.ceil(res.data.data.leads.length / 15);
+        dispatch(setTotalPages(totalPages));
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to fetch leads");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
-  const handleFilterleads = async (field, value) => {
+  const handleChangePage = (page) => {
+    dispatch(setCurrentPage(page));
+  };
+
+  const handleFilterleads = (field, value) => {
     try {
-      if (!field || value === undefined) {
+      if (!field || !value) {
+        dispatch(resetFilter());
         return;
       }
-
       dispatch(filterLead({ field, value }));
     } catch (error) {
       console.error("Error in handleFilterleads:", error);
+      notify.error("Error filtering leads");
     }
   };
 
-  const handleSortLeads = async (field, order) => {
+  const handleSortLeads = (field, order) => {
     try {
-      if (!field || order === undefined) {
+      if (!field || !order) {
         return;
       }
-
       dispatch(sortLead({ field, order }));
     } catch (error) {
       console.log(error);
+      notify.error("Error sorting leads");
     }
   };
 
   const handleAddNewLead = async (lead) => {
     try {
-      if (!lead) {
-        return;
-      }
+      if (!lead) return;
+      dispatch(setLoading(true));
       const res = await axiosInstance.post(POST_API().createlead, lead, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,22 +90,30 @@ const useLead = () => {
         activity.append("customerId", res.data.data._id);
         activity.append("type", "customer");
         activity.append("subject", "Created this lead");
-        handleAddActivity(activity);
+        await handleAddActivity(activity);
+        notify.success("Lead created successfully");
+        return true;
       }
     } catch (error) {
       console.log(error);
       if (
-        error.response.status === 400 &&
-        error.response.data.message === "Email already exists"
+        error.response?.status === 400 &&
+        error.response?.data?.message === "Email already exists"
       ) {
-        alert("Customer already exists");
+        notify.error("Customer already exists");
+      } else {
+        notify.error("Failed to create lead");
       }
+      return false;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleDeleteLead = async (id) => {
     try {
       if (!id) return;
+      dispatch(setLoading(true));
       const res = await axiosInstance.delete(DELETE_API(id).deleteCustomer, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -103,15 +121,22 @@ const useLead = () => {
       });
       if (res.status === 200) {
         dispatch(deleteLead(id));
+        notify.success("Lead deleted successfully");
+        return true;
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to delete lead");
+      return false;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleGetCustomerById = async (id) => {
     try {
       if (!id) return;
+      dispatch(setLoading(true));
       const res = await axiosInstance.get(GET_API(id).getCustomerById, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -120,14 +145,20 @@ const useLead = () => {
 
       if (res.status === 200) {
         dispatch(getLeadById(res.data.data));
+        return res.data.data;
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to fetch customer details");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
+
   return {
     isLoading,
-    leads: filteredLeads,
+    leads: displayedLeads,
+    allLeads,
     customer,
     totalPages,
     handleSetLeads,
@@ -136,6 +167,7 @@ const useLead = () => {
     handleAddNewLead,
     handleDeleteLead,
     handleGetCustomerById,
+    handleChangePage,
   };
 };
 

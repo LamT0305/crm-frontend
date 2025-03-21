@@ -4,14 +4,24 @@ import useDeal from "../hooks/useDeal";
 import useActivity from "../hooks/useActivity";
 
 function DealBody({ columns, setOpenDealForm, setDealId }) {
-  const { deals, totalPages, handleSetDeals, handleDeleteDeal } = useDeal();
+  const {
+    deals,
+    totalPages,
+    handleSetDeals,
+    handleDeleteDeal,
+    handleChangePage,
+  } = useDeal();
   const { handleAddActivity } = useActivity();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
-    handleSetDeals(page);
-  }, [page]);
+    handleSetDeals();
+  }, []); // Fetch all deals once on mount
+
+  useEffect(() => {
+    handleChangePage(page);
+  }, [page]); // Update displayed deals when page changes
 
   const onOpenForm = (id) => {
     setDealId(id);
@@ -45,22 +55,22 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
     return formatValue(value, key);
   };
 
-  const onDeleteDeal = (id, customerId) => {
-    handleDeleteDeal(id);
-    //activity
+  const onDeleteDeal = async (id, customerId) => {
+    await handleDeleteDeal(id);
     const activity = {
       customerId: customerId,
       type: "deal",
       subject: "delete a deal",
     };
-    handleAddActivity(activity);
+    await handleAddActivity(activity);
+    // Refresh current page after deletion
+    handleChangePage(page);
   };
-  // pagination
+
   useEffect(() => {
     const calculateDisplayedPages = () => {
       let start, end;
 
-      // Calculate start and end based on current page
       if (page <= 10) {
         start = 1;
         end = Math.min(10, totalPages);
@@ -93,7 +103,7 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
               <th className="p-2 relative">Actions</th>
             </tr>
           </thead>
-          <tbody className="">
+          <tbody>
             {deals?.map((deal) => (
               <tr
                 key={deal._id}
@@ -125,12 +135,15 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
           </tbody>
         </table>
       </div>
-      {/* Pagination */}
+
       <div className="flex justify-center items-center gap-2 mb-5">
         <button
-          onClick={() => setPage(page - 1)}
+          onClick={() => {
+            setPage(page - 1);
+            handleChangePage(page - 1);
+          }}
           disabled={page === 1}
-          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+          className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
         >
           {"<"}
         </button>
@@ -138,7 +151,10 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
         {displayedPages.map((pageNum) => (
           <button
             key={pageNum}
-            onClick={() => setPage(pageNum)}
+            onClick={() => {
+              setPage(pageNum);
+              handleChangePage(pageNum);
+            }}
             className={`px-3 py-1 rounded-lg cursor-pointer ${
               pageNum === page
                 ? "bg-blue-400 text-white"
@@ -150,9 +166,12 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
         ))}
 
         <button
-          onClick={() => setPage(page + 1)}
+          onClick={() => {
+            setPage(page + 1);
+            handleChangePage(page + 1);
+          }}
           disabled={page >= totalPages}
-          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+          className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
         >
           {">"}
         </button>

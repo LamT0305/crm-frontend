@@ -13,25 +13,29 @@ import {
   sortDeal,
   filterDeal,
   setTotalPages,
+  setCurrentPage
 } from "../redux/slice/dealSlice";
 import { notify } from "../utils/Toastify";
 
 const useDeal = () => {
-  const { filteredDeals, isLoading, deal, totalPages } = useSelector((state) => state.deal);
+  const { displayedDeals, isLoading, deal, totalPages, allDeals } = useSelector(
+    (state) => state.deal
+  );
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetDeals = async (page) => {
+  const handleSetDeals = async () => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(0, page).getDeals, {
+      const res = await axiosInstance.get(GET_API(0).getDeals, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
         dispatch(setDeals(res.data.data.deals));
-        dispatch(setTotalPages(res.data.data.pagination.pages));
+        const totalPages = Math.ceil(res.data.data.deals.length / 15);
+        dispatch(setTotalPages(totalPages));
       }
     } catch (error) {
       console.log(error);
@@ -39,6 +43,10 @@ const useDeal = () => {
     } finally {
       dispatch(setLoading(false));
     }
+  };
+
+  const handleChangePage = (page) => {
+    dispatch(setCurrentPage(page));
   };
 
   const handleGetDealById = async (id) => {
@@ -143,9 +151,9 @@ const useDeal = () => {
   const handleFilterDeals = (field, value) => {
     try {
       if (!field || !value) {
+        dispatch(setDeals(allDeals)); // Reset to original data
         return;
       }
-
       dispatch(filterDeal({ field, value }));
     } catch (error) {
       console.log(error);
@@ -159,7 +167,8 @@ const useDeal = () => {
 
   return {
     isLoading,
-    deals: filteredDeals,
+    deals: displayedDeals,
+    allDeals,
     deal,
     totalPages,
     handleSetDeals,
@@ -170,6 +179,7 @@ const useDeal = () => {
     handleClearDeal,
     handleSortDeals,
     handleFilterDeals,
+    handleChangePage,
   };
 };
 

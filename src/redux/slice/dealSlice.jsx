@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  allDeals: [],
   deals: [],
   filteredDeals: [],
+  displayedDeals: [],
   deal: null,
   isLoading: false,
   totalPages: 0,
@@ -16,8 +18,17 @@ const dealSlice = createSlice({
       state.isLoading = action.payload;
     },
     setDeals: (state, action) => {
+      state.allDeals = action.payload;
       state.deals = action.payload;
       state.filteredDeals = action.payload;
+      state.displayedDeals = action.payload.slice(0, 15);
+      state.totalPages = Math.ceil(action.payload.length / 15);
+    },
+    setCurrentPage: (state, action) => {
+      const page = action.payload;
+      const start = (page - 1) * 15;
+      const end = start + 15;
+      state.displayedDeals = state.filteredDeals.slice(start, end);
     },
     sortDeal: (state, action) => {
       const { field, order } = action.payload;
@@ -49,15 +60,16 @@ const dealSlice = createSlice({
       };
 
       state.filteredDeals = [...state.filteredDeals].sort(compareFunction);
+      state.displayedDeals = state.filteredDeals.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredDeals.length / 15);
     },
-
     filterDeal: (state, action) => {
       const { field, value } = action.payload;
 
-      if (!field || value === undefined) return;
-
-      if (!value || value.length === 0) {
-        state.filteredDeals = state.deals;
+      if (!field || value === undefined) {
+        state.filteredDeals = state.allDeals;
+        state.displayedDeals = state.allDeals.slice(0, 15);
+        state.totalPages = Math.ceil(state.allDeals.length / 15);
         return;
       }
 
@@ -71,35 +83,53 @@ const dealSlice = createSlice({
         return value;
       };
 
-      state.filteredDeals = state.deals.filter((deal) => {
+      state.filteredDeals = state.allDeals.filter((deal) => {
         const fieldValue = getNestedValue(deal, field);
         return fieldValue
           ?.toString()
           .toLowerCase()
           .includes(value.toLowerCase());
       });
+
+      state.displayedDeals = state.filteredDeals.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredDeals.length / 15);
     },
     getDealById: (state, action) => {
       state.deal = action.payload;
     },
     addDeal: (state, action) => {
+      state.allDeals.unshift(action.payload);
       state.deals.unshift(action.payload);
       state.filteredDeals = [...state.deals];
+      state.displayedDeals = state.filteredDeals.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredDeals.length / 15);
     },
     updateDeal: (state, action) => {
-      const index = state.deals.findIndex(
-        (deal) => deal._id === action.payload._id
-      );
-      if (index !== -1) {
-        state.deals[index] = action.payload;
-        state.filteredDeals = [...state.deals];
-      }
+      const updatedDeal = action.payload;
+      const updateInArray = (array) => {
+        const index = array.findIndex((deal) => deal._id === updatedDeal._id);
+        if (index !== -1) {
+          array[index] = updatedDeal;
+        }
+      };
+
+      updateInArray(state.allDeals);
+      updateInArray(state.deals);
+      updateInArray(state.filteredDeals);
+      updateInArray(state.displayedDeals);
+
       state.isLoading = false;
       state.error = null;
     },
     deleteDeal: (state, action) => {
-      state.deals = state.deals.filter((deal) => deal._id !== action.payload);
-      state.filteredDeals = [...state.deals];
+      const deleteId = action.payload;
+      state.allDeals = state.allDeals.filter((deal) => deal._id !== deleteId);
+      state.deals = state.deals.filter((deal) => deal._id !== deleteId);
+      state.filteredDeals = state.filteredDeals.filter(
+        (deal) => deal._id !== deleteId
+      );
+      state.displayedDeals = state.filteredDeals.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredDeals.length / 15);
     },
     clearDeal: (state) => {
       state.deal = null;
@@ -113,6 +143,7 @@ const dealSlice = createSlice({
 export const {
   setLoading,
   setDeals,
+  setCurrentPage,
   sortDeal,
   filterDeal,
   getDealById,
@@ -120,7 +151,7 @@ export const {
   updateDeal,
   deleteDeal,
   clearDeal,
-  setTotalPages
+  setTotalPages,
 } = dealSlice.actions;
 
 export default dealSlice.reducer;

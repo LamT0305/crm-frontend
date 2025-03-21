@@ -44,7 +44,7 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
     form.append("unit", formData.unit);
     form.append("status", formData.status);
 
-    if (product) {
+    if (productId) {
       handleUpdateProduct(productId, form);
     } else {
       handleAddNewProduct(form);
@@ -240,7 +240,7 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
 
           <div className="flex justify-end mt-4">
             <button className="bg-black text-white opacity-100 px-4 py-1 rounded-xl mt-5 cursor-pointer">
-              {product ? "Update" : "Create"}
+              {productId ? "Update" : "Create"}
             </button>
           </div>
         </form>

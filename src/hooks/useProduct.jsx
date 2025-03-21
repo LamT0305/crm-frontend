@@ -13,57 +13,71 @@ import {
   sortProducts,
   clearProduct,
   setTotalPages,
+  setCurrentPage,
+  resetFilter,
 } from "../redux/slice/productSlice";
+import { notify } from "../utils/Toastify";
 
 const useProduct = () => {
-  const { filteredProducts, isLoading, product, totalPages } = useSelector(
-    (state) => state.product
-  );
+  const { displayedProducts, isLoading, product, totalPages, allProducts } =
+    useSelector((state) => state.product);
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleSetProducts = async (page) => {
+  const handleSetProducts = async () => {
     try {
-      const res = await axiosInstance.get(GET_API(0, page).getAllproducts, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(GET_API(0).getAllproducts, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
         dispatch(setProducts(res.data.data.products));
-        dispatch(setTotalPages(res.data.data.pagination.pages));
+        const totalPages = Math.ceil(res.data.data.products.length / 15);
+        dispatch(setTotalPages(totalPages));
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to fetch products");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
-  const handleFilterProducts = async (field, value) => {
+  const handleChangePage = (page) => {
+    dispatch(setCurrentPage(page));
+  };
+
+  const handleFilterProducts = (field, value) => {
     try {
-      if (!field || value === undefined) {
+      if (!field || !value) {
+        dispatch(resetFilter());
         return;
       }
       dispatch(filterProducts({ field, value }));
     } catch (error) {
       console.error("Error in handleFilterProducts:", error);
+      notify.error("Error filtering products");
     }
   };
 
-  const handleSortProducts = async (field, order) => {
+  const handleSortProducts = (field, order) => {
     try {
-      if (!field || order === undefined) {
+      if (!field || !order) {
         return;
       }
       dispatch(sortProducts({ field, order }));
     } catch (error) {
       console.log(error);
+      notify.error("Error sorting products");
     }
   };
 
   const handleAddNewProduct = async (product) => {
     try {
       if (!product) return;
-
+      dispatch(setLoading(true));
       const res = await axiosInstance.post(POST_API().createProduct, product, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -72,19 +86,26 @@ const useProduct = () => {
 
       if (res.status === 200) {
         dispatch(addProduct(res.data.data));
+        notify.success("Product added successfully");
+        return true;
       }
     } catch (error) {
       console.log(error);
-      if (error.status === 409) {
-        alert("Product has already existed!");
+      if (error.response?.status === 409) {
+        notify.error("Product already exists");
+      } else {
+        notify.error("Failed to add product");
       }
+      return false;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleDeleteProduct = async (id) => {
     try {
       if (!id) return;
-
+      dispatch(setLoading(true));
       const res = await axiosInstance.delete(DELETE_API(id).deleteProduct, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -93,16 +114,22 @@ const useProduct = () => {
 
       if (res.status === 200) {
         dispatch(deleteProduct(id));
+        notify.success("Product deleted successfully");
+        return true;
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to delete product");
+      return false;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleGetProductById = async (id) => {
     try {
       if (!id) return;
-
+      dispatch(setLoading(true));
       const res = await axiosInstance.get(GET_API(id).getProduct, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -111,16 +138,20 @@ const useProduct = () => {
 
       if (res.status === 200) {
         dispatch(getProductById(res.data.data));
+        return res.data.data;
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to fetch product details");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleUpdateProduct = async (id, productData) => {
     try {
       if (!id || !productData) return;
-
+      dispatch(setLoading(true));
       const res = await axiosInstance.put(
         PUT_API(id).updateProduct,
         productData,
@@ -133,9 +164,15 @@ const useProduct = () => {
 
       if (res.status === 200) {
         dispatch(updateProduct(res.data.data));
+        notify.success("Product updated successfully");
+        return true;
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to update product");
+      return false;
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -145,7 +182,8 @@ const useProduct = () => {
 
   return {
     isLoading,
-    products: filteredProducts,
+    products: displayedProducts,
+    allProducts,
     product,
     totalPages,
     handleSetProducts,
@@ -156,6 +194,7 @@ const useProduct = () => {
     handleGetProductById,
     handleUpdateProduct,
     handleClearProduct,
+    handleChangePage,
   };
 };
 

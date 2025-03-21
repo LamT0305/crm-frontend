@@ -1,9 +1,9 @@
-export const GET_API = (id, page) => {
+export const GET_API = (id) => {
   return {
     profile: "/auth/profile",
     login: "/auth/google",
-    getLeads: `/customer/get-all-leads?page=${page}`,
-    getCustomers: `/customer/customers?page=${page}`,
+    getLeads: `/customer/get-all-leads`,
+    getCustomers: `/customer/customers`,
     getCustomerById: `/customer/get-customer/${id}`,
     getSources: "/source/get-sources",
     getActivities: `/activity/get-activities/${id}`,
@@ -14,9 +14,9 @@ export const GET_API = (id, page) => {
     getAllNote: `/note/get-notes`,
     getCustomerNote: `/note/get-customer-notes/${id}`,
     getNoteById: `/note/get-note/${id}`,
-    getAllproducts: `/product/products?page=${page}`,
+    getAllproducts: `/product/products`,
     getProduct: `/product/get-product/${id}`,
-    getDeals: `/deal/get-deals?page=${page}`,
+    getDeals: `/deal/get-deals`,
     getDealById: `/deal/get-deal/${id}`,
     getCustomerCareByCustomer: `/customer-care/${id}`,
     getCustomerCareById: `/get-customer-care/${id}`,

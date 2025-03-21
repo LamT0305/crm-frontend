@@ -5,24 +5,57 @@ import useProduct from "../hooks/useProduct";
 
 function ProductBody({ columns, setOpenForm, setProductId }) {
   const navigate = useNavigate();
-  const { products, totalPages, handleSetProducts, handleDeleteProduct } =
-    useProduct();
+  const {
+    products,
+    totalPages,
+    handleSetProducts,
+    handleDeleteProduct,
+    handleChangePage,
+  } = useProduct();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
+
   useEffect(() => {
-    handleSetProducts(page);
-  }, [page]);
+    handleSetProducts();
+  }, []); // Fetch all products once
+
+  useEffect(() => {
+    handleChangePage(page);
+  }, [page]); // Update displayed products when page changes
 
   const onOpenForm = (id) => {
     setProductId(id);
     setOpenForm(true);
   };
 
+  const getNestedValue = (obj, path) => {
+    const keys = path.split(".");
+    let value = obj;
+    for (const key of keys) {
+      value = value?.[key];
+      if (value === undefined) return "-";
+    }
+    return value;
+  };
+
+  const formatValue = (value, key) => {
+    if (!value) return "-";
+    if (key === "price") return `$${Number(value).toFixed(2)}`;
+    if (key === "createdAt" || key === "updatedAt") {
+      return new Date(value).toLocaleDateString();
+    }
+    return value;
+  };
+
+  const renderCellContent = (product, key) => {
+    const value = getNestedValue(product, key);
+    return formatValue(value, key);
+  };
+
   useEffect(() => {
     const calculateDisplayedPages = () => {
       let start, end;
 
-      // Calculate start and end based on current page
       if (page <= 10) {
         start = 1;
         end = Math.min(10, totalPages);
@@ -40,10 +73,11 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
 
     calculateDisplayedPages();
   }, [page, totalPages]);
+
   return (
     <div className="flex flex-col h-full justify-between">
-      <div className="overflow-x-auto px-2">
-        <table className="table-auto border-collapse w-full">
+      <div className="overflow-x-auto px-2 max-h-[72vh]">
+        <table className="table-auto border-collapse w-full h-full">
           <thead>
             <tr className="bg-gray-100 text-gray-500 text-md font-thin">
               {columns.map((col) => (
@@ -55,22 +89,18 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
             </tr>
           </thead>
           <tbody>
-            {products.map((product, index) => (
+            {products?.map((product) => (
               <tr
-                key={index}
-                className="border-b cursor-pointer hover:bg-gray-200"
+                key={product._id}
+                className="border-b cursor-pointer hover:bg-gray-200 h-fit"
               >
                 {columns.map((col) => (
                   <td
                     onClick={() => onOpenForm(product._id)}
                     key={col.key}
-                    className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center"
+                    className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center h-fit"
                   >
-                    {col.key === "price"
-                      ? `$${product[col.key]}`
-                      : col.key === "createdAt" || col.key === "updatedAt"
-                      ? new Date(product[col.key]).toLocaleDateString()
-                      : product[col.key] || "-"}
+                    {renderCellContent(product, col.key)}
                   </td>
                 ))}
                 <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
@@ -88,12 +118,15 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
           </tbody>
         </table>
       </div>
-      {/* Pagination */}
+
       <div className="flex justify-center items-center gap-2 mb-5">
         <button
-          onClick={() => setPage(page - 1)}
+          onClick={() => {
+            setPage(page - 1);
+            handleChangePage(page - 1);
+          }}
           disabled={page === 1}
-          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+          className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
         >
           {"<"}
         </button>
@@ -101,7 +134,10 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
         {displayedPages.map((pageNum) => (
           <button
             key={pageNum}
-            onClick={() => setPage(pageNum)}
+            onClick={() => {
+              setPage(pageNum);
+              handleChangePage(pageNum);
+            }}
             className={`px-3 py-1 rounded-lg cursor-pointer ${
               pageNum === page
                 ? "bg-blue-400 text-white"
@@ -113,9 +149,12 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
         ))}
 
         <button
-          onClick={() => setPage(page + 1)}
+          onClick={() => {
+            setPage(page + 1);
+            handleChangePage(page + 1);
+          }}
           disabled={page >= totalPages}
-          className="px-2  bg-gray-200 rounded-lg cursor-pointer"
+          className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
         >
           {">"}
         </button>
