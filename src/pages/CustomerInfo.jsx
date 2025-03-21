@@ -45,7 +45,9 @@ function CustomerInfo() {
             <Task customerId={customer._id} user={customer.userId} />
           ) : null}
           {tagName === "note" ? <Note customerId={customer._id} /> : null}
-          {tagName === "customer_care" ? <CustomerCare /> : null}
+          {tagName === "customer_care" ? (
+            <CustomerCare customerId={customer._id} />
+          ) : null}
           <div className="absolute bottom-0 w-[100%]">
             <CustomerFooter
               customerEmail={customer?.email}

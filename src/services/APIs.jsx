@@ -18,8 +18,8 @@ export const GET_API = (id) => {
     getProduct: `/product/get-product/${id}`,
     getDeals: `/deal/get-deals`,
     getDealById: `/deal/get-deal/${id}`,
-    getCustomerCareByCustomer: `/customer-care/${id}`,
-    getCustomerCareById: `/get-customer-care/${id}`,
+    getCustomerCareByCustomer: `/customer-care/customer-care/${id}`,
+    getCustomerCareById: `/customer-care/get-customer-care/${id}`,
   };
 };
 
@@ -36,7 +36,7 @@ export const POST_API = () => {
     createNote: "/note/create-note",
     createProduct: "/product/create-product",
     createDeal: "/deal/create-deal",
-    createCustomerCare: "/create-customer-care",
+    createCustomerCare: "/customer-care/create-customer-care",
   };
 };
 
@@ -48,7 +48,7 @@ export const PUT_API = (id) => {
     updateProduct: `/product/update-product/${id}`,
     updateQuotation: `/quotation/update-quotation/${id}`,
     updateDeal: `/deal/update-deal/${id}`,
-    updateCustomerCare: `/update-customer-care/${id}`,
+    updateCustomerCare: `/customer-care/update-customer-care/${id}`,
   };
 };
 
@@ -62,6 +62,6 @@ export const DELETE_API = (id) => {
     deleteProduct: `/product/delete-product/${id}`,
     deleteQuotation: `/quotation/delete-quotation/${id}`,
     deleteDeal: `/deal/delete-deal/${id}`,
-    deleteCustomerCare: `/delete-customer-care/${id}`,
+    deleteCustomerCare: `/customer-care/delete-customer-care/${id}`,
   };
 };
