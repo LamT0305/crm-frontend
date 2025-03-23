@@ -25,7 +25,7 @@ function Comment({ customerId }) {
   };
 
   return (
-    <div className="bg-white h-full">
+    <div className="bg-white h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between shadow-md py-2 px-8">
         <p className="font-bold text-lg">Comments</p>

@@ -34,6 +34,10 @@ export const GET_API = (id) => {
     //customer care
     getCustomerCareByCustomer: `/customer-care/customer-care/${id}`,
     getCustomerCareById: `/customer-care/get-customer-care/${id}`,
+
+    // notification
+    getNotifications: "/notification",
+    getUnreadCount: "/notification/unread/count",
   };
 };
 
@@ -51,6 +55,8 @@ export const POST_API = () => {
     createProduct: "/product/create-product",
     createDeal: "/deal/create-deal",
     createCustomerCare: "/customer-care/create-customer-care",
+    createNotification: "/notification",
+    createEmailNotification: "/notification/email",
   };
 };
 
@@ -63,6 +69,8 @@ export const PUT_API = (id) => {
     updateQuotation: `/quotation/update-quotation/${id}`,
     updateDeal: `/deal/update-deal/${id}`,
     updateCustomerCare: `/customer-care/update-customer-care/${id}`,
+    markNotificationAsRead: `/notification/${id}/read`,
+    markAllNotificationsAsRead: "/notification/mark-all-read",
   };
 };
 
@@ -77,5 +85,7 @@ export const DELETE_API = (id) => {
     deleteQuotation: `/quotation/delete-quotation/${id}`,
     deleteDeal: `/deal/delete-deal/${id}`,
     deleteCustomerCare: `/customer-care/delete-customer-care/${id}`,
+    deleteNotification: `/notification/${id}`,
+    deleteEmail: `/email/delete-email/${id}`,
   };
 };

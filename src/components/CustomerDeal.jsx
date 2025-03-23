@@ -8,7 +8,7 @@ function CustomerDeal({ customerId, columns }) {
     deals,
     totalPages,
     handleGetCustomerDeals,
-    handleDealsChangePage,
+    handleChangePage,
     handleFilterCustomerDeals,
     handleSortCustomerDealsByDate,
     handleDeleteDeal,
@@ -179,7 +179,7 @@ function CustomerDeal({ customerId, columns }) {
           <button
             onClick={() => {
               setPage(page - 1);
-              handleDealsChangePage(page - 1);
+              handleChangePage(page - 1);
             }}
             disabled={page === 1}
             className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
@@ -192,7 +192,7 @@ function CustomerDeal({ customerId, columns }) {
               key={pageNum}
               onClick={() => {
                 setPage(pageNum);
-                handleDealsChangePage(pageNum);
+                handleChangePage(pageNum);
               }}
               className={`px-3 py-1 rounded-lg cursor-pointer ${
                 pageNum === page
@@ -207,7 +207,7 @@ function CustomerDeal({ customerId, columns }) {
           <button
             onClick={() => {
               setPage(page + 1);
-              handleDealsChangePage(page + 1);
+              handleChangePage(page + 1);
             }}
             disabled={page >= totalPages}
             className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"

@@ -11,6 +11,7 @@ import quotaionSlice from "./slice/quotationSlice";
 import dealSlice from "./slice/dealSlice";
 import customerSlice from "./slice/customerSlice";
 import customerCareSlice from "./slice/customerCareSlice";
+import notiSlice from "./slice/notiSlice";
 
 export const configStore = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const configStore = configureStore({
     deal: dealSlice,
     customer: customerSlice,
     customerCare: customerCareSlice,
+    noti: notiSlice,
   },
 });
 

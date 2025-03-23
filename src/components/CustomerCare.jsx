@@ -41,7 +41,7 @@ function CustomerCare({ customerId }) {
   }, [customerId]);
 
   return (
-    <div className="w-full h-full bg-white">
+    <div className="w-full h-full bg-white flex flex-col">
       {openFormInteraction && (
         <CreateInteractionForm
           setIsOpen={setOpenFormInteraction}

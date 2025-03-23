@@ -6,26 +6,29 @@ import product from "../assets/product.png";
 import logoutImg from "../assets/logout.png";
 import { useAuth } from "../context/AuthContext";
 import UserIcon from "../assets/UserIcon";
-import TodoIcon from "../assets/TodoIcon";
-import NoteIcon from "../assets/NoteIcon";
+import Notification from "../pages/Notification";
+import { useState } from "react";
+import NotiIcon from "../assets/NotiIcon";
 
 const Sidebar = () => {
   const { logout } = useAuth();
-
+  const [openNoti, setOpenNoti] = useState(false);
   return (
-    <div className="w-[20%] bg-white border-r-2 border-gray-100 h-screen p-4 ">
+    <div className="w-[20%] bg-white border-r-2 border-gray-100 h-screen p-4 relative">
+      {openNoti && <Notification setOpenNoti={setOpenNoti} />}
+
       <div className="flex items-center mb-10">
         <img src={logo} alt="" style={{ width: 70, height: 70 }} />
         <h2 className="text-xl font-bold">CRM System</h2>
       </div>
       <nav className="h-[80%]">
         <ul className="space-y-4">
-          <li>
+          <li onClick={() => setOpenNoti(!openNoti)}>
             <Link
-              to="/notifications"
+              // to="/notifications"
               className="block p-2 hover:bg-gray-200 rounded flex items-center"
             >
-              <img src={noti} alt="" className="mr-2" width={30} height={30} />
+              <NotiIcon className={"w-[30px] h-[30px] mr-2"} />
               Notifications
             </Link>
           </li>

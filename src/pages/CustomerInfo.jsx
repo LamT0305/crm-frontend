@@ -39,7 +39,7 @@ function CustomerInfo() {
     }
   }, [id]);
   return (
-    <div className="w-[100%] h-full flex flex-col">
+    <div className="w-[80%] h-full flex flex-col">
       {openDeal && (
         <DealForm setOpenDeal={setOpenDeal} customerId={customer._id} />
       )}

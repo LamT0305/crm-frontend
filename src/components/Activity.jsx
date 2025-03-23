@@ -16,7 +16,7 @@ function Activity({ id }) {
     }
   }, [id]);
   return (
-    <div className="bg-white h-full px-8 py-5">
+    <div className="bg-white flex flex-col h-full px-8 py-5">
       <p className="font-bold text-xl">Activity</p>
       {activities.length === 0 ? (
         <>

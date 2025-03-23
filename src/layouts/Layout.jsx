@@ -3,10 +3,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import { useEffect } from "react";
+import useNotification from "../hooks/useNotification";
 
 const Layout = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  useNotification();
 
   useEffect(() => {
     if (!isAuthenticated) {
