@@ -2,22 +2,36 @@ export const GET_API = (id) => {
   return {
     profile: "/auth/profile",
     login: "/auth/google",
+    //leads & customers
     getLeads: `/customer/get-all-leads`,
     getCustomers: `/customer/customers`,
     getCustomerById: `/customer/get-customer/${id}`,
+
+    //sources
     getSources: "/source/get-sources",
+    // activities
     getActivities: `/activity/get-activities/${id}`,
+    //comments
     getComments: `/comment/get-comments/${id}`,
+    //tasks
     getAllTasks: `/task/get-tasks`,
     getTasksOfCustomer: `/task/get-tasks-of-customer/${id}`,
     getTaskById: `/task/get-task/${id}`,
+    //notes
     getAllNote: `/note/get-notes`,
     getCustomerNote: `/note/get-customer-notes/${id}`,
     getNoteById: `/note/get-note/${id}`,
+
+    //products
     getAllproducts: `/product/products`,
     getProduct: `/product/get-product/${id}`,
+
+    //deals
     getDeals: `/deal/get-deals`,
     getDealById: `/deal/get-deal/${id}`,
+    getDealsOfCustomer: `/deal/get-deals-by-customer/${id}`,
+
+    //customer care
     getCustomerCareByCustomer: `/customer-care/customer-care/${id}`,
     getCustomerCareById: `/customer-care/get-customer-care/${id}`,
   };

@@ -137,6 +137,60 @@ const dealSlice = createSlice({
     setTotalPages: (state, action) => {
       state.totalPages = action.payload;
     },
+    // Deals of customer
+    getDealsOfCustomer: (state, action) => {
+      state.deals = action.payload;
+      state.filteredDeals = action.payload;
+      state.displayedDeals = action.payload.slice(0, 15);
+      state.totalPages = Math.ceil(action.payload.length / 15);
+    },
+
+    filterDealsOfCustomer: (state, action) => {
+      const { field, value } = action.payload;
+
+      if (!field || value === undefined) {
+        state.filteredDeals = state.deals;
+        state.displayedDeals = state.deals.slice(0, 15);
+        state.totalPages = Math.ceil(state.deals.length / 15);
+        return;
+      }
+
+      const getNestedValue = (obj, path) => {
+        const keys = path.split(".");
+        let value = obj;
+        for (const key of keys) {
+          value = value?.[key];
+          if (value === undefined) return "";
+        }
+        return value;
+      };
+
+      state.filteredDeals = state.deals.filter((deal) => {
+        const fieldValue = getNestedValue(deal, field);
+        return fieldValue
+          ?.toString()
+          .toLowerCase()
+          .includes(value.toLowerCase());
+      });
+
+      state.displayedDeals = state.filteredDeals.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredDeals.length / 15);
+    },
+
+    sortDealsByDate: (state, action) => {
+      const order = action.payload;
+
+      state.filteredDeals = [...state.filteredDeals].sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return order === "asc"
+          ? dateA.getTime() - dateB.getTime()
+          : dateB.getTime() - dateA.getTime();
+      });
+
+      state.displayedDeals = state.filteredDeals.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredDeals.length / 15);
+    },
   },
 });
 
@@ -152,6 +206,9 @@ export const {
   deleteDeal,
   clearDeal,
   setTotalPages,
+  getDealsOfCustomer,
+  filterDealsOfCustomer,
+  sortDealsByDate,
 } = dealSlice.actions;
 
 export default dealSlice.reducer;

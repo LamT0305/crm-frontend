@@ -62,6 +62,14 @@ function CustomerNavigation({ tagName, setTagName }) {
         >
           Customer Care
         </li>
+        <li
+          onClick={() => setTagName("deal")}
+          className={`px-6 py-4 hover:bg-gray-200 cursor-pointer rounded-t-lg  ${
+            tagName === "deal" ? "text-black border-b" : "text-gray-400"
+          }`}
+        >
+          Deals
+        </li>
       </ul>
     </div>
   );

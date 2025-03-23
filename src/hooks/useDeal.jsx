@@ -13,7 +13,10 @@ import {
   sortDeal,
   filterDeal,
   setTotalPages,
-  setCurrentPage
+  setCurrentPage,
+  getDealsOfCustomer,
+  filterDealsOfCustomer,
+  sortDealsByDate,
 } from "../redux/slice/dealSlice";
 import { notify } from "../utils/Toastify";
 
@@ -165,6 +168,47 @@ const useDeal = () => {
     dispatch(clearDeal());
   };
 
+  const handleGetCustomerDeals = async (customerId) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(
+        GET_API(customerId).getDealsOfCustomer,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(getDealsOfCustomer(res.data.data.deals));
+        return res.data.data.deals;
+      }
+    } catch (error) {
+      console.log(error);
+      notify.error("Failed to fetch customer deals");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleFilterCustomerDeals = (field, value) => {
+    try {
+      dispatch(filterDealsOfCustomer({ field, value }));
+    } catch (error) {
+      console.log(error);
+      notify.error("Error filtering customer deals");
+    }
+  };
+
+  const handleSortCustomerDealsByDate = (order) => {
+    try {
+      dispatch(sortDealsByDate(order));
+    } catch (error) {
+      console.log(error);
+      notify.error("Error sorting customer deals");
+    }
+  };
+
   return {
     isLoading,
     deals: displayedDeals,
@@ -180,6 +224,9 @@ const useDeal = () => {
     handleSortDeals,
     handleFilterDeals,
     handleChangePage,
+    handleGetCustomerDeals,
+    handleFilterCustomerDeals,
+    handleSortCustomerDealsByDate,
   };
 };
 

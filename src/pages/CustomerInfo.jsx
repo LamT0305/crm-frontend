@@ -13,12 +13,25 @@ import Note from "../components/Note";
 import Comment from "../components/Comment";
 import DealForm from "../components/form/DealForm";
 import CustomerCare from "../components/CustomerCare";
+import CustomerDeal from "../components/CustomerDeal";
 function CustomerInfo() {
   const { id } = useParams();
   const { customer, handleGetCustomerById } = useLead();
   const [tagName, setTagName] = useState("activity"); // default
   const [openDeal, setOpenDeal] = useState(false);
   const [openForm, setOpen] = useState(false);
+
+  const defaultColumns = [
+    // { key: "customerId._id", value: "Customer ID" },
+    { key: "customerId.firstName", value: "First Name" },
+    { key: "customerId.lastName", value: "Last Name" },
+    { key: "quotationId.totalPrice", value: "Total Amount" },
+    { key: "quotationId.discount.type", value: "Discount Type" },
+    { key: "quotationId.discount.value", value: "Discount Value" },
+    { key: "quotationId.finalPrice", value: "Final Price" },
+    { key: "status", value: "Status" },
+    { key: "createdAt", value: "Created At" },
+  ];
 
   useEffect(() => {
     if (id) {
@@ -47,6 +60,9 @@ function CustomerInfo() {
           {tagName === "note" ? <Note customerId={customer._id} /> : null}
           {tagName === "customer_care" ? (
             <CustomerCare customerId={customer._id} />
+          ) : null}
+          {tagName === "deal" ? (
+            <CustomerDeal customerId={customer._id} columns={defaultColumns}/>
           ) : null}
           <div className="absolute bottom-0 w-[100%]">
             <CustomerFooter
