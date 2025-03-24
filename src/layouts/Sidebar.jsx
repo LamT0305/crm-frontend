@@ -9,6 +9,7 @@ import UserIcon from "../assets/UserIcon";
 import Notification from "../pages/Notification";
 import { useState } from "react";
 import NotiIcon from "../assets/NotiIcon";
+import StatisticIcon from "../assets/StatisticIcon";
 
 const Sidebar = () => {
   const { logout } = useAuth();
@@ -67,7 +68,15 @@ const Sidebar = () => {
               Product Services
             </Link>
           </li>
-
+          <li>
+            <Link
+              to="/statistic"
+              className="block p-2 hover:bg-gray-200 rounded flex items-center"
+            >
+              <StatisticIcon className={"w-[30px] h-[30px] mr-2"} />
+              Statistic
+            </Link>
+          </li>
           <li>
             <div
               className="block p-2 hover:bg-gray-200 rounded flex items-center cursor-pointer"

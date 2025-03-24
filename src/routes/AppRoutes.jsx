@@ -10,7 +10,7 @@ import CustomerInfo from "../pages/CustomerInfo";
 import Deal from "../pages/Deal";
 import Customers from "../pages/Customers";
 import ProductService from "../pages/ProductService";
-
+import Statistic from "../pages/Statistic";
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
             <Route path="/deals" element={<Deal />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/product-services" element={<ProductService />} />
+            <Route path="/statistic" element={<Statistic />} />
           </Route>
         </Route>
 

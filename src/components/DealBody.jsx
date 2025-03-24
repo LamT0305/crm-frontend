@@ -89,6 +89,7 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
     calculateDisplayedPages();
   }, [page, totalPages]);
 
+  console.log(deals)
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="overflow-x-auto px-2 max-h-[72vh]">

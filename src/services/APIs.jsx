@@ -38,6 +38,23 @@ export const GET_API = (id) => {
     // notification
     getNotifications: "/notification",
     getUnreadCount: "/notification/unread/count",
+    //statistics
+    //customer analytic
+    getCustomerStatusDistribution: "analytic/customer/status",
+    getCustomerIndustryDistribution: "/analytic/customer/industry",
+    getCustomerSourceDistribution: "/analytic/customer/source",
+    getMonthlyIncomeDistribution: "/analytic/customer/income",
+    //deal analytic
+    getDealStatusDistribution: "/analytic/deal/status",
+    getDealValueAnalysis: "/analytic/deal/value",
+    getProductPerformance: "/analytic/deal/products",
+    //interaction analytic
+    getInteractionTypeDistribution: "/analytic/interaction/type",
+    getInteractionTimeline: "/analytic/interaction/timeline",
+
+    //sale performance analytic
+    getQuotationAnalysis: "/analytic/sales/quotations",
+    getDiscountAnalysis: "/analytic/sales/discounts",
   };
 };
 
