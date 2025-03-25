@@ -18,6 +18,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
   const { products, handleSetProducts } = useProduct();
   const { handleAddActivity } = useActivity();
   const createRef = useRef(null);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     products: [],
@@ -30,18 +31,59 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
 
   const statusOptions = ["Open", "Negotiation", "Won", "Lost"];
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate customer
+    if (!customerId && !deal) {
+      newErrors.customer = "Please select a customer";
+    }
+
+    // Validate products
+    if (formData.products.length === 0) {
+      newErrors.products = "Please select at least one product";
+    }
+
+    // Validate quantities
+    formData.products.forEach((product) => {
+      if (!product.quantity || product.quantity <= 0) {
+        newErrors[`quantity_${product.productId}`] =
+          "Quantity must be greater than 0";
+      }
+    });
+
+    // Validate discount
+    if (formData.discount.type === "percentage") {
+      if (formData.discount.value < 0 || formData.discount.value > 100) {
+        newErrors.discount = "Percentage discount must be between 0 and 100";
+      }
+    } else {
+      if (formData.discount.value < 0) {
+        newErrors.discount = "Fixed discount cannot be negative";
+      }
+      if (formData.discount.value > subtotal) {
+        newErrors.discount = "Discount cannot exceed subtotal";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!customerId && !deal) {
-      notify.error("Please provide a customer");
+    if (!validateForm()) {
       return;
     }
 
-    // Create proper JSON object
     const dealData = {
       customerId: customerId || deal.customerId._id,
       products: formData.products.map((product) => ({
@@ -55,7 +97,6 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
 
     if (dealId) {
       handleUpdateDeal(dealId, dealData);
-      // activity
       const activity = {
         customerId: deal.customerId._id,
         type: "deal",
@@ -64,8 +105,6 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
       handleAddActivity(activity);
     } else {
       handleAddNewDeal(dealData);
-      // activity
-
       const activity = {
         customerId: customerId,
         type: "deal",
@@ -86,6 +125,63 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
     if (dealId) {
       handleClearDeal();
       setDealId("");
+    }
+  };
+
+  const handleProductSelection = (productId, product) => {
+    const existingProduct = formData.products.find(
+      (p) => p.productId === productId
+    );
+
+    if (existingProduct) {
+      setFormData((prev) => ({
+        ...prev,
+        products: prev.products.filter((p) => p.productId !== productId),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        products: [
+          ...prev.products,
+          {
+            productId: productId,
+            quantity: 1,
+            price: product.price || 0,
+          },
+        ],
+      }));
+    }
+    // Clear product-related errors when selection changes
+    if (errors.products) {
+      setErrors((prev) => ({ ...prev, products: "" }));
+    }
+  };
+
+  const handleQuantityChange = (productId, value) => {
+    const quantity = parseInt(value) || 1;
+    setFormData((prev) => ({
+      ...prev,
+      products: prev.products.map((p) =>
+        p.productId === productId ? { ...p, quantity } : p
+      ),
+    }));
+    // Clear quantity error when changed
+    if (errors[`quantity_${productId}`]) {
+      setErrors((prev) => ({ ...prev, [`quantity_${productId}`]: "" }));
+    }
+  };
+
+  const handleDiscountChange = (value) => {
+    const discountValue = parseFloat(value) || 0;
+    setFormData((prev) => ({
+      ...prev,
+      discount: {
+        ...prev.discount,
+        value: discountValue,
+      },
+    }));
+    if (errors.discount) {
+      setErrors((prev) => ({ ...prev, discount: "" }));
     }
   };
 
@@ -143,33 +239,6 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
 
   const total = subtotal - discountAmount;
 
-  const handleProductSelection = (productId, product) => {
-    const existingProduct = formData.products.find(
-      (p) => p.productId === productId
-    );
-
-    if (existingProduct) {
-      // Remove product if it exists
-      setFormData((prev) => ({
-        ...prev,
-        products: prev.products.filter((p) => p.productId !== productId),
-      }));
-    } else {
-      // Add new product if it doesn't exist
-      setFormData((prev) => ({
-        ...prev,
-        products: [
-          ...prev.products,
-          {
-            productId: productId,
-            quantity: 1,
-            price: product.price || 0,
-          },
-        ],
-      }));
-    }
-  };
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/10 z-100">
       <div
@@ -181,21 +250,14 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
             {dealId ? "Update Deal" : "Create Deal"}
           </h2>
           <div className="w-fit flex items-center">
-            {/* export */}
             {deal && (
               <div
-                onClick={() => {
-                  if (deal) {
-                    exportToExcel(deal);
-                  }
-                }}
+                onClick={() => deal && exportToExcel(deal)}
                 className="bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-400 mr-3"
               >
-                <ExportIcon className={"w-4 h-4 "} color={"black"} />
+                <ExportIcon className="w-4 h-4" color="black" />
               </div>
             )}
-
-            {/* close button */}
             <div
               onClick={() => {
                 setOpenDeal(false);
@@ -205,18 +267,17 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                 }
               }}
             >
-              <CloseIcon
-                className={
-                  "w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-400"
-                }
-              />
+              <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-400" />
             </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
+          {errors.customer && (
+            <div className="text-red-500 text-xs mb-4">{errors.customer}</div>
+          )}
+
           <div className="grid grid-cols-1 gap-4">
-            {/* status */}
             <div className="flex flex-col w-full">
               <span>Status</span>
               <select
@@ -224,7 +285,9 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                 onChange={handleChangeValue}
                 required
                 name="status"
-                className="py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm w-full"
+                className={`py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm w-full ${
+                  errors.status ? "border-2 border-red-500" : ""
+                }`}
               >
                 {statusOptions.map((status) => (
                   <option key={status} value={status}>
@@ -236,10 +299,15 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
           </div>
 
           <hr className="my-6" style={{ color: "lightgrey" }} />
-          {/* product */}
+
           <div className="grid grid-cols-1 gap-4">
             <div className="flex flex-col">
               <span>Products</span>
+              {errors.products && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.products}
+                </span>
+              )}
               <div className="mt-2 space-y-2 max-h-60 overflow-y-auto">
                 {products?.map((product) => (
                   <div
@@ -274,19 +342,20 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                                 (p) => p.productId === product._id
                               )?.quantity || 1
                             }
-                            onChange={(e) => {
-                              const value = parseInt(e.target.value) || 1;
-                              setFormData((prev) => ({
-                                ...prev,
-                                products: prev.products.map((p) =>
-                                  p.productId === product._id
-                                    ? { ...p, quantity: value }
-                                    : p
-                                ),
-                              }));
-                            }}
-                            className="w-20 py-1 px-2 rounded-lg bg-white text-sm"
+                            onChange={(e) =>
+                              handleQuantityChange(product._id, e.target.value)
+                            }
+                            className={`w-20 py-1 px-2 rounded-lg bg-white text-sm ${
+                              errors[`quantity_${product._id}`]
+                                ? "border-2 border-red-500"
+                                : ""
+                            }`}
                           />
+                          {errors[`quantity_${product._id}`] && (
+                            <span className="text-red-500 text-xs">
+                              {errors[`quantity_${product._id}`]}
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-2">
                           <span>Unit:</span>
@@ -307,7 +376,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
               </div>
             </div>
           </div>
-          {/* discount */}
+
           <div className="grid grid-cols-2 gap-4 mt-6">
             <div className="flex flex-col">
               <span>Discount Type</span>
@@ -322,6 +391,9 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                       value: 0,
                     },
                   }));
+                  if (errors.discount) {
+                    setErrors((prev) => ({ ...prev, discount: "" }));
+                  }
                 }}
                 className="py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm"
               >
@@ -340,17 +412,16 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                   formData.discount.type === "percentage" ? "100" : undefined
                 }
                 value={formData.discount.value}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    discount: {
-                      ...prev.discount,
-                      value: parseFloat(e.target.value) || 0,
-                    },
-                  }));
-                }}
-                className="py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm"
+                onChange={(e) => handleDiscountChange(e.target.value)}
+                className={`py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm ${
+                  errors.discount ? "border-2 border-red-500" : ""
+                }`}
               />
+              {errors.discount && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.discount}
+                </span>
+              )}
             </div>
           </div>
 

@@ -112,24 +112,7 @@ const analyticSlice = createSlice({
       };
       state.error = null;
     },
-    clearAnalytics: (state) => {
-      state.customerAnalytics = {
-        statusDistribution: [],
-        industryDistribution: [],
-        sourceDistribution: [],
-        incomeDistribution: [],
-        selectedMonth: null,
-        selectedYear: null,
-      };
-      state.dealAnalytics = {
-        statusDistribution: [],
-        valueAnalysis: [],
-        productPerformance: [],
-        selectedMonth: null,
-        selectedYear: null,
-      };
-      state.error = null;
-    },
+    
     setSelectedDate: (state, action) => {
       const month = Number(action.payload.month);
       const year = Number(action.payload.year);
