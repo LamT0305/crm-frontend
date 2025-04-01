@@ -4,10 +4,21 @@ import Filter from "../components/Filter";
 import CustomerBody from "../components/CustomerBody";
 
 function Customers() {
-  const { handleFilterCustomers, handleSortCustomers, handleSetCustomers } =
-    useCustomer();
+  const {
+    handleFilterCustomers,
+    handleSortCustomers,
+    handleSetCustomers,
+    isLoading,
+  } = useCustomer();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  useEffect(() => {
+    const initializeData = async () => {
+      await handleSetCustomers();
+      setIsInitialLoad(false);
+    };
+    initializeData();
+  }, []);
   const STORAGE_KEY = "selectedCustomerColumns";
 
   const defaultColumns = [
@@ -47,6 +58,14 @@ function Customers() {
   const removeColumn = (key) => {
     setColumns(columns.filter((col) => col.key !== key));
   };
+
+  if (isLoading && isInitialLoad) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="w-[80%] bg-white flex flex-col">
       {/* header */}

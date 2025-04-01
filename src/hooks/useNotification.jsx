@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import { notify } from "../utils/Toastify";
+
 const useNotification = () => {
   const dispatch = useDispatch();
   const { notifications, unreadCount, loading, error } = useSelector(
@@ -23,7 +24,6 @@ const useNotification = () => {
   );
   const token = getToken();
 
-  // Initialize Socket.IO connection
   useEffect(() => {
     const socket = io("https://crm-backend-bz03.onrender.com");
 
@@ -40,20 +40,18 @@ const useNotification = () => {
 
     socket.on("newEmail", (data) => {
       dispatch(addNotification(data.data.notification));
-      // Add toast notification for new email
       notify.info("New email received!");
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [dispatch]);
+  }, [dispatch, token]);
 
-  // Fetch all notifications
   const fetchNotifications = async () => {
     try {
       dispatch(setLoading(true));
-      const response = await axiosInstance.get(GET_API().getNotifications, {
+      const response = await axiosInstance.get(GET_API().notifications, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,14 +66,16 @@ const useNotification = () => {
     }
   };
 
-  // Get unread notifications count
   const fetchUnreadCount = async () => {
     try {
-      const response = await axiosInstance.get(GET_API().getUnreadCount, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.get(
+        GET_API().unreadNotificationsCount,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.status === 200) {
         dispatch(setUnreadCount(response.data.data.count));
       }
@@ -84,11 +84,10 @@ const useNotification = () => {
     }
   };
 
-  // Mark notification as read
   const markAsRead = async (notificationId) => {
     try {
       const response = await axiosInstance.patch(
-        PUT_API(notificationId).markNotificationAsRead,
+        PUT_API(notificationId).notificationRead,
         {},
         {
           headers: {
@@ -98,48 +97,50 @@ const useNotification = () => {
       );
       if (response.status === 200) {
         dispatch(updateNotification(response.data.data));
+        fetchUnreadCount();
       }
     } catch (error) {
       dispatch(setError(error.message));
     }
   };
 
-  // Mark all notifications as read
   const markAllAsReadHandler = async () => {
     try {
       const res = await axiosInstance.patch(
-        PUT_API().markAllNotificationsAsRead,
+        PUT_API().allNotificationsRead,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (res.status === 200) {
         dispatch(markAllAsRead());
+        fetchUnreadCount();
       }
     } catch (error) {
       dispatch(setError(error.message));
     }
   };
 
-  // Delete notification
   const deleteNotificationHandler = async (notificationId) => {
     try {
       const res = await axiosInstance.delete(
-        DELETE_API(notificationId).deleteNotification,
+        DELETE_API(notificationId).notification,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (res.status === 200) {
         dispatch(removeNotification(notificationId));
+        fetchUnreadCount();
       }
     } catch (error) {
       dispatch(setError(error.message));
     }
   };
 
-  // Load initial data
   useEffect(() => {
-    fetchNotifications();
-    fetchUnreadCount();
-  }, []);
+    if (token) {
+      fetchNotifications();
+      fetchUnreadCount();
+    }
+  }, [token]);
 
   return {
     notifications,

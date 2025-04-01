@@ -11,6 +11,8 @@ import Deal from "../pages/Deal";
 import Customers from "../pages/Customers";
 import ProductService from "../pages/ProductService";
 import Statistic from "../pages/Statistic";
+import FirstTimeUser from "../pages/FirstTimeUser";
+import CheckWorkspace from "../pages/CheckWorkspace";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/auth-success" element={<AuthSuccess />} />
+        <Route path="/check-workspace" element={<CheckWorkspace />} />
+        <Route path="/welcome" element={<FirstTimeUser />} />
 
         {/* Protected Routes */}
         <Route element={<Layout />}>

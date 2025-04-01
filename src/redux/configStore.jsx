@@ -13,6 +13,8 @@ import customerSlice from "./slice/customerSlice";
 import customerCareSlice from "./slice/customerCareSlice";
 import notiSlice from "./slice/notiSlice";
 import analyticSlice from "./slice/analyticSlice";
+import workspaceSlice from "./slice/workspaceSlice";
+import category from "./slice/categorySlice";
 
 export const configStore = configureStore({
   reducer: {
@@ -30,6 +32,8 @@ export const configStore = configureStore({
     customerCare: customerCareSlice,
     noti: notiSlice,
     analytic: analyticSlice,
+    workspace: workspaceSlice,
+    category: category,
   },
 });
 

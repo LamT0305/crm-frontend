@@ -4,10 +4,9 @@ import ChatIcon from "../assets/commentIcon";
 import CloseIcon from "../assets/CloseIcon";
 import useActivity from "../hooks/useActivity";
 
-function Comment({ customerId }) {
+function Comment({ customerId, setOpenForm }) {
   const { isLoading, comments, handleGetComments, handleDeleteCmt } =
     useComment();
-  const { handleAddActivity } = useActivity();
   useEffect(() => {
     if (customerId) {
       handleGetComments(customerId);
@@ -15,13 +14,7 @@ function Comment({ customerId }) {
   }, [customerId]);
 
   const onDelete = (id, content) => {
-    handleDeleteCmt(id);
-    const activity = {
-      customerId: customerId,
-      type: "comment",
-      subject: "has deleted comment: " + '"' + content + '"',
-    };
-    handleAddActivity(activity);
+    handleDeleteCmt(id, customerId, content);
   };
 
   return (
@@ -29,12 +22,14 @@ function Comment({ customerId }) {
       {/* Header */}
       <div className="flex items-center justify-between shadow-md py-2 px-8">
         <p className="font-bold text-lg">Comments</p>
-        <p className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white hover:bg-gray-200 hover:text-black">
+        <p 
+        onClick={() => setOpenForm(true)}
+        className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white hover:bg-gray-200 hover:text-black">
           + Comment
         </p>
       </div>
 
-      {comments.length === 0 ? (
+      {comments && comments.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-gray-400 h-full">
           <ChatIcon className={"h-8 w-8 text-gray-400"} />
           <p>Comment empty</p>

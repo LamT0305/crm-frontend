@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useProduct from "../../hooks/useProduct";
+import useCategory from "../../hooks/useCategory";
+import Category from "../../components/Category";
 import CloseIcon from "../../assets/CloseIcon";
 
 const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
@@ -10,34 +12,27 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
     handleClearProduct,
     handleUpdateProduct,
   } = useProduct();
+  const { handleSetCategories } = useCategory();
   const createRef = useRef(null);
   const [errors, setErrors] = useState({});
+  const [openCategoryDropdown, setOpenCategoryDropdown] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
-    category: "",
+    category: { _id: "", name: "" },
     stock: "",
     unit: "",
     status: "",
   });
 
-  const categories = [
-    "pt-training",
-    "annual-training",
-    "supplement",
-    "stretching",
-  ];
-
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
 
-    // Prevent non-numeric characters in price and stock
     if ((name === "price" || name === "stock") && !/^\d*\.?\d*$/.test(value)) {
       return;
     }
 
-    // Prevent numbers in unit field
     if (name === "unit" && /\d/.test(value)) {
       return;
     }
@@ -51,39 +46,26 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Name validation
-    if (!/^[a-zA-Z0-9\s]{3,50}$/.test(formData.name.trim())) {
+    if (!/^[a-zA-Z0-9\s\-+(),.]{3,50}$/.test(formData.name.trim())) {
       newErrors.name = "Product name should be 3-50 characters";
     }
 
-    // Description validation
     if (formData.description.trim().length < 10) {
       newErrors.description = "Description should be at least 10 characters";
     }
 
-    // Price validation
     if (!formData.price || parseFloat(formData.price) <= 0) {
       newErrors.price = "Price must be greater than 0";
     }
 
-    // Category validation
-    if (!categories.includes(formData.category)) {
+    if (!formData.category._id) {
       newErrors.category = "Please select a valid category";
     }
 
-    // Stock validation for supplements
-    if (formData.category === "supplement") {
-      if (!formData.stock || parseInt(formData.stock) < 0) {
-        newErrors.stock = "Stock must be 0 or greater for supplements";
-      }
-    }
-
-    // Unit validation
     if (!/^[a-zA-Z\s]{2,20}$/.test(formData.unit.trim())) {
       newErrors.unit = "Unit should be 2-20 characters, letters only";
     }
 
-    // Status validation
     if (!["Active", "Inactive"].includes(formData.status)) {
       newErrors.status = "Please select a valid status";
     }
@@ -91,30 +73,34 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) {
       return;
     }
-    const form = new FormData();
-    form.append("name", formData.name);
-    form.append("description", formData.description);
-    form.append("price", formData.price);
-    form.append("category", formData.category);
-    form.append("stock", formData.stock);
-    form.append("unit", formData.unit);
-    form.append("status", formData.status);
+
+    const productData = {
+      name: formData.name.trim(),
+      description: formData.description.trim(),
+      price: parseFloat(formData.price),
+      category: formData.category._id,
+      stock: parseInt(formData.stock) || 0,
+      unit: formData.unit.trim(),
+      status: formData.status,
+    };
 
     if (productId) {
-      handleUpdateProduct(productId, form);
+      handleUpdateProduct(productId, productData);
     } else {
-      handleAddNewProduct(form);
+      handleAddNewProduct(productData);
     }
+
     setFormData({
       name: "",
       description: "",
       price: "",
-      category: "",
+      category: { _id: "", name: "" },
       stock: "",
       unit: "",
       status: "",
@@ -125,6 +111,7 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
   };
 
   useEffect(() => {
+    handleSetCategories();
     const handleClickOutside = (e) => {
       if (createRef.current && !createRef.current.contains(e.target)) {
         setIsOpen(false);
@@ -133,7 +120,7 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
           name: "",
           description: "",
           price: "",
-          category: "",
+          category: { _id: "", name: "" },
           stock: "",
           unit: "",
           status: "Active",
@@ -145,7 +132,6 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // set product by Id if exist
   useEffect(() => {
     if (productId) {
       handleGetProductById(productId);
@@ -171,7 +157,7 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
       name: "",
       description: "",
       price: "",
-      category: "",
+      category: { _id: "", name: "" },
       stock: "",
       unit: "",
       status: "Active",
@@ -262,24 +248,25 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
           <hr className="my-6" style={{ color: "lightgrey" }} />
 
           <div className="grid grid-cols-2 gap-4">
-            <label className="flex flex-col">
+            <label className="flex flex-col relative">
               Category
-              <select
-                value={formData.category || ""}
-                onChange={handleChangeValue}
-                required
-                name="category"
-                className={`py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm ${
+              <div
+                onClick={() => setOpenCategoryDropdown(!openCategoryDropdown)}
+                className={`py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm cursor-pointer ${
                   errors.category ? "border-2 border-red-500" : ""
                 }`}
               >
-                <option value="">Select Category</option>
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
+                {formData.category?.name || "Select Category"}
+              </div>
+              {openCategoryDropdown && (
+                <div className="absolute top-16 left-0 w-full z-10">
+                  <Category
+                    setFormData={setFormData}
+                    setOpenCategoryDropdown={setOpenCategoryDropdown}
+                    required={true}
+                  />
+                </div>
+              )}
               {errors.category && (
                 <span className="text-red-500 text-xs mt-1">
                   {errors.category}
@@ -310,7 +297,6 @@ const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
               <input
                 value={formData.stock || ""}
                 onChange={handleChangeValue}
-                required={formData.category === "supplement"}
                 type="number"
                 min="0"
                 name="stock"

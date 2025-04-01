@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "../assets/CloseIcon";
 import useProduct from "../hooks/useProduct";
+import useWorkspace from "../hooks/useWorkspace";
 
 function ProductBody({ columns, setOpenForm, setProductId }) {
-  const navigate = useNavigate();
   const {
     products,
     totalPages,
@@ -12,12 +12,13 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
     handleDeleteProduct,
     handleChangePage,
   } = useProduct();
+  const { currentWorkspace } = useWorkspace();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
     handleSetProducts();
-  }, []); // Fetch all products once
+  }, [currentWorkspace]); // Fetch all products once
 
   useEffect(() => {
     handleChangePage(page);

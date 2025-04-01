@@ -16,6 +16,7 @@ import { DELETE_API, GET_API, POST_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
 import useActivity from "./useActivity";
 import { notify } from "../utils/Toastify";
+import { useNavigate } from "react-router-dom";
 
 const useLead = () => {
   const { handleAddActivity } = useActivity();
@@ -23,11 +24,12 @@ const useLead = () => {
     useSelector((state) => state.lead);
   const dispatch = useDispatch();
   const token = getToken();
+  const navigate = useNavigate();
 
   const handleSetLeads = async () => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(0).getLeads, {
+      const res = await axiosInstance.get(GET_API().leads, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,7 +80,7 @@ const useLead = () => {
     try {
       if (!lead) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.post(POST_API().createlead, lead, {
+      const res = await axiosInstance.post(POST_API().customer, lead, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -114,7 +116,7 @@ const useLead = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.delete(DELETE_API(id).deleteCustomer, {
+      const res = await axiosInstance.delete(DELETE_API(id).customer, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -137,7 +139,7 @@ const useLead = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(id).getCustomerById, {
+      const res = await axiosInstance.get(GET_API(id).customerById, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -145,11 +147,14 @@ const useLead = () => {
 
       if (res.status === 200) {
         dispatch(getLeadById(res.data.data));
-        return res.data.data;
       }
     } catch (error) {
-      console.log(error);
-      notify.error("Failed to fetch customer details");
+      if (error.status === 404) {
+        navigate("/");
+      } else {
+        console.log(error);
+        notify.error("Failed to fetch customer");
+      }
     } finally {
       dispatch(setLoading(false));
     }

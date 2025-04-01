@@ -5,7 +5,6 @@ import {
   addSource,
   deleteSource,
 } from "../redux/slice/sourceSlice";
-
 import axiosInstance from "../services/Axios";
 import { getToken } from "../utils/auth";
 import { DELETE_API, GET_API, POST_API } from "../services/APIs";
@@ -17,24 +16,28 @@ const useSource = () => {
 
   const handleGetSources = async () => {
     try {
-      const res = await axiosInstance.get(GET_API().getSources, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(GET_API().sources, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (res.status === 200) {
-        dispatch(setSources(res.data.sources));
+        dispatch(setSources(res.data.data.sources));
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleAddSource = async (source) => {
     try {
+      dispatch(setLoading(true));
       const res = await axiosInstance.post(
-        POST_API().createSource,
+        POST_API().source,
         { name: source },
         {
           headers: {
@@ -44,16 +47,19 @@ const useSource = () => {
       );
 
       if (res.status === 200) {
-        dispatch(addSource(res.data.source));
+        dispatch(addSource(res.data.data));
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleDeleteSource = async (id) => {
     try {
-      const res = await axiosInstance.delete(DELETE_API(id).deleteSource, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.delete(DELETE_API(id).source, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,6 +69,8 @@ const useSource = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

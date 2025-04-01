@@ -1,9 +1,11 @@
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
-export const exportToExcel = (deal) => {
-  const workbook = XLSX.utils.book_new();
+export const exportToExcel = async (deal) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Quotation");
 
-  const quotationData = [
+  // Add data
+  worksheet.addRows([
     ["Quotation Details"],
     [""],
     ["Customer Information"],
@@ -13,14 +15,22 @@ export const exportToExcel = (deal) => {
     [""],
     ["Products"],
     ["Name", "Category", "Unit", "Price", "Quantity", "Total"],
-    ...deal.products.map((product) => [
+  ]);
+
+  // Add product rows
+  deal.products.forEach((product) => {
+    worksheet.addRow([
       product.productId.name,
       product.productId.category,
       product.productId.unit,
       `$${product.productId.price}`,
       product.quantity,
       `$${product.productId.price * product.quantity}`,
-    ]),
+    ]);
+  });
+
+  // Add summary
+  worksheet.addRows([
     [""],
     ["Summary"],
     ["Total Price", `$${deal.quotationId.totalPrice}`],
@@ -34,16 +44,13 @@ export const exportToExcel = (deal) => {
     ["Final Price", `$${deal.quotationId.finalPrice}`],
     [""],
     ["Created Date", new Date(deal.createdAt).toLocaleDateString()],
-  ];
+  ]);
 
-  const worksheet = XLSX.utils.aoa_to_sheet(quotationData);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Quotation");
-
-  // Auto-size columns
-  const maxWidth = quotationData.reduce((w, r) => Math.max(w, r.length), 0);
-  const wscols = Array(maxWidth).fill({ wch: 15 });
-  worksheet["!cols"] = wscols;
+  // Auto-fit columns
+  worksheet.columns.forEach((column) => {
+    column.width = 15;
+  });
 
   // Save file
-  XLSX.writeFile(workbook, `Quotation-${deal._id}.xlsx`);
+  await workbook.xlsx.writeFile(`Quotation-${deal._id}.xlsx`);
 };

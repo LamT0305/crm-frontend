@@ -2,13 +2,15 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "./Sidebar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useNotification from "../hooks/useNotification";
+import AddWorkspaceForm from "../components/form/AddWorkspaceForm";
 
 const Layout = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   useNotification();
+  const [addWS, setAddWS] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -23,9 +25,11 @@ const Layout = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar Navigation */}
-      <Sidebar />
+      <Sidebar setAddWS={setAddWS} />
       {/* Dynamic Page Content */}
       <Outlet />
+
+      {addWS && <AddWorkspaceForm setWS={setAddWS} />}
     </div>
   );
 };

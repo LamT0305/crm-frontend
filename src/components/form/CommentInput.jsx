@@ -5,21 +5,13 @@ import useActivity from "../../hooks/useActivity";
 function CommentForm({ setOpenCmt, customerId }) {
   const [text, setText] = useState("");
   const { handleAddComment } = useComment();
-  const { handleAddActivity } = useActivity();
   const handleAdd = () => {
     const comment = new FormData();
     comment.append("customerId", customerId);
     comment.append("content", text);
 
-    const activity = {
-      customerId: customerId,
-      type: "comment",
-      subject: `added a comment "${text}"`,
-    };
-
     if (customerId) {
-      handleAddComment(comment);
-      handleAddActivity(activity);
+      handleAddComment(comment, customerId);
     }
     setText("");
     setOpenCmt(false);

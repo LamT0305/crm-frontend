@@ -15,7 +15,7 @@ const AuthSuccess = () => {
     if (token) {
       storeToken(token);
       setAuthenticated(true);
-      navigate("/leads"); // Redirect to dashboard
+      navigate("/"); // Redirect to dashboard
     } else {
       navigate("/login");
     }

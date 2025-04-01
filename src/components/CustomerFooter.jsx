@@ -4,28 +4,34 @@ import ChatIcon from "../assets/commentIcon";
 import EmailForm from "./form/EmailForm";
 import CommentForm from "./form/CommentInput";
 
-function CustomerFooter({ customerEmail, id, openForm, setOpen }) {
-  const [openComment, setOpenCmt] = useState(false);
+function CustomerFooter({
+  customerEmail,
+  id,
+  openFormEmail,
+  setOpenEmail,
+  openCommentForm,
+  setOpenCommentForm,
+}) {
   return (
     <>
-      {openForm && !openComment ? (
+      {openFormEmail && !openCommentForm ? (
         <EmailForm
           customerEmail={customerEmail}
-          setOpenEmail={setOpen}
+          setOpenEmail={setOpenEmail}
           customerId={id}
         />
       ) : null}
 
-      {!openForm && openComment ? (
-        <CommentForm setOpenCmt={setOpenCmt} customerId={id} />
+      {!openFormEmail && openCommentForm ? (
+        <CommentForm setOpenCmt={setOpenCommentForm} customerId={id} />
       ) : null}
 
-      {!openComment && !openForm ? (
+      {!openCommentForm && !openFormEmail ? (
         <div className="flex items-center bg-white w-[100%] py-3 px-3 text-lg border-r border-gray-300 shadow-sm">
           <div
             onClick={() => {
-              setOpen(true);
-              setOpenCmt(false);
+              setOpenEmail(true);
+              setOpenCommentForm(false);
             }}
             className="flex items-center hover:bg-gray-200 w-fit px-2 py-1 rounded-md cursor-pointer"
           >
@@ -34,8 +40,8 @@ function CustomerFooter({ customerEmail, id, openForm, setOpen }) {
           </div>
           <div
             onClick={() => {
-              setOpen(false);
-              setOpenCmt(true);
+              setOpenEmail(false);
+              setOpenCommentForm(true);
             }}
             className="flex items-center hover:bg-gray-200 w-fit px-2 py-1 rounded-md cursor-pointer"
           >

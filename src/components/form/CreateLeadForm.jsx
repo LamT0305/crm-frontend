@@ -306,7 +306,7 @@ const CreateLeadForm = ({ setIsOpen }) => {
                 </span>
               )}
               {openSourceDropdown && (
-                <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-xl z-20 mt-2">
+                <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-2xl z-20 mt-2">
                   <Source
                     sources={sources}
                     setFormData={setFormData}

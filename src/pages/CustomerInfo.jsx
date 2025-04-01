@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CustomerHeader from "../components/CustomerHeader";
 import CustomerNavigation from "../components/CustomerNavigation";
 import CustomerFooter from "../components/CustomerFooter";
@@ -14,12 +14,16 @@ import Comment from "../components/Comment";
 import DealForm from "../components/form/DealForm";
 import CustomerCare from "../components/CustomerCare";
 import CustomerDeal from "../components/CustomerDeal";
+import useWorkspace from "../hooks/useWorkspace";
 function CustomerInfo() {
   const { id } = useParams();
-  const { customer, handleGetCustomerById } = useLead();
+  const navigate = useNavigate();
+  const { customer, handleGetCustomerById, isLoading } = useLead();
+  const { currentWorkspace } = useWorkspace();
   const [tagName, setTagName] = useState("activity"); // default
   const [openDeal, setOpenDeal] = useState(false);
   const [openForm, setOpen] = useState(false);
+  const [openComment, setOpenCmt] = useState(false);
 
   const defaultColumns = [
     // { key: "customerId._id", value: "Customer ID" },
@@ -37,7 +41,16 @@ function CustomerInfo() {
     if (id) {
       handleGetCustomerById(id);
     }
-  }, [id]);
+  }, [id, currentWorkspace]);
+
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="w-[80%] h-full flex flex-col">
       {openDeal && (
@@ -52,7 +65,9 @@ function CustomerInfo() {
           {tagName === "email" ? (
             <Email customer={customer} setOpenEmailForm={setOpen} />
           ) : null}
-          {tagName === "comment" ? <Comment customerId={customer._id} /> : null}
+          {tagName === "comment" ? (
+            <Comment customerId={customer._id} setOpenForm={setOpenCmt} />
+          ) : null}
           {tagName === "data" ? <Data customerId={customer._id} /> : null}
           {tagName === "task" ? (
             <Task customerId={customer._id} user={customer.userId} />
@@ -62,14 +77,16 @@ function CustomerInfo() {
             <CustomerCare customerId={customer._id} />
           ) : null}
           {tagName === "deal" ? (
-            <CustomerDeal customerId={customer._id} columns={defaultColumns}/>
+            <CustomerDeal customerId={customer._id} columns={defaultColumns} />
           ) : null}
           <div className="absolute bottom-0 w-[100%]">
             <CustomerFooter
               customerEmail={customer?.email}
               id={customer._id}
-              openForm={openForm}
-              setOpen={setOpen}
+              openFormEmail={openForm}
+              setOpenEmail={setOpen}
+              openCommentForm={openComment}
+              setOpenCommentForm={setOpenCmt}
             />
           </div>
         </div>

@@ -5,15 +5,19 @@ import ProductBody from "../components/ProductBody";
 import useProduct from "../hooks/useProduct";
 
 function ProductService() {
-  const { handleFilterProducts, handleSortProducts, handleSetProducts } =
-    useProduct();
+  const {
+    handleFilterProducts,
+    handleSortProducts,
+    handleSetProducts,
+    isLoading,
+  } = useProduct();
   const [productId, setProductId] = useState(null);
 
   const STORAGE_KEY = "selectedColumnsProductService";
   const defaultColumns = [
     { key: "name", value: "Product Name" },
     { key: "price", value: "Price" },
-    { key: "category", value: "Category" },
+    { key: "category.name", value: "Category" },
     { key: "unit", value: "Unit" },
     { key: "stock", value: "Stock" },
     { key: "status", value: "Status" },
@@ -48,6 +52,21 @@ function ProductService() {
 
   // open form
   const [isOpenForm, setIsOpenForm] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  useEffect(() => {
+    const initializeData = async () => {
+      await handleSetProducts();
+      setIsInitialLoad(false);
+    };
+    initializeData();
+  }, []);
+  if (isLoading && isInitialLoad) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="w-[80%] bg-white flex flex-col h-full">
       {/* form */}

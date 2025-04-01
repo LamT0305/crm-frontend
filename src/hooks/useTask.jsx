@@ -12,15 +12,21 @@ import {
   filterTask,
   sortTask,
 } from "../redux/slice/taskSlice";
+import { notify } from "../utils/Toastify";
+import useActivity from "./useActivity";
 
 const useTask = () => {
   const { isLoading, filteredTasks, task } = useSelector((state) => state.task);
+  const { handleAddActivity } = useActivity();
+
   const dispatch = useDispatch();
   const token = getToken();
 
-  const handleGetAllTasks = async () => {
+  const handleGetTasksOfCustomer = async (customerId) => {
     try {
-      const res = await axiosInstance.get(GET_API().getAllTasks, {
+      if (!customerId) return;
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(GET_API(customerId).customerTasks, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -31,32 +37,16 @@ const useTask = () => {
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to fetch customer tasks");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
-  const handleGetTasksOfCustomer = async (customerId) => {
+  const handleAddTask = async (task, customerId) => {
     try {
-      if (customerId === undefined) return;
-      const res = await axiosInstance.get(
-        GET_API(customerId).getTasksOfCustomer,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (res.status === 200) {
-        dispatch(setTasks(res.data.data));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleAddTask = async (task) => {
-    try {
-      const res = await axiosInstance.post(POST_API().createTask, task, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.post(POST_API().task, task, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,15 +54,26 @@ const useTask = () => {
 
       if (res.status === 200) {
         dispatch(addTask(res.data.data));
+        notify.success("Task added successfully");
+        const activity = {
+          customerId: customerId,
+          type: "task",
+          subject: "updated a task: " + '"' + task.get("title") + '"',
+        };
+        handleAddActivity(activity);
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to add task");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
-  const handleUpdateTask = async (id, task) => {
+  const handleUpdateTask = async (id, task, customerId) => {
     try {
-      const res = await axiosInstance.put(PUT_API(id).updateTask, task, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.put(PUT_API(id).task, task, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -80,30 +81,46 @@ const useTask = () => {
 
       if (res.status === 200) {
         dispatch(updateTask(res.data.data));
+        notify.success("Task updated successfully");
+        const activity = {
+          customerId: customerId,
+          type: "task",
+          subject: "updated a task: " + '"' + task.get("title") + '"',
+        };
+        handleAddActivity(activity);
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to update task");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleDeleteTask = async (id) => {
     try {
-      const res = await axiosInstance.delete(DELETE_API(id).deleteTask, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.delete(DELETE_API(id).task, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (res.status === 200) {
         dispatch(deleteTask(id));
+        notify.success("Task deleted successfully");
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to delete task");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleGetTaskById = async (id) => {
     try {
-      const res = await axiosInstance.get(GET_API(id).getTaskById, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(GET_API(id).taskById, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -114,9 +131,13 @@ const useTask = () => {
       }
     } catch (error) {
       console.log(error);
+      notify.error("Failed to fetch task details");
+    } finally {
+      dispatch(setLoading(false));
     }
   };
-  const handleFilterTasks = async (field, value) => {
+
+  const handleFilterTasks = (field, value) => {
     try {
       if (!field || value === undefined) {
         return;
@@ -124,10 +145,11 @@ const useTask = () => {
       dispatch(filterTask({ field, value }));
     } catch (error) {
       console.error("Error in handleFilterTasks:", error);
+      notify.error("Error filtering tasks");
     }
   };
 
-  const handleSortTasks = async (field, order) => {
+  const handleSortTasks = (field, order) => {
     try {
       if (!field || order === undefined) {
         return;
@@ -135,13 +157,14 @@ const useTask = () => {
       dispatch(sortTask({ field, order }));
     } catch (error) {
       console.log(error);
+      notify.error("Error sorting tasks");
     }
   };
+
   return {
     isLoading,
     tasks: filteredTasks,
     task,
-    handleGetAllTasks,
     handleGetTasksOfCustomer,
     handleAddTask,
     handleUpdateTask,

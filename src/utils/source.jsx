@@ -12,8 +12,8 @@ export const Source = ({
   const [newSource, setNewSource] = useState("");
 
   return (
-    <div className="p-2 border border-gray-300 rounded-2xl bg-white max-h-50 overflow-auto">
-      <dir className="flex items-center justify-between px-1 text-sm mb-2">
+    <div className="p-2 border border-gray-100 rounded-3xl bg-white max-h-50 overflow-auto">
+      <dir className="flex items-center justify-between text-sm my-1">
         <input
           type="text"
           value={newSource}
@@ -58,7 +58,7 @@ export const Source = ({
                 sourceId: { key: "", value: "" },
               }));
             }}
-            className="hover:bg-black hover:text-white px-2 py-1 rounded-lg cursor-pointer text-sm"
+            className="bg-black text-white hover:bg-gray-200 hover:text-black px-2 py-1 rounded-lg cursor-pointer text-sm"
           >
             Del
           </p>

@@ -5,9 +5,18 @@ import DealBody from "../components/DealBody";
 import useDeal from "../hooks/useDeal";
 
 function Deal() {
-  const { handleFilterDeals, handleSortDeals, handleSetDeals } = useDeal();
+  const { handleFilterDeals, handleSortDeals, handleSetDeals, isLoading } =
+    useDeal();
   const [openDealForm, setOpenDealForm] = useState(false);
   const [dealId, setDealId] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  useEffect(() => {
+    const initializeData = async () => {
+      await handleSetDeals();
+      setIsInitialLoad(false);
+    };
+    initializeData();
+  }, []);
   const STORAGE_KEY = "selectedDealColumns";
 
   const defaultColumns = [
@@ -48,6 +57,14 @@ function Deal() {
   const removeColumn = (key) => {
     setColumns(columns.filter((col) => col.key !== key));
   };
+
+  if (isLoading && isInitialLoad) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="w-[80%] bg-white flex flex-col">
       {openDealForm && (

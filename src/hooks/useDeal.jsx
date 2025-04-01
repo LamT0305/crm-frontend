@@ -30,7 +30,7 @@ const useDeal = () => {
   const handleSetDeals = async () => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(0).getDeals, {
+      const res = await axiosInstance.get(GET_API().deals, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ const useDeal = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(id).getDealById, {
+      const res = await axiosInstance.get(GET_API(id).dealById, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,7 +77,7 @@ const useDeal = () => {
     try {
       if (!deal) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.post(POST_API().createDeal, deal, {
+      const res = await axiosInstance.post(POST_API().deal, deal, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,12 +86,10 @@ const useDeal = () => {
       if (res.status === 200) {
         dispatch(addDeal(res.data.data));
         notify.success("Deal created successfully");
-        return true;
       }
     } catch (error) {
       console.log(error);
       notify.error("Deal creation failed");
-      return false;
     } finally {
       dispatch(setLoading(false));
     }
@@ -101,7 +99,7 @@ const useDeal = () => {
     try {
       if (!id || !dealData) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.put(PUT_API(id).updateDeal, dealData, {
+      const res = await axiosInstance.put(PUT_API(id).deal, dealData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -124,7 +122,7 @@ const useDeal = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.delete(DELETE_API(id).deleteDeal, {
+      const res = await axiosInstance.delete(DELETE_API(id).deal, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -170,18 +168,17 @@ const useDeal = () => {
 
   const handleGetCustomerDeals = async (customerId) => {
     try {
+      if (!customerId) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(
-        GET_API(customerId).getDealsOfCustomer,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosInstance.get(GET_API(customerId).customerDeals, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.status === 200) {
         dispatch(getDealsOfCustomer(res.data.data.deals));
-        return res.data.data.deals;
+        const totalPages = Math.ceil(res.data.data.deals.length / 15);
+        dispatch(setTotalPages(totalPages));
       }
     } catch (error) {
       console.log(error);

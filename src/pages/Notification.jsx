@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import ReloadIcon from "../assets/Reload";
-import TodoIcon from "../assets/TodoIcon";
 import useNotification from "../hooks/useNotification";
 import NotiIcon from "../assets/NotiIcon";
 import CloseIcon from "../assets/CloseIcon";
@@ -28,7 +27,7 @@ function Notification({ setOpenNoti }) {
   }, []);
 
   return (
-    <div className="absolute left-full top-0 w-[100vw] h-full bg-black/10 z-100">
+    <div className="absolute left-full top-0 w-[100vw] h-full bg-black/10 z-1000">
       <div
         ref={notiRef}
         className="w-[30%] h-full bg-white border-l border-gray-300 flex flex-col"

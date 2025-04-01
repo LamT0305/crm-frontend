@@ -8,7 +8,6 @@ import {
   setInteractions,
   addInteraction,
   deleteInteraction,
-  updateInteraction,
   getInteractionById,
   filterInteractionsByType,
   filterInteractionsByNotes,
@@ -27,16 +26,15 @@ const useCustomerCare = () => {
 
   const handleSetInteractions = async (customerId) => {
     try {
+      if (!customerId) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(
-        GET_API(customerId).getCustomerCareByCustomer,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosInstance.get(GET_API(customerId).customerCare, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.status === 200) {
+        console.log();
         dispatch(setInteractions(res.data.data.interactions));
       }
     } catch (error) {
@@ -49,16 +47,13 @@ const useCustomerCare = () => {
 
   const handleCreateInteraction = async (data) => {
     try {
+      if (!data) return false;
       dispatch(setLoading(true));
-      const res = await axiosInstance.post(
-        POST_API().createCustomerCare,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosInstance.post(POST_API().customerCare, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.status === 200) {
         dispatch(addInteraction(res.data.data));
         await handleAddActivity({
@@ -67,54 +62,26 @@ const useCustomerCare = () => {
           subject: `Created a new ${data.type.toLowerCase()} interaction`,
         });
         notify.success("Interaction recorded successfully");
-        return true;
       }
     } catch (error) {
       console.error(error);
       notify.error("Failed to record interaction");
-      return false;
     } finally {
       dispatch(setLoading(false));
     }
   };
 
-  const handleUpdateInteraction = async (id, data) => {
-    try {
-      dispatch(setLoading(true));
-      const res = await axiosInstance.put(
-        PUT_API(id).updateCustomerCare,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (res.status === 200) {
-        dispatch(updateInteraction(res.data.data));
-        notify.success("Interaction updated successfully");
-        return true;
-      }
-    } catch (error) {
-      console.error(error);
-      notify.error("Failed to update interaction");
-      return false;
-    } finally {
-      dispatch(setLoading(false));
-    }
-  };
+  
 
   const handleDeleteInteraction = async (id, data) => {
     try {
+      if (!id || !data) return false;
       dispatch(setLoading(true));
-      const res = await axiosInstance.delete(
-        DELETE_API(id).deleteCustomerCare,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosInstance.delete(DELETE_API(id).customerCare, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.status === 200) {
         dispatch(deleteInteraction(id));
         await handleAddActivity({
@@ -136,8 +103,9 @@ const useCustomerCare = () => {
 
   const handleGetInteractionById = async (id) => {
     try {
+      if (!id) return null;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(id).getCustomerCareById, {
+      const res = await axiosInstance.get(GET_API(id).customerCareById, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -149,6 +117,7 @@ const useCustomerCare = () => {
     } catch (error) {
       console.error(error);
       notify.error("Failed to fetch interaction details");
+      return null;
     } finally {
       dispatch(setLoading(false));
     }
@@ -176,7 +145,6 @@ const useCustomerCare = () => {
     interaction,
     handleSetInteractions,
     handleCreateInteraction,
-    handleUpdateInteraction,
     handleDeleteInteraction,
     handleGetInteractionById,
     handleFilterByType,

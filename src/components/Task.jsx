@@ -97,19 +97,19 @@ function Task({ customerId, user }) {
                   <div className="flex items-center bg-white mr-4 text-xs text-gray-500 px-2 py-1 rounded-lg">
                     <p>
                       {task.status === "Backlog" ? (
-                        <BacklogIcon className={""} />
+                        <BacklogIcon className={"w-4 h-4"} />
                       ) : null}
                       {task.status === "Todo" ? (
-                        <TodoIcon className={""} />
+                        <TodoIcon className={"w-4 h-4"} />
                       ) : null}
                       {task.status === "InProgress" ? (
-                        <InProgressIcon className={""} />
+                        <InProgressIcon className={"w-4 h-4"} />
                       ) : null}
                       {task.status === "Completed" ? (
-                        <DoneIcon className={""} />
+                        <DoneIcon className={"w-4 h-4"} />
                       ) : null}
                       {task.status === "Canceled" ? (
-                        <CanceledIcon className={""} />
+                        <CanceledIcon className={"w-4 h-4"} />
                       ) : null}
                     </p>
                     <p className="ml-2">{task.status}</p>
@@ -138,7 +138,7 @@ function Task({ customerId, user }) {
                 onClick={() => onDelete(task._id, task.title)}
                 className="bg-white mr-4 text-xs text-gray-500 p-1 rounded-lg hover:bg-red-400 hover:text-white"
               >
-                <CloseIcon />
+                <CloseIcon className={"w-4 h-4"}/>
               </p>
             </div>
           ))}

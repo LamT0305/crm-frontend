@@ -6,7 +6,6 @@ import DoneIcon from "../../assets/DoneIcon";
 import CanceledIcon from "../../assets/CancelIcon";
 import { useEffect, useRef, useState } from "react";
 import useTask from "../../hooks/useTask";
-import useActivity from "../../hooks/useActivity";
 
 export const TaskForm = ({
   taskId,
@@ -26,8 +25,6 @@ export const TaskForm = ({
   const [description, setDescription] = useState("");
 
   const { task, handleGetTaskById, handleUpdateTask } = useTask();
-
-  const { handleAddActivity } = useActivity();
 
   //get task
 
@@ -64,27 +61,10 @@ export const TaskForm = ({
     form.append("priority", priority);
     form.append("status", status);
 
-    const activity = {
-      customerId: customerId,
-      type: "task",
-      subject: "created a task: " + '"' + title + '"',
-    };
     if (taskId) {
-      handleUpdateTask(taskId, form);
-      const activity = {
-        customerId: customerId,
-        type: "task",
-        subject: "updated a task: " + '"' + title + '"',
-      };
-      handleAddActivity(activity);
+      handleUpdateTask(taskId, form, customerId);
     } else {
-      handleCreateTask(form);
-      const activity = {
-        customerId: customerId,
-        type: "task",
-        subject: "created a task: " + '"' + title + '"',
-      };
-      handleAddActivity(activity);
+      handleCreateTask(form, customerId);
     }
 
     setOpenForm(false);
@@ -156,14 +136,20 @@ export const TaskForm = ({
                 className="flex items-center bg-gray-100 px-2 py-1 rounded-lg cursor-pointer"
               >
                 <p>
-                  {status === "Backlog" ? <BacklogIcon className={""} /> : null}
-                  {status === "Todo" ? <TodoIcon className={""} /> : null}
-                  {status === "InProgress" ? (
-                    <InProgressIcon className={""} />
+                  {status === "Backlog" ? (
+                    <BacklogIcon className={"w-4 h-4"} />
                   ) : null}
-                  {status === "Completed" ? <DoneIcon className={""} /> : null}
+                  {status === "Todo" ? (
+                    <TodoIcon className={"w-4 h-4"} />
+                  ) : null}
+                  {status === "InProgress" ? (
+                    <InProgressIcon className={"w-4 h-4"} />
+                  ) : null}
+                  {status === "Completed" ? (
+                    <DoneIcon className={"w-4 h-4"} />
+                  ) : null}
                   {status === "Canceled" ? (
-                    <CanceledIcon className={""} />
+                    <CanceledIcon className={"w-4 h-4"} />
                   ) : null}
                 </p>
                 <p className="ml-2">{status}</p>
@@ -247,11 +233,19 @@ const Status = ({ setStatus, setOpenStatus }) => {
             className="flex items-center hover:bg-gray-100 px-2 py-1 rounded-lg cursor-pointer"
           >
             <span>
-              {status === "Backlog" ? <BacklogIcon /> : null}
-              {status === "Todo" ? <TodoIcon /> : null}
-              {status === "InProgress" ? <InProgressIcon /> : null}
-              {status === "Completed" ? <DoneIcon /> : null}
-              {status === "Canceled" ? <CanceledIcon /> : null}
+              {status === "Backlog" ? (
+                <BacklogIcon className={"w-4 h-4"} />
+              ) : null}
+              {status === "Todo" ? <TodoIcon className={"w-4 h-4"} /> : null}
+              {status === "InProgress" ? (
+                <InProgressIcon className={"w-4 h-4"} />
+              ) : null}
+              {status === "Completed" ? (
+                <DoneIcon className={"w-4 h-4"} />
+              ) : null}
+              {status === "Canceled" ? (
+                <CanceledIcon className={"w-4 h-4"} />
+              ) : null}
             </span>
             <p className="ml-2">{status}</p>
           </div>

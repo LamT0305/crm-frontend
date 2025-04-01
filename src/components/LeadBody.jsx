@@ -3,10 +3,12 @@ import useLead from "../hooks/useLead";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "../assets/CloseIcon";
 import useActivity from "../hooks/useActivity";
+import useWorkspace from "../hooks/useWorkspace";
 
 function LeadBody({ columns }) {
   const navigate = useNavigate();
   const { handleAddActivity } = useActivity();
+  const { currentWorkspace } = useWorkspace();
   const {
     leads,
     totalPages,
@@ -19,7 +21,7 @@ function LeadBody({ columns }) {
 
   useEffect(() => {
     handleSetLeads();
-  }, []); // Fetch all leads once
+  }, [currentWorkspace]); // Fetch all leads once
 
   useEffect(() => {
     handleChangePage(page);
@@ -54,12 +56,7 @@ function LeadBody({ columns }) {
 
   const onDeleteLead = async (id, customerId) => {
     await handleDeleteLead(id);
-    const activity = {
-      customerId: customerId,
-      type: "lead",
-      subject: "delete a lead",
-    };
-    await handleAddActivity(activity);
+    
     handleChangePage(page);
   };
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import CloseIcon from "../../assets/CloseIcon";
 import useNote from "../../hooks/useNote";
-import useActivity from "../../hooks/useActivity";
 
 function NoteForm({ setOpenForm, customerId, noteId, setNoteId }) {
   const { note, handleAddNote, handleGetNoteById } = useNote();
-  const { handleAddActivity } = useActivity();
   const onCloseForm = () => {
     setOpenForm(false);
     setNoteId(null);
@@ -34,17 +32,7 @@ function NoteForm({ setOpenForm, customerId, noteId, setNoteId }) {
     form.append("content", description);
     form.append("customerId", customerId);
 
-    const activity = {
-      customerId: customerId,
-      type: "note",
-      subject: "added a note: " + '"' + title + '"',
-    };
-
-    handleAddNote(form);
-
-    if (customerId) {
-      handleAddActivity(activity);
-    }
+    handleAddNote(form, customerId, title);
 
     setTitle("");
     setDescription("");

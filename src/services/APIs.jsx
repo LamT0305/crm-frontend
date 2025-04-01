@@ -1,108 +1,140 @@
 export const GET_API = (id) => {
   return {
-    profile: "/auth/profile",
+    // Auth & User
     login: "/auth/google",
-    //leads & customers
-    getLeads: `/customer/get-all-leads`,
-    getCustomers: `/customer/customers`,
-    getCustomerById: `/customer/get-customer/${id}`,
+    profile: "/auth/profile",
+    userProfile: "/user/profile",
+    userList: "/user/list",
+    getUserById: `/user/${id}`,
 
-    //sources
-    getSources: "/source/get-sources",
-    // activities
-    getActivities: `/activity/get-activities/${id}`,
-    //comments
-    getComments: `/comment/get-comments/${id}`,
-    //tasks
-    getAllTasks: `/task/get-tasks`,
-    getTasksOfCustomer: `/task/get-tasks-of-customer/${id}`,
-    getTaskById: `/task/get-task/${id}`,
-    //notes
-    getAllNote: `/note/get-notes`,
-    getCustomerNote: `/note/get-customer-notes/${id}`,
-    getNoteById: `/note/get-note/${id}`,
+    // Customer & Leads
+    customers: `/customer/customers`,
+    leads: `/customer/leads`,
+    customerById: `/customer/${id}`,
 
-    //products
-    getAllproducts: `/product/products`,
-    getProduct: `/product/get-product/${id}`,
+    // Sources
+    sources: "/source/get-sources",
 
-    //deals
-    getDeals: `/deal/get-deals`,
-    getDealById: `/deal/get-deal/${id}`,
-    getDealsOfCustomer: `/deal/get-deals-by-customer/${id}`,
+    // Activities
+    activities: `/activity/${id}`,
 
-    //customer care
-    getCustomerCareByCustomer: `/customer-care/customer-care/${id}`,
-    getCustomerCareById: `/customer-care/get-customer-care/${id}`,
+    // Comments
+    comments: `/comment/${id}`,
 
-    // notification
-    getNotifications: "/notification",
-    getUnreadCount: "/notification/unread/count",
-    //statistics
-    //customer analytic
-    getCustomerStatusDistribution: "analytic/customer/status",
-    getCustomerIndustryDistribution: "/analytic/customer/industry",
-    getCustomerSourceDistribution: "/analytic/customer/source",
-    getMonthlyIncomeDistribution: "/analytic/customer/income",
-    //deal analytic
-    getDealStatusDistribution: "/analytic/deal/status",
-    getDealValueAnalysis: "/analytic/deal/value",
-    getProductPerformance: "/analytic/deal/products",
-    //interaction analytic
-    getInteractionTypeDistribution: "/analytic/interaction/type",
-    getInteractionTimeline: "/analytic/interaction/timeline",
+    // Tasks
+    tasks: `/task`,
+    customerTasks: `/task/customer/${id}`,
+    taskById: `/task/${id}`,
 
-    //sale performance analytic
-    getQuotationAnalysis: "/analytic/sales/quotations",
-    getDiscountAnalysis: "/analytic/sales/discounts",
+    // Notes
+    notes: `/note`,
+    customerNotes: `/note/customer/${id}`,
+    noteById: `/note/${id}`,
+
+    // Products
+    products: `/product`,
+    productById: `/product/${id}`,
+
+    // Deals
+    deals: `/deal`,
+    dealById: `/deal/${id}`,
+    customerDeals: `/deal/customer/${id}`,
+
+    // Customer Care
+    customerCare: `/customer-care/customer/${id}`,
+    customerCareById: `/customer-care/${id}`,
+
+    // Notifications
+    notifications: "/notification",
+    unreadNotificationsCount: "/notification/unread/count",
+
+    // Quotations
+    quotations: "/quotation",
+    quotationById: `/quotation/${id}`,
+
+    // Emails
+    emails: `/email/${id}`,
+
+    // Analytics
+    analytics: {
+      customerStatus: "/analytic/customer/status",
+      customerIndustry: "/analytic/customer/industry",
+      customerSource: "/analytic/customer/source",
+      customerIncome: "/analytic/customer/income",
+      dealStatus: "/analytic/deal/status",
+      dealValue: "/analytic/deal/value",
+      productPerformance: "/analytic/deal/products",
+      interactionType: "/analytic/interaction/type",
+      interactionTimeline: "/analytic/interaction/timeline",
+      quotations: "/analytic/sales/quotations",
+      discounts: "/analytic/sales/discounts",
+    },
+
+    // Workspace
+    workspaceDetails: "/workspace/details",
+    userWorkspaces: "/workspace/user-workspaces",
+
+    //category
+    category: "/category",
   };
 };
 
 export const POST_API = () => {
   return {
+    // Auth
     logout: "/auth/logout",
-    createlead: "customer/create-customer",
-    createSource: "/source/create-source",
-    createActivity: "/activity/create-activity",
-    sendEmail: "/email/send",
-    getEmails: "/email/get-emails",
-    createComment: "/comment/create-comment",
-    createTask: "/task/create-task",
-    createNote: "/note/create-note",
-    createProduct: "/product/create-product",
-    createDeal: "/deal/create-deal",
-    createCustomerCare: "/customer-care/create-customer-care",
-    createNotification: "/notification",
-    createEmailNotification: "/notification/email",
+
+    // Workspace
+    createWorkspace: "/workspace/create",
+    inviteMember: "/workspace/invite",
+    joinWorkspace: "/workspace/join",
+    switchWorkspace: "/workspace/switch",
+    // Resources
+    customer: "/customer",
+    source: "/source/create-source",
+    activity: "/activity",
+    email: "/email",
+    comment: "/comment",
+    task: "/task",
+    note: "/note",
+    product: "/product",
+    deal: "/deal",
+    customerCare: "/customer-care",
+    notification: "/notification",
+    upload: "/upload",
+    category: "/category",
   };
 };
 
 export const PUT_API = (id) => {
   return {
-    updateCustomer: `/customer/update-customer/${id}`,
-    updateTask: `/task/update-task/${id}`,
-    updateNote: `/note/update-note/${id}`,
-    updateProduct: `/product/update-product/${id}`,
-    updateQuotation: `/quotation/update-quotation/${id}`,
-    updateDeal: `/deal/update-deal/${id}`,
-    updateCustomerCare: `/customer-care/update-customer-care/${id}`,
-    markNotificationAsRead: `/notification/${id}/read`,
-    markAllNotificationsAsRead: "/notification/mark-all-read",
+    userProfile: "/user/profile",
+    customer: `/customer/${id}`,
+    task: `/task/${id}`,
+    note: `/note/${id}`,
+    product: `/product/${id}`,
+    quotation: `/quotation/${id}`,
+    deal: `/deal/${id}`,
+    customerCare: `/customer-care/${id}`,
+    notificationRead: `/notification/${id}/read`,
+    allNotificationsRead: "/notification/mark-all-read",
   };
 };
 
 export const DELETE_API = (id) => {
   return {
-    deleteCustomer: `/customer/delete-customer/${id}`,
-    deleteSource: `/source/delete-source/${id}`,
-    deleteComment: `/comment/delete-comment/${id}`,
-    deleteTask: `/task/delete-task/${id}`,
-    deleteNote: `/note/delete-note/${id}`,
-    deleteProduct: `/product/delete-product/${id}`,
-    deleteQuotation: `/quotation/delete-quotation/${id}`,
-    deleteDeal: `/deal/delete-deal/${id}`,
-    deleteCustomerCare: `/customer-care/delete-customer-care/${id}`,
-    deleteNotification: `/notification/${id}`,
-    deleteEmail: `/email/delete-email/${id}`,
+    customer: `/customer/${id}`,
+    source: `/source/delete-source/${id}`,
+    comment: `/comment/${id}`,
+    task: `/task/${id}`,
+    note: `/note/${id}`,
+    product: `/product/${id}`,
+    quotation: `/quotation/${id}`,
+    deal: `/deal/${id}`,
+    customerCare: `/customer-care/${id}`,
+    notification: `/notification/${id}`,
+    email: `/email/${id}`,
+    activity: `/activity/${id}`,
+    category: `/category/${id}`,
   };
 };

@@ -6,9 +6,20 @@ import CreateLeadForm from "../components/form/CreateLeadForm";
 import useLead from "../hooks/useLead";
 
 function Dashboard() {
-  const { handleFilterleads, handleSortLeads, handleSetLeads } = useLead();
+  const { handleFilterleads, handleSortLeads, handleSetLeads, isLoading } =
+    useLead();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    const initializeData = async () => {
+      await handleSetLeads();
+      setIsInitialLoad(false);
+    };
+    initializeData();
+  }, []);
+
   const STORAGE_KEY = "selectedColumns";
 
   const defaultColumns = [
@@ -49,22 +60,35 @@ function Dashboard() {
     setColumns(columns.filter((col) => col.key !== key));
   };
 
-  return (
-    <div className="w-[80%] bg-white flex flex-col">
-      {isOpen && <CreateLeadForm setIsOpen={setIsOpen} />}
+  // if (isLoading) {
+  //   return (
 
-      <LeadHeader setIsOpen={setIsOpen} />
-      <Filter
-        addColumn={addColumn}
-        removeColumn={removeColumn}
-        columns={columns}
-        defaultColumns={defaultColumns}
-        handleSort={handleSortLeads}
-        handleFilter={handleFilterleads}
-        handleSetDefaultData={handleSetLeads}
-      />
-      <LeadBody columns={columns} />
-    </div>
+  //   );
+  // }
+  return (
+    <>
+      {isLoading && isInitialLoad ? (
+        <div className="flex items-center justify-center h-screen w-full">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <div className="w-[80%] bg-white flex flex-col">
+          {isOpen && <CreateLeadForm setIsOpen={setIsOpen} />}
+
+          <LeadHeader setIsOpen={setIsOpen} />
+          <Filter
+            addColumn={addColumn}
+            removeColumn={removeColumn}
+            columns={columns}
+            defaultColumns={defaultColumns}
+            handleSort={handleSortLeads}
+            handleFilter={handleFilterleads}
+            handleSetDefaultData={handleSetLeads}
+          />
+          <LeadBody columns={columns} />
+        </div>
+      )}
+    </>
   );
 }
 

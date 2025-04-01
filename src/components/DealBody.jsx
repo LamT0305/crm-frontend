@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CloseIcon from "../assets/CloseIcon";
 import useDeal from "../hooks/useDeal";
 import useActivity from "../hooks/useActivity";
+import useWorkspace from "../hooks/useWorkspace";
 
 function DealBody({ columns, setOpenDealForm, setDealId }) {
   const {
@@ -12,12 +13,13 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
     handleChangePage,
   } = useDeal();
   const { handleAddActivity } = useActivity();
+  const { currentWorkspace } = useWorkspace();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
     handleSetDeals();
-  }, []); // Fetch all deals once on mount
+  }, [currentWorkspace]); // Fetch all deals once on mount
 
   useEffect(() => {
     handleChangePage(page);
@@ -89,7 +91,6 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
     calculateDisplayedPages();
   }, [page, totalPages]);
 
-  console.log(deals)
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="overflow-x-auto px-2 max-h-[72vh]">

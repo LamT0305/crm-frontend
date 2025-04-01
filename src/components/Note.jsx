@@ -3,11 +3,9 @@ import useNote from "../hooks/useNote";
 import NoteIcon from "../assets/NoteIcon";
 import NoteForm from "./form/NoteForm";
 import CloseIcon from "../assets/CloseIcon";
-import useActivity from "../hooks/useActivity";
 
 function Note({ customerId }) {
   const { notes, handleGetCustomerNotes, handleDeleteNote } = useNote();
-  const { handleAddActivity } = useActivity();
   const [openForm, setOpenForm] = useState(false);
   const [noteId, setNoteId] = useState(null);
 
@@ -26,13 +24,7 @@ function Note({ customerId }) {
   };
 
   const onDelete = (id, content) => {
-    handleDeleteNote(id);
-    const activity = {
-      customerId: customerId,
-      type: "comment",
-      subject: "has deleted comment: " + '"' + content + '"',
-    };
-    handleAddActivity(activity);
+    handleDeleteNote(id, customerId, content);
   };
   return (
     <div className="bg-white h-full flex flex-col">

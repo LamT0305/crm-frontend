@@ -10,7 +10,7 @@ const slice = createSlice({
   initialState: initialState,
   reducers: {
     setLoading: (state, action) => {
-      state.comments = action.payload;
+      state.isLoading = action.payload;
     },
     setComments: (state, action) => {
       state.comments = action.payload;

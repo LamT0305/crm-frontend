@@ -15,7 +15,8 @@ const useActivity = () => {
 
   const handleGetActivities = async (id) => {
     try {
-      const res = await axiosInstance.get(GET_API(id).getActivities, {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.get(GET_API(id).activities, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -25,32 +26,54 @@ const useActivity = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   const handleAddActivity = async (activity) => {
     try {
-      const res = await axiosInstance.post(
-        POST_API().createActivity,
-        activity,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      dispatch(setLoading(true));
+      const res = await axiosInstance.post(POST_API().activity, activity, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (res.status === 200) {
         dispatch(addActivity(res.data.data));
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
+
+  const handleDeleteActivity = async (id) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.delete(DELETE_API(id).activity, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        // Add appropriate dispatch action for deletion if needed
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   return {
     activities,
+    isLoading,
     handleGetActivities,
     handleAddActivity,
+    handleDeleteActivity,
   };
 };
 

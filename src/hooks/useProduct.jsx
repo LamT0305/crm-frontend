@@ -27,7 +27,7 @@ const useProduct = () => {
   const handleSetProducts = async () => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(0).getAllproducts, {
+      const res = await axiosInstance.get(GET_API(0).products, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,7 +78,7 @@ const useProduct = () => {
     try {
       if (!product) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.post(POST_API().createProduct, product, {
+      const res = await axiosInstance.post(POST_API().product, product, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -106,7 +106,7 @@ const useProduct = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.delete(DELETE_API(id).deleteProduct, {
+      const res = await axiosInstance.delete(DELETE_API(id).product, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -130,7 +130,7 @@ const useProduct = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(id).getProduct, {
+      const res = await axiosInstance.get(GET_API(id).productById, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -152,15 +152,11 @@ const useProduct = () => {
     try {
       if (!id || !productData) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.put(
-        PUT_API(id).updateProduct,
-        productData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosInstance.put(PUT_API(id).product, productData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (res.status === 200) {
         dispatch(updateProduct(res.data.data));

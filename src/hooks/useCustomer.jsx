@@ -11,12 +11,12 @@ import {
   setLoading,
   setCurrentPage,
 } from "../redux/slice/customerSlice";
-
 import axiosInstance from "../services/Axios";
 import { DELETE_API, GET_API, PUT_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
 import useActivity from "./useActivity";
 import { notify } from "../utils/Toastify";
+import { useNavigate } from "react-router-dom";
 
 const useCustomer = () => {
   const { handleAddActivity } = useActivity();
@@ -24,11 +24,11 @@ const useCustomer = () => {
     useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const token = getToken();
-
+  const navigate = useNavigate();
   const handleSetCustomers = async () => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(0).getCustomers, {
+      const res = await axiosInstance.get(GET_API().customers, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,7 +78,7 @@ const useCustomer = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.delete(DELETE_API(id).deleteCustomer, {
+      const res = await axiosInstance.delete(DELETE_API(id).customer, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -101,7 +101,7 @@ const useCustomer = () => {
     try {
       if (!id) return;
       dispatch(setLoading(true));
-      const res = await axiosInstance.get(GET_API(id).getCustomerById, {
+      const res = await axiosInstance.get(GET_API(id).customerById, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -112,8 +112,9 @@ const useCustomer = () => {
         return res.data.data;
       }
     } catch (error) {
-      console.log(error);
-      notify.error("Failed to fetch customer details");
+      if (error.status === 404) {
+        navigate("/");
+      }
     } finally {
       dispatch(setLoading(false));
     }
@@ -126,7 +127,7 @@ const useCustomer = () => {
   const handleUpdateCustomer = async (id, data) => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.put(PUT_API(id).updateCustomer, data, {
+      const res = await axiosInstance.put(PUT_API(id).customer, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import useDeal from "../../hooks/useDeal";
 import useProduct from "../../hooks/useProduct";
 import CloseIcon from "../../assets/CloseIcon";
-import { notify } from "../../utils/Toastify";
 import ExportIcon from "../../assets/ExportIcon";
 import { exportToExcel } from "../../utils/exportQuotation";
 import useActivity from "../../hooks/useActivity";
@@ -15,7 +14,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
     handleClearDeal,
     handleUpdateDeal,
   } = useDeal();
-  const { products, handleSetProducts } = useProduct();
+  const { products, handleSetProducts, handleFilterProducts } = useProduct();
   const { handleAddActivity } = useActivity();
   const createRef = useRef(null);
   const [errors, setErrors] = useState({});
@@ -90,6 +89,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
         productId: product.productId,
         quantity: Number(product.quantity),
         price: Number(product.price),
+        category: product.category,
       })),
       status: formData.status,
       discount: formData.discount,
@@ -147,6 +147,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
             productId: productId,
             quantity: 1,
             price: product.price || 0,
+            category: product.category._id,
           },
         ],
       }));
@@ -202,6 +203,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
           productId: product.productId._id,
           quantity: product.quantity,
           price: product.productId.price,
+          category: product.productId.category._id,
         })),
         status: deal.status,
         discount: deal.quotationId.discount || {
@@ -302,77 +304,100 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
 
           <div className="grid grid-cols-1 gap-4">
             <div className="flex flex-col">
-              <span>Products</span>
+              <div className="flex items-center justify-between px-2">
+                <span>Products</span>
+                <input
+                  type="text"
+                  className="bg-gray-100 px-2 py-1 rounded-xl w-[250px] text-sm shadow-md cursor-pointer"
+                  placeholder="Product name..."
+                  onChange={(e) => handleFilterProducts("name", e.target.value)}
+                />
+              </div>
               {errors.products && (
                 <span className="text-red-500 text-xs mt-1">
                   {errors.products}
                 </span>
               )}
-              <div className="mt-2 space-y-2 max-h-60 overflow-y-auto">
-                {products?.map((product) => (
-                  <div
-                    key={product._id}
-                    className="flex items-center gap-4 bg-gray-50 p-3 rounded-xl"
-                    onClick={() => handleProductSelection(product._id, product)}
-                  >
-                    <div className="flex items-center gap-3 flex-1 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={formData.products.some(
-                          (p) => p.productId === product._id
-                        )}
-                        readOnly
-                      />
-                      <span className="select-none">{product.name}</span>
-                    </div>
-                    {formData.products.some(
-                      (p) => p.productId === product._id
-                    ) && (
-                      <>
-                        <div
-                          className="flex items-center gap-2"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <span className="text-sm select-none">Qty:</span>
-                          <input
-                            type="number"
-                            min="1"
-                            value={
-                              formData.products.find(
-                                (p) => p.productId === product._id
-                              )?.quantity || 1
-                            }
-                            onChange={(e) =>
-                              handleQuantityChange(product._id, e.target.value)
-                            }
-                            className={`w-20 py-1 px-2 rounded-lg bg-white text-sm ${
-                              errors[`quantity_${product._id}`]
-                                ? "border-2 border-red-500"
-                                : ""
-                            }`}
-                          />
-                          {errors[`quantity_${product._id}`] && (
-                            <span className="text-red-500 text-xs">
-                              {errors[`quantity_${product._id}`]}
-                            </span>
+              <div className="mt-2 space-y-2 h-60 overflow-y-auto">
+                {[...products]
+                  ?.sort((a, b) => {
+                    const aSelected = formData.products.some(
+                      (p) => p.productId === a._id
+                    );
+                    const bSelected = formData.products.some(
+                      (p) => p.productId === b._id
+                    );
+                    return bSelected - aSelected;
+                  })
+                  .map((product) => (
+                    <div
+                      key={product._id}
+                      className="flex items-center gap-4 bg-gray-50 p-3 rounded-xl"
+                      onClick={() =>
+                        handleProductSelection(product._id, product)
+                      }
+                    >
+                      <div className="flex items-center gap-3 flex-1 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.products.some(
+                            (p) => p.productId === product._id
                           )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span>Unit:</span>
-                          <p className="w-24 py-1 px-2 rounded-lg bg-white text-sm">
-                            {product.unit}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm select-none">Price:</span>
-                          <p className="w-24 py-1 px-2 rounded-lg bg-white text-sm">
-                            ${product.price}
-                          </p>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ))}
+                          readOnly
+                        />
+                        <span className="select-none">{product.name}</span>
+                      </div>
+                      {formData.products.some(
+                        (p) => p.productId === product._id
+                      ) && (
+                        <>
+                          <div
+                            className="flex items-center gap-2"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span className="text-sm select-none">Qty:</span>
+                            <input
+                              type="number"
+                              min="1"
+                              value={
+                                formData.products.find(
+                                  (p) => p.productId === product._id
+                                )?.quantity || 1
+                              }
+                              onChange={(e) =>
+                                handleQuantityChange(
+                                  product._id,
+                                  e.target.value
+                                )
+                              }
+                              className={`w-20 py-1 px-2 rounded-lg bg-white text-sm ${
+                                errors[`quantity_${product._id}`]
+                                  ? "border-2 border-red-500"
+                                  : ""
+                              }`}
+                            />
+                            {errors[`quantity_${product._id}`] && (
+                              <span className="text-red-500 text-xs">
+                                {errors[`quantity_${product._id}`]}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span>Unit:</span>
+                            <p className="w-24 py-1 px-2 rounded-lg bg-white text-sm">
+                              {product.unit}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm select-none">Price:</span>
+                            <p className="w-24 py-1 px-2 rounded-lg bg-white text-sm">
+                              ${product.price}
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
