@@ -5,12 +5,8 @@ import NotiIcon from "../assets/NotiIcon";
 import CloseIcon from "../assets/CloseIcon";
 
 function Notification({ setOpenNoti }) {
-  const {
-    notifications,
-    fetchUnreadCount,
-    fetchNotifications,
-    deleteNotificationHandler,
-  } = useNotification();
+  const { notifications, fetchNotifications, deleteNotificationHandler } =
+    useNotification();
   useEffect(() => {
     fetchNotifications();
   }, []);
@@ -26,6 +22,7 @@ function Notification({ setOpenNoti }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  console.log(notifications);
   return (
     <div className="absolute left-full top-0 w-[100vw] h-full bg-black/10 z-1000">
       <div
@@ -63,6 +60,11 @@ function Notification({ setOpenNoti }) {
             {notifications.map((notification) => (
               <div
                 key={notification._id}
+                onClick={() => {
+                  if (notification.link !== "") {
+                    window.location.href = notification.link;
+                  }
+                }}
                 className="px-4 py-2 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-100"
               >
                 <div>

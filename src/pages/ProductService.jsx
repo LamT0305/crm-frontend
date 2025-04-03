@@ -62,7 +62,7 @@ function ProductService() {
   }, []);
   if (isLoading && isInitialLoad) {
     return (
-      <div className="flex items-center justify-center h-screen w-full">
+      <div className="flex items-center justify-center h-screen w-[80%]">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );

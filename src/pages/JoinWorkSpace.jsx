@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import useWorkspace from "../hooks/useWorkspace";
 import { notify } from "../utils/Toastify";
 import { useAuth } from "../context/AuthContext";
+import { CircularProgress } from "@mui/material";
 
 function JoinWorkSpace() {
   const { token } = useParams();
@@ -19,11 +20,9 @@ function JoinWorkSpace() {
           navigate("/welcome");
           return;
         }
-
         if (!isAuthenticated) {
           navigate("/login");
         }
-
         await handleJoinWorkspace(token);
       } catch (err) {
         setError(err.message || "Failed to join workspace");
@@ -45,7 +44,7 @@ function JoinWorkSpace() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen w-[80%] flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -64,9 +63,12 @@ function JoinWorkSpace() {
               </button>
             </div>
           ) : (
-            <p className="text-gray-600">
-              You will be redirected to the dashboard shortly...
-            </p>
+            <>
+              <CircularProgress />
+              <p className="text-gray-600">
+                You will be redirected to the dashboard shortly...
+              </p>
+            </>
           )}
         </div>
       </div>

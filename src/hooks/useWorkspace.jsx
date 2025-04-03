@@ -28,6 +28,9 @@ const useWorkspace = () => {
   const token = getToken();
   const navigate = useNavigate();
 
+  
+
+
   const handleGetUserWorkspaces = async () => {
     dispatch(setLoading(true));
     dispatch(setError(null));
@@ -198,6 +201,7 @@ const useWorkspace = () => {
         error.response?.data?.error || "Failed to join workspace";
       notify.error(errorMessage);
       setError(errorMessage);
+      navigate("/");
       return false;
     } finally {
       dispatch(setLoading(false));
@@ -323,6 +327,8 @@ const useWorkspace = () => {
     handleSwitchWorkspace,
     handleUpdateWorkspaceName,
     handleDeleteWorkspace,
+    handleLeaveWorkspace,
+    handleDeleteMember
   };
 };
 

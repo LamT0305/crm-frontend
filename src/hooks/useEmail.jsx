@@ -16,9 +16,11 @@ import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useRef } from "react";
 import { notify } from "../utils/Toastify";
+import useActivity from "./useActivity";
 
 const useEmail = () => {
   const { logout } = useAuth();
+  const { handleAddActivity } = useActivity();
   const { isLoading, emails, filteredEmails } = useSelector(
     (state) => state.email
   );
@@ -30,56 +32,70 @@ const useEmail = () => {
     const socket = io("https://crm-backend-bz03.onrender.com");
 
     socket.on("connect", () => {
-      console.log("Connected to email socket");
+      console.log("📧 Connected to email socket");
       if (token) {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.id;
         if (userId) {
           socket.emit("join", userId);
+          console.log("🔗 Joined email room:", userId);
         }
       }
     });
 
-    socket.on("newEmail", (data) => {
-      if (currentRecipientRef.current) {
-        handleGetEmails(currentRecipientRef.current);
-      }
+    socket.on("updateEmails", (data) => {
+      console.log("📩 New email received:", data);
+      handleGetEmails(data.customerId);
+      notify.info(
+        `New email received: ${data?.email?.subject || "New message"}`
+      );
+    });
+
+    socket.on("error", (error) => {
+      console.error("Socket error:", error);
+      notify.error("Connection error occurred");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("❌ Disconnected from email socket");
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Connection error:", error);
     });
 
     return () => {
+      console.log("🔌 Cleaning up socket connection");
       socket.disconnect();
+      currentRecipientRef.current = null;
     };
-  }, []);
+  }, [token]); // Add token dependency to reconnect if token changes
 
   const handleGetEmails = async (recipient) => {
     try {
-      currentRecipientRef.current = recipient;
       dispatch(setLoading(true));
-      const res = await axiosInstance.post(
-        POST_API().getEmails,
-        { recipient },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axiosInstance.get(GET_API(recipient).emails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.status === 200) {
-        dispatch(setEmails(res.data.emails));
+        dispatch(setEmails(res.data.data.emails));
       }
     } catch (error) {
       console.error("Error fetching emails:", error);
       if (error.response?.status === 401) {
         logout();
+        alert("Session expired. Please login again.");
       }
     } finally {
       dispatch(setLoading(false));
     }
   };
 
-  const handleSendEmail = async (email) => {
+  const handleSendEmail = async (email, customerId, subject) => {
     try {
-      const res = await axiosInstance.post(POST_API().sendEmail, email, {
+      const res = await axiosInstance.post(POST_API().email, email, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -87,18 +103,28 @@ const useEmail = () => {
       });
       if (res.status === 200) {
         dispatch(sendEmail(res.data.email));
+        // activity
+
+        const activity = {
+          customerId: customerId,
+          type: "email",
+          subject: "has sent an email with subject: " + '"' + subject + '"',
+        };
+        handleAddActivity(activity);
+        notify.success("Email sent successfully");
       }
     } catch (error) {
       console.log(error);
       if (error.response?.status === 401) {
         logout();
+        alert("Session expired. Please login again.");
       }
     }
   };
 
   const handleDeleteEmail = async (emailId) => {
     try {
-      const res = await axiosInstance.delete(DELETE_API(emailId).deleteEmail, {
+      const res = await axiosInstance.delete(DELETE_API(emailId).email, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -111,8 +137,8 @@ const useEmail = () => {
       console.log(error);
       if (error.response?.status === 401) {
         logout();
+        alert("Session expired. Please login again.");
       }
-      alert("Session expired. Please login again.");
     }
   };
 

@@ -7,12 +7,9 @@ import {
   setError,
   setNotifications,
   removeNotification,
-  addNotification,
 } from "../redux/slice/notiSlice";
 import { useEffect } from "react";
-import io from "socket.io-client";
-import { jwtDecode } from "jwt-decode";
-import { notify } from "../utils/Toastify";
+import useWorkspace from "./useWorkspace";
 
 const useNotification = () => {
   const dispatch = useDispatch();
@@ -21,29 +18,7 @@ const useNotification = () => {
   );
   const token = getToken();
 
-  useEffect(() => {
-    const socket = io("https://crm-backend-bz03.onrender.com");
-
-    socket.on("connect", () => {
-      console.log("Connected to notification socket");
-      if (token) {
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.id;
-        if (userId) {
-          socket.emit("join", userId);
-        }
-      }
-    });
-
-    socket.on("newEmail", (data) => {
-      dispatch(addNotification(data.data.notification));
-      notify.info("New email received!");
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [dispatch, token]);
+  
 
   const fetchNotifications = async () => {
     try {

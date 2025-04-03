@@ -9,6 +9,7 @@ import CloseIcon from "../assets/CloseIcon";
 function Email({ customer, setOpenEmailForm }) {
   const {
     emails,
+    isLoading,
     handleGetEmails,
     handleDeleteEmail,
     handleFilterEmails,
@@ -22,9 +23,16 @@ function Email({ customer, setOpenEmailForm }) {
   };
 
   useState(() => {
-    if (customer) handleGetEmails(customer.email);
+    if (customer) handleGetEmails(customer._id);
   }, [customer]);
-  console.log(emails);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="bg-white h-full flex flex-col">
       {/* Header */}
@@ -50,7 +58,7 @@ function Email({ customer, setOpenEmailForm }) {
           >
             + New email
           </p>
-          <div onClick={() => handleGetEmails(customer.email)}>
+          <div onClick={() => handleGetEmails(customer._id)}>
             <ReloadIcon className="w-7 h-7 bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-100 ml-5" />
           </div>
         </div>
@@ -124,12 +132,12 @@ function Email({ customer, setOpenEmailForm }) {
                   <div className="text-sm whitespace-pre-line max-h-[250px] overflow-y-auto">
                     <EmailDisplay emailText={email.message} />
                   </div>
-                  <div className="flex items-center overflow-x-auto">
+                  <div className="flex items-center overflow-x-auto w-full">
                     {email.attachments &&
                       email.attachments.map((attachment) => (
                         <div
                           key={attachment._id}
-                          className="mt-2 bg-gray-300 w-fit px-4 py-1 rounded-lg text-black cursor-pointer hover:text-blue-500"
+                          className="mt-2 mx-2 bg-gray-300 w-fit px-4 py-1 rounded-lg text-black cursor-pointer hover:text-blue-500"
                         >
                           <a
                             href={attachment.path}

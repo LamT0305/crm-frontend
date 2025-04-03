@@ -6,6 +6,7 @@ import EditIcon from "../assets/EditIcon";
 import SaveIcon from "../assets/SaveIcon";
 import useUser from "../hooks/useUser";
 import ConfirmModal from "../components/ConfirmModal";
+import { notify } from "../utils/Toastify";
 
 function Setting() {
   const {
@@ -19,6 +20,8 @@ function Setting() {
     handleGetWorkspaceDetails,
     handleUpdateWorkspaceName,
     handleDeleteWorkspace,
+    handleLeaveWorkspace,
+    handleDeleteMember,
   } = useWorkspace();
 
   const { users, handleGetUsers, handleFilterUsers } = useUser();
@@ -29,6 +32,9 @@ function Setting() {
   const [editName, setEditName] = useState(false);
   const [displayResults, setDisplayResults] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showKickMemberModal, setShowKickMemberModal] = useState(false);
+  const [member, setMember] = useState();
 
   useEffect(() => {
     handleGetUserWorkspaces();
@@ -70,6 +76,21 @@ function Setting() {
     setShowDeleteModal(false);
   };
 
+  const onLeaveWorkspace = () => {
+    handleLeaveWorkspace(workspace.workspace?._id);
+    setShowLeaveModal(false);
+  };
+
+  const onKickMember = () => {
+    if (member) {
+      handleDeleteMember(workspace.workspace?._id, member);
+      setShowKickMemberModal(false);
+      setMember("");
+    } else {
+      notify.error("Please select a member to kick");
+    }
+  };
+
   return (
     <div className="p-6 w-[80%] h-full flex flex-col bg-white/30">
       <ConfirmModal
@@ -81,46 +102,53 @@ function Setting() {
         confirmText="Yes, Delete"
         cancelText="Cancel"
       />
-      <div className="flex items-center gap-2 mb-6">
+
+      <ConfirmModal
+        isOpen={showLeaveModal}
+        onClose={() => setShowLeaveModal(false)}
+        onConfirm={onLeaveWorkspace}
+        title="Leave Workspace"
+        message="Are you sure you want to leave this workspace? This action cannot be undone."
+        confirmText="Yes, Leave"
+        cancelText="Cancel"
+      />
+      <ConfirmModal
+        isOpen={showKickMemberModal}
+        onClose={() => setShowKickMemberModal(false)}
+        onConfirm={onKickMember}
+        title="Remove member out of Workspace"
+        message="Are you sure you want to remove this member? This action cannot be undone."
+        confirmText="Yes, remove"
+        cancelText="Cancel"
+      />
+      <div className="flex items-center gap-2 mb-6 bg-white p-6">
         <h2 className="text-xl font-bold">Settings</h2>
       </div>
 
-      <div className="mb-6 bg-white w-full shadow-md bg-gray-400 px-1">
-        <ul className="flex items-center">
-          <li
-            onClick={() => setActiveTab("workspace")}
-            className={`px-3 py-5 cursor-pointer text-lg font-semibold ${
-              activeTab === "workspace" ? "bg-gray-100" : ""
-            }`}
-          >
-            Workspaces
-          </li>
-          <li
-            onClick={() => setActiveTab("profile")}
-            className={`px-3 py-5 cursor-pointer text-lg font-semibold ${
-              activeTab === "profile" ? "bg-gray-100" : ""
-            }`}
-          >
-            User profile
-          </li>
-        </ul>
-      </div>
-      {/* main */}
-      <div className="max-h-[75vh] ">
+      <div className="h-[85vh] overflow-x-auto">
         {activeTab === "workspace" && (
           <div className="bg-white p-6 rounded-xl shadow-sm flex w-full h-full overflow-x-auto">
             <div className="w-[65%] px-4 border-r border-gray-200">
-              <div className="flex items-center justify-between border-b border-gray-200">
-                <h2 className="text-xl font-semibold mb-4 pb-2">
+              <div className="flex items-center justify-between border-b border-gray-200 mb-6">
+                <h2 className="text-xl font-semibold mb-4">
                   Workspace Details
                 </h2>
 
-                <span
-                  onClick={() => setShowDeleteModal(true)}
-                  className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
-                >
-                  Delete
-                </span>
+                {workspace.isOwner ? (
+                  <span
+                    onClick={() => setShowDeleteModal(true)}
+                    className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 hover:bg-red-500 hover:text-white"
+                  >
+                    Delete
+                  </span>
+                ) : (
+                  <span
+                    onClick={() => setShowLeaveModal(true)}
+                    className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 hover:bg-red-500 hover:text-white"
+                  >
+                    Leave
+                  </span>
+                )}
               </div>
 
               {workspace && (
@@ -236,7 +264,11 @@ function Setting() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Status
                             </th>
-                            <th>Action</th>
+                            {workspace.isOwner && (
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Action
+                              </th>
+                            )}
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -265,12 +297,22 @@ function Setting() {
                                   {member.status}
                                 </span>
                               </td>
-                              {member.role !== "Admin" && (
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                    Delete
-                                  </span>
-                                </td>
+                              {workspace.isOwner && (
+                                <>
+                                  {member.role !== "Admin" && (
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                      <span
+                                        onClick={() => {
+                                          setShowKickMemberModal(true);
+                                          setMember(member.user._id);
+                                        }}
+                                        className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 hover:bg-red-500 hover:text-white cursor-pointer"
+                                      >
+                                        Remove
+                                      </span>
+                                    </td>
+                                  )}
+                                </>
                               )}
                             </tr>
                           ))}
@@ -283,16 +325,13 @@ function Setting() {
             </div>
 
             <div className="w-[35%] px-4 h-full">
-              <div
-                className="flex items-center justify-between border-b border-gray-200 
-            mb-5 pb-1"
-              >
-                <div className="flex items-center">
-                  <WorkspaceIcon className={"w-[30px] h-[30px] mr-3"} />
+              <div className="flex items-center justify-between border-b border-gray-200  mb-6">
+                <div className="flex items-center mb-4">
+                  <WorkspaceIcon className={"w-[25px] h-[25px] mr-3"} />
                   <h2 className="text-lg font-semibold">All spaces</h2>
                 </div>
 
-                <p className="px-2 py-1 bg-black text-white font-semibold rounded-xl mr-6 cursor-pointer hover:bg-gray-200 hover:text-black">
+                <p className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-grey-800 hover:bg-green-500 hover:text-white">
                   New
                 </p>
               </div>
@@ -316,14 +355,14 @@ function Setting() {
             </div>
           </div>
         )}
-
+        {/*         
         {activeTab === "profile" && (
           <div className="bg-white p-6 rounded-xl shadow-sm">
             <h2 className="text-xl font-semibold mb-4">Profile Settings</h2>
-            {/* Profile settings will be implemented when useAuth is ready */}
             <p className="text-gray-600">Profile settings coming soon...</p>
           </div>
         )}
+         */}
       </div>
     </div>
   );
