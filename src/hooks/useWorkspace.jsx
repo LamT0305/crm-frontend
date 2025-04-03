@@ -322,6 +322,7 @@ const useWorkspace = () => {
     handleGetUserWorkspaces,
     handleSwitchWorkspace,
     handleUpdateWorkspaceName,
+    handleDeleteWorkspace,
   };
 };
 

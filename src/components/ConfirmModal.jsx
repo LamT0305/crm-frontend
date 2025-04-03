@@ -1,23 +1,34 @@
-const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+import React from "react";
+
+const ConfirmModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title = "Confirm Action",
+  message = "Are you sure you want to proceed?",
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  confirmButtonClass = "bg-red-600 hover:bg-red-700",
+}) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96 shadow-xl">
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h3 className="text-lg font-semibold mb-4">{title}</h3>
         <p className="text-gray-600 mb-6">{message}</p>
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
           >
-            Cancel
+            {cancelText}
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className={`px-4 py-2 text-white rounded-lg ${confirmButtonClass}`}
           >
-            Confirm
+            {confirmText}
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Menu from "../assets/Menu";
 import EditIcon from "../assets/EditIcon";
 import SaveIcon from "../assets/SaveIcon";
 import useUser from "../hooks/useUser";
+import ConfirmModal from "../components/ConfirmModal";
 
 function Setting() {
   const {
@@ -17,6 +18,7 @@ function Setting() {
     handleSwitchWorkspace,
     handleGetWorkspaceDetails,
     handleUpdateWorkspaceName,
+    handleDeleteWorkspace,
   } = useWorkspace();
 
   const { users, handleGetUsers, handleFilterUsers } = useUser();
@@ -26,6 +28,7 @@ function Setting() {
   const [name, setName] = useState("");
   const [editName, setEditName] = useState(false);
   const [displayResults, setDisplayResults] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     handleGetUserWorkspaces();
@@ -62,8 +65,22 @@ function Setting() {
     setDisplayResults(false);
   };
 
+  const onDeleteWorkspace = () => {
+    handleDeleteWorkspace(workspace.workspace?._id);
+    setShowDeleteModal(false);
+  };
+
   return (
     <div className="p-6 w-[80%] h-full flex flex-col bg-white/30">
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={onDeleteWorkspace}
+        title="Delete Workspace"
+        message="Are you sure you want to delete this workspace? This action cannot be undone."
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
       <div className="flex items-center gap-2 mb-6">
         <h2 className="text-xl font-bold">Settings</h2>
       </div>
@@ -93,9 +110,19 @@ function Setting() {
         {activeTab === "workspace" && (
           <div className="bg-white p-6 rounded-xl shadow-sm flex w-full h-full overflow-x-auto">
             <div className="w-[65%] px-4 border-r border-gray-200">
-              <h2 className="text-xl font-semibold mb-4 border-b border-gray-200 pb-2">
-                Workspace Details
-              </h2>
+              <div className="flex items-center justify-between border-b border-gray-200">
+                <h2 className="text-xl font-semibold mb-4 pb-2">
+                  Workspace Details
+                </h2>
+
+                <span
+                  onClick={() => setShowDeleteModal(true)}
+                  className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
+                >
+                  Delete
+                </span>
+              </div>
+
               {workspace && (
                 <>
                   <div className="mb-6">
