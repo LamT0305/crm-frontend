@@ -13,6 +13,8 @@ import ProductService from "../pages/ProductService";
 import Statistic from "../pages/Statistic";
 import FirstTimeUser from "../pages/FirstTimeUser";
 import CheckWorkspace from "../pages/CheckWorkspace";
+import Setting from "../pages/Setting";
+import JoinWorkSpace from "../pages/JoinWorkSpace";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
             <Route path="/customers" element={<Customers />} />
             <Route path="/product-services" element={<ProductService />} />
             <Route path="/statistic" element={<Statistic />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/join-workspace/:token" element={<JoinWorkSpace />} />
           </Route>
         </Route>
 

@@ -1,15 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { GET_API, POST_API, DELETE_API, PUT_API } from "../services/APIs";
+import { GET_API, DELETE_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
 import axiosInstance from "../services/Axios";
 import {
   setLoading,
   setError,
   setNotifications,
-  updateNotification,
   removeNotification,
-  setUnreadCount,
-  markAllAsRead,
   addNotification,
 } from "../redux/slice/notiSlice";
 import { useEffect } from "react";
@@ -66,60 +63,6 @@ const useNotification = () => {
     }
   };
 
-  const fetchUnreadCount = async () => {
-    try {
-      const response = await axiosInstance.get(
-        GET_API().unreadNotificationsCount,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        dispatch(setUnreadCount(response.data.data.count));
-      }
-    } catch (error) {
-      console.error("Error fetching unread count:", error);
-    }
-  };
-
-  const markAsRead = async (notificationId) => {
-    try {
-      const response = await axiosInstance.patch(
-        PUT_API(notificationId).notificationRead,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        dispatch(updateNotification(response.data.data));
-        fetchUnreadCount();
-      }
-    } catch (error) {
-      dispatch(setError(error.message));
-    }
-  };
-
-  const markAllAsReadHandler = async () => {
-    try {
-      const res = await axiosInstance.patch(
-        PUT_API().allNotificationsRead,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      if (res.status === 200) {
-        dispatch(markAllAsRead());
-        fetchUnreadCount();
-      }
-    } catch (error) {
-      dispatch(setError(error.message));
-    }
-  };
-
   const deleteNotificationHandler = async (notificationId) => {
     try {
       const res = await axiosInstance.delete(
@@ -138,7 +81,6 @@ const useNotification = () => {
   useEffect(() => {
     if (token) {
       fetchNotifications();
-      fetchUnreadCount();
     }
   }, [token]);
 
@@ -147,11 +89,8 @@ const useNotification = () => {
     unreadCount,
     loading,
     error,
-    markAsRead,
-    markAllAsReadHandler,
     deleteNotificationHandler,
     fetchNotifications,
-    fetchUnreadCount,
   };
 };
 

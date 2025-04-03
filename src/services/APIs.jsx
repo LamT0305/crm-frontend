@@ -73,6 +73,7 @@ export const GET_API = (id) => {
     // Workspace
     workspaceDetails: "/workspace/details",
     userWorkspaces: "/workspace/user-workspaces",
+    joinWorkspace: `/workspace/join`,
 
     //category
     category: "/category",
@@ -87,7 +88,6 @@ export const POST_API = () => {
     // Workspace
     createWorkspace: "/workspace/create",
     inviteMember: "/workspace/invite",
-    joinWorkspace: "/workspace/join",
     switchWorkspace: "/workspace/switch",
     // Resources
     customer: "/customer",
@@ -118,6 +118,7 @@ export const PUT_API = (id) => {
     customerCare: `/customer-care/${id}`,
     notificationRead: `/notification/${id}/read`,
     allNotificationsRead: "/notification/mark-all-read",
+    updateWorkspaceName: "/workspace/update-name",
   };
 };
 
@@ -136,5 +137,8 @@ export const DELETE_API = (id) => {
     email: `/email/${id}`,
     activity: `/activity/${id}`,
     category: `/category/${id}`,
+    deleteWorkspace: `/workspace/delete/${id}`,
+    leaveWorkspace: `/workspace/leave/${id}`,
+    kickMember: `/workspace/member/${id}`,
   };
 };

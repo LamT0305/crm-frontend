@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { GET_API, POST_API } from "../services/APIs";
+import { DELETE_API, GET_API, POST_API, PUT_API } from "../services/APIs";
 import axiosInstance from "../services/Axios";
 import { getToken } from "../utils/auth";
 import { notify } from "../utils/Toastify";
@@ -11,7 +11,9 @@ import {
   addWorkspace,
   setOnboardingStatus,
   clearWorkspaceState,
+  setWorkspaceDetails,
 } from "../redux/slice/workspaceSlice";
+import { useNavigate } from "react-router-dom";
 
 const useWorkspace = () => {
   const dispatch = useDispatch();
@@ -21,8 +23,10 @@ const useWorkspace = () => {
     isLoading,
     error,
     hasCompletedOnboarding,
+    workspace,
   } = useSelector((state) => state.workspace);
   const token = getToken();
+  const navigate = useNavigate();
 
   const handleGetUserWorkspaces = async () => {
     dispatch(setLoading(true));
@@ -37,7 +41,6 @@ const useWorkspace = () => {
       if (res.status === 200) {
         dispatch(setWorkspaces(res.data.data.workspaces));
         dispatch(setCurrentWorkspace(res.data.data.currentWorkspace));
-        // dispatch(setOnboardingStatus(res.data.data[0].hasCompletedOnboarding));
       }
     } catch (error) {
       console.error(error);
@@ -64,7 +67,7 @@ const useWorkspace = () => {
       );
       if (res.status === 200) {
         dispatch(setCurrentWorkspace(res.data.data.currentWorkspace));
-        // dispatch(setOnboardingStatus(res.data.data.hasCompletedOnboarding));
+        handleGetWorkspaceDetails();
         notify.success("Workspace switched successfully");
       }
     } catch (error) {
@@ -89,7 +92,7 @@ const useWorkspace = () => {
         },
       });
       if (res.status === 200) {
-        dispatch(setCurrentWorkspace(res.data.data));
+        dispatch(setWorkspaceDetails(res.data.data));
         return res.data.data;
       }
     } catch (error) {
@@ -153,15 +156,17 @@ const useWorkspace = () => {
         }
       );
       if (res.status === 200) {
+        console.log(res.data.data);
         notify.success("Invitation sent successfully");
-        return true;
       }
     } catch (error) {
       console.error(error);
       notify.error(
         error.response?.data?.message || "Failed to send invitation"
       );
-      return false;
+      if (error.response?.status === 403) {
+        notify.error("Only Admin can invite people");
+      }
     } finally {
       dispatch(setLoading(false));
     }
@@ -170,23 +175,29 @@ const useWorkspace = () => {
   const handleJoinWorkspace = async (token) => {
     try {
       dispatch(setLoading(true));
-      const res = await axiosInstance.post(
-        `${POST_API().joinWorkspace}/${token}`,
-        {},
+      const res = await axiosInstance.get(
+        `${GET_API().joinWorkspace}/${token}`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
         }
       );
+
       if (res.status === 200) {
-        dispatch(addWorkspace(res.data.data));
+        // Refresh workspaces list
+        await handleGetUserWorkspaces();
         notify.success("Joined workspace successfully");
+        navigate("/");
         return true;
       }
+      return false;
     } catch (error) {
-      console.error(error);
-      notify.error(error.response?.data?.message || "Failed to join workspace");
+      console.error("Join workspace error:", error);
+      const errorMessage =
+        error.response?.data?.error || "Failed to join workspace";
+      notify.error(errorMessage);
+      setError(errorMessage);
       return false;
     } finally {
       dispatch(setLoading(false));
@@ -197,12 +208,112 @@ const useWorkspace = () => {
     dispatch(clearWorkspaceState());
   };
 
+  const handleUpdateWorkspaceName = async (workspaceId, newName) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.put(
+        PUT_API().updateWorkspaceName,
+        { workspaceId: workspaceId, name: newName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        handleGetWorkspaceDetails();
+        handleGetUserWorkspaces();
+        notify.success("Workspace name updated successfully");
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        setError(
+          error.response?.data?.message || "Failed to update workspace name"
+        )
+      );
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleDeleteWorkspace = async (workspaceId) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.delete(
+        DELETE_API(workspaceId).deleteWorkspace,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        notify.success("Workspace deleted successfully");
+        handleGetUserWorkspaces();
+        handleGetWorkspaceDetails();
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        setError(error.response?.data?.message || "Failed to delete workspace")
+      );
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleLeaveWorkspace = async (workspaceId) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.delete(
+        DELETE_API(workspaceId).leaveWorkspace,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        notify.success("Left workspace successfully");
+        handleGetUserWorkspaces();
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteMember = async (workspaceId, memberId) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.delete(
+        `${DELETE_API(workspaceId).kickMember}/${memberId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        notify.success("Member deleted successfully");
+        handleGetWorkspaceDetails();
+      }
+    } catch (error) {
+      console.error(error);
+      notify.error(error.response?.data?.message || "Failed to delete member");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   return {
     workspaces,
     currentWorkspace,
     isLoading,
     error,
     hasCompletedOnboarding,
+    workspace,
     handleGetWorkspaceDetails,
     handleCreateWorkspace,
     handleInviteMember,
@@ -210,6 +321,7 @@ const useWorkspace = () => {
     handleClearWorkspace,
     handleGetUserWorkspaces,
     handleSwitchWorkspace,
+    handleUpdateWorkspaceName,
   };
 };
 

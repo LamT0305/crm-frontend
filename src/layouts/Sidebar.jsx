@@ -13,6 +13,7 @@ import WorkspaceIcon from "../assets/Workspace";
 import useWorkspace from "../hooks/useWorkspace";
 import Menu from "../assets/Menu";
 import ConfirmModal from "../components/ConfirmModal";
+import SettingsIcon from "../assets/SettingIcon";
 
 const Sidebar = ({ setAddWS }) => {
   const { logout } = useAuth();
@@ -118,6 +119,15 @@ const Sidebar = ({ setAddWS }) => {
             >
               <StatisticIcon className={"w-[30px] h-[30px] mr-2"} />
               Statistic
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/setting"
+              className="block p-2 hover:bg-gray-200 rounded flex items-center"
+            >
+              <SettingsIcon className={"w-[30px] h-[30px] mr-2"} />
+              Setting
             </Link>
           </li>
           <li>

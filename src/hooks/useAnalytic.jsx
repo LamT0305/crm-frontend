@@ -42,7 +42,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getCustomerStatusDistribution}?${params}`,
+        `${GET_API().analytics.customerStatus}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -65,7 +65,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getCustomerIndustryDistribution}?${params}`,
+        `${GET_API().analytics.customerIndustry}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -88,7 +88,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getCustomerSourceDistribution}?${params}`,
+        `${GET_API().analytics.customerSource}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -111,7 +111,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getMonthlyIncomeDistribution}?${params}`,
+        `${GET_API().analytics.customerIncome}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -135,7 +135,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getDealStatusDistribution}?${params}`,
+        `${GET_API().analytics.dealStatus}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -158,7 +158,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getDealValueAnalysis}?${params}`,
+        `${GET_API().analytics.dealValue}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -181,7 +181,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getProductPerformance}?${params}`,
+        `${GET_API().analytics.productPerformance}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -205,7 +205,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getInteractionTypeDistribution}?${params}`,
+        `${GET_API().analytics.interactionType}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -228,7 +228,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getInteractionTimeline}?${params}`,
+        `${GET_API().analytics.interactionTimeline}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -252,7 +252,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getQuotationAnalysis}?${params}`,
+        `${GET_API().analytics.quotations}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -275,7 +275,7 @@ const useAnalytic = () => {
       if (year) params.append("year", year);
 
       const response = await axiosInstance.get(
-        `${GET_API().getDiscountAnalysis}?${params}`,
+        `${GET_API().analytics.discounts}?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

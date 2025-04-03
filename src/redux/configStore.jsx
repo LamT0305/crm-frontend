@@ -15,6 +15,7 @@ import notiSlice from "./slice/notiSlice";
 import analyticSlice from "./slice/analyticSlice";
 import workspaceSlice from "./slice/workspaceSlice";
 import category from "./slice/categorySlice";
+import userSLice from "./slice/userSlice";
 
 export const configStore = configureStore({
   reducer: {
@@ -34,6 +35,7 @@ export const configStore = configureStore({
     analytic: analyticSlice,
     workspace: workspaceSlice,
     category: category,
+    user: userSLice,
   },
 });
 

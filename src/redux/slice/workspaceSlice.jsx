@@ -6,6 +6,7 @@ const initialState = {
   isLoading: false,
   error: null,
   hasCompletedOnboarding: false,
+  workspace: {},
 };
 
 const workspaceSlice = createSlice({
@@ -58,6 +59,9 @@ const workspaceSlice = createSlice({
       state.hasCompletedOnboarding = false;
       state.error = null;
     },
+    setWorkspaceDetails: (state, action) => {
+      state.workspace = action.payload;
+    },
   },
 });
 
@@ -70,6 +74,7 @@ export const {
   updateWorkspace,
   setOnboardingStatus,
   clearWorkspaceState,
+  setWorkspaceDetails,
 } = workspaceSlice.actions;
 
 export default workspaceSlice.reducer;
