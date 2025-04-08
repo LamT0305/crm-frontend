@@ -1,30 +1,33 @@
 import React, { useEffect } from "react";
 import useWorkspace from "../hooks/useWorkspace";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
 
 function CheckWorkspace() {
-  const { handleGetUserWorkspaces, workspaces, isLoading } = useWorkspace();
+  const { isAuthenticated, user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    handleGetUserWorkspaces();
-  }, []);
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (workspaces?.length > 0) {
-        navigate("/");
+    if (!loading && user) {
+      if (user.hasCompletedOnboarding) {
+        navigate("/", { replace: true });
       } else {
-        navigate("/welcome");
+        navigate("/welcome", { replace: true });
       }
     }
-  }, [workspaces, isLoading, navigate]);
+  }, [isAuthenticated, user, loading]);
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <CircularProgress />
-      <p className="ml-3">Checking workspace...</p>
+    <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600">Checking your workspace...</p>
+      </div>
     </div>
   );
 }

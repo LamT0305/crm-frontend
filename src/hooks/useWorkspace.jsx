@@ -28,9 +28,6 @@ const useWorkspace = () => {
   const token = getToken();
   const navigate = useNavigate();
 
-  
-
-
   const handleGetUserWorkspaces = async () => {
     dispatch(setLoading(true));
     dispatch(setError(null));
@@ -96,7 +93,6 @@ const useWorkspace = () => {
       });
       if (res.status === 200) {
         dispatch(setWorkspaceDetails(res.data.data));
-        return res.data.data;
       }
     } catch (error) {
       console.error(error);
@@ -128,6 +124,8 @@ const useWorkspace = () => {
       if (res.status === 200) {
         dispatch(addWorkspace(res.data.data));
         notify.success("Workspace created successfully");
+        handleGetUserWorkspaces();
+        handleGetWorkspaceDetails();
         dispatch(setLoading(false));
         return true;
       }
@@ -328,7 +326,7 @@ const useWorkspace = () => {
     handleUpdateWorkspaceName,
     handleDeleteWorkspace,
     handleLeaveWorkspace,
-    handleDeleteMember
+    handleDeleteMember,
   };
 };
 

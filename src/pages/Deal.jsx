@@ -3,8 +3,13 @@ import DealForm from "../components/form/DealForm";
 import Filter from "../components/Filter";
 import DealBody from "../components/DealBody";
 import useDeal from "../hooks/useDeal";
+import useWorkspace from "../hooks/useWorkspace";
+import { useNavigate } from "react-router-dom";
 
 function Deal() {
+  const { currentWorkspace, isLoading: workspaceLoading } = useWorkspace();
+  const navigate = useNavigate();
+
   const { handleFilterDeals, handleSortDeals, handleSetDeals, isLoading } =
     useDeal();
   const [openDealForm, setOpenDealForm] = useState(false);
@@ -17,6 +22,16 @@ function Deal() {
     };
     initializeData();
   }, []);
+  const [hasCheckedWorkspace, setHasCheckedWorkspace] = useState(true);
+
+  useEffect(() => {
+    if (workspaceLoading && hasCheckedWorkspace) {
+      if (!currentWorkspace) {
+        navigate("/welcome");
+      }
+      setHasCheckedWorkspace(false);
+    }
+  }, [currentWorkspace, workspaceLoading]);
   const STORAGE_KEY = "selectedDealColumns";
 
   const defaultColumns = [

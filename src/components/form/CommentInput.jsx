@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import useComment from "../../hooks/useComment";
-import useActivity from "../../hooks/useActivity";
 
 function CommentForm({ setOpenCmt, customerId }) {
   const [text, setText] = useState("");
   const { handleAddComment } = useComment();
+
   const handleAdd = () => {
     const comment = new FormData();
     comment.append("customerId", customerId);
@@ -16,33 +16,69 @@ function CommentForm({ setOpenCmt, customerId }) {
     setText("");
     setOpenCmt(false);
   };
-  return (
-    <div className="bg-white px-10 py-5 border-t border-gray-300">
-      <p className="p-2 text-lg font-semibold text-gray-500 border-b border-gray-300 mb-2">
-        Content
-      </p>
-      <textarea
-        className="w-full p-2 rounded-md text-md resize-none focus:outline-none focus:ring-0 focus:border-transparent"
-        rows="6"
-        placeholder="Type your comment here..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      ></textarea>
-      <hr className="border-gray-200" />
 
-      <div className="flex items-center justify-end pr-10 py-2">
-        <p
-          onClick={() => setOpenCmt(false)}
-          className="bg-black hover:bg-gray-200 text-white hover:text-black font-semibold py-1 px-2 mx-2 rounded-md cursor-pointer"
-        >
-          Discard
-        </p>
-        <p
-          onClick={() => handleAdd()}
-          className="bg-black hover:bg-gray-200 text-white hover:text-black font-semibold py-1 px-2 mx-2 rounded-md cursor-pointer"
-        >
-          Send
-        </p>
+  return (
+    <div className="bg-white rounded-lg shadow-lg">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+            <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+            Add Comment
+          </h2>
+          <button
+            onClick={() => setOpenCmt(false)}
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="relative">
+          <textarea
+            className="w-full min-h-[200px] p-4 bg-gray-50 rounded-lg
+                     text-gray-900 placeholder-gray-400
+                     border border-gray-200 focus:border-blue-500
+                     resize-none focus:outline-none focus:ring-1 focus:ring-blue-500
+                     transition-colors"
+            placeholder="Type your comment here..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <div className="absolute bottom-3 right-3 text-sm text-gray-400">
+            {text.length} characters
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-gray-100">
+          <button
+            onClick={() => setOpenCmt(false)}
+            className="px-4 py-2 text-gray-600 hover:text-gray-800 
+                     hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleAdd}
+            disabled={!text.trim()}
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg
+                     hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed
+                     transition-colors"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );

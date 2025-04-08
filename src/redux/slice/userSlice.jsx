@@ -3,8 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   users: [],
   filteredUsers: [],
+  isAuthenticated: false,
   loading: false,
   error: null,
+  user: null,
 };
 
 const userSlice = createSlice({
@@ -44,8 +46,29 @@ const userSlice = createSlice({
           .includes(value.toLowerCase());
       });
     },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    updateUserProfile: (state, action) => {
+      state.user = action.payload;
+    },
+    logout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+    },
+    setAuthenticated: (state, action) => {
+      state.isAuthenticated = action.payload;
+    },
   },
 });
 
-export const { setUsers, setLoading, setFilterUsers } = userSlice.actions;
+export const {
+  setUsers,
+  setLoading,
+  setFilterUsers,
+  setUser,
+  updateUserProfile,
+  logout,
+  setAuthenticated,
+} = userSlice.actions;
 export default userSlice.reducer;

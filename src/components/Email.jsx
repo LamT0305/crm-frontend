@@ -29,179 +29,194 @@ function Email({ customer, setOpenEmailForm }) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-full">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
+
   return (
     <div className="bg-white h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between shadow-md py-2 px-8">
-        <p className="font-bold text-lg">Emails</p>
-        <div className="flex items-center">
-          <input
-            onChange={(e) => handleFilterEmails("subject", e.target.value)}
-            type="text"
-            className="bg-gray-100 text-sm px-2 py-1 rounded-lg mr-5"
-            placeholder="Search...."
-          />
-          <p
-            onClick={() => handleSort()}
-            className="cursor-pointer px-2 py-1 rounded-lg bg-black text-white font-semibold text-sm"
-          >
-            Sort by: {sortOrder ? "Newest" : "Lastest"}
-          </p>
-
-          <p
-            onClick={() => setOpenEmailForm(true)}
-            className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white text-sm hover:bg-gray-200 hover:text-black ml-5"
-          >
-            + New email
-          </p>
-          <div onClick={() => handleGetEmails(customer._id)}>
-            <ReloadIcon className="w-7 h-7 bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-100 ml-5" />
+      <div className="flex items-center justify-between p-6 border-b border-gray-100 shadow-sm">
+        <h2 className="text-xl font-bold text-gray-800 flex items-center">
+          <MailIcon className="w-6 h-6 mr-2 text-blue-500" />
+          Emails
+        </h2>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <input
+              onChange={(e) => handleFilterEmails("subject", e.target.value)}
+              type="text"
+              className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Search emails..."
+            />
+            <svg
+              className="w-5 h-5 absolute left-3 top-2.5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
           </div>
+
+          <button
+            onClick={handleSort}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center"
+          >
+            <span className="mr-2">Sort:</span>
+            {sortOrder ? "Newest" : "Latest"}
+          </button>
+
+          <button
+            onClick={() => setOpenEmailForm(true)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center"
+          >
+            <span className="mr-2">+</span>
+            New Email
+          </button>
+
+          <button
+            onClick={() => handleGetEmails(customer._id)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+          >
+            <ReloadIcon className="w-5 h-5 text-gray-600" />
+          </button>
         </div>
       </div>
 
       {emails.length === 0 ? (
-        <div className="flex flex-col items-center justify-center flex-grow text-2xl text-gray-400">
-          <MailIcon className="w-10 h-10 text-gray-400" />
-          No emails
+        <div className="flex flex-col items-center justify-center flex-grow py-20 bg-gray-50">
+          <MailIcon className="w-16 h-16 text-gray-300 mb-4" />
+          <p className="text-xl font-medium text-gray-500">No emails yet</p>
+          <p className="text-sm text-gray-400 mt-2">
+            Start by composing a new email
+          </p>
         </div>
       ) : (
-        <div className="flex flex-col flex-grow">
-          <div className="max-h-[clamp(200px,75vh,75vh)] flex flex-col overflow-y-auto">
-            {emails.map((email) => (
-              <div key={email._id} className="flex">
-                <div className="w-[10%] flex justify-center py-4">
-                  {email.status === "sent" ? (
-                    <img
-                      src={userAvatar}
-                      alt=""
-                      style={{ width: 50, height: 50, objectFit: "cover" }}
-                      className="rounded-3xl shadow-md"
-                    />
-                  ) : (
-                    <img
-                      src={customerAvatar}
-                      alt=""
-                      style={{ width: 50, height: 50, objectFit: "cover" }}
-                      className="rounded-3xl shadow-md"
-                    />
-                  )}
-                </div>
-                <div className="border border-gray-300 w-[80%] p-4 rounded-xl my-5">
-                  {/* sender */}
-                  <div className="flex items-center justify-between">
-                    {email.status === "sent" ? (
+        <div className="max-h-[clamp(200px,75vh,75vh)] flex flex-col overflow-y-auto p-8">
+          {emails.map((email) => (
+            <div key={email._id} className="flex mb-6 last:mb-0">
+              <div className="w-12 flex-shrink-0">
+                <img
+                  src={email.status === "sent" ? userAvatar : customerAvatar}
+                  alt=""
+                  className="w-12 h-12 rounded-full object-cover shadow-sm"
+                />
+              </div>
+              <div className="ml-4 flex-grow">
+                <div className="bg-gray-50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
                       <div className="flex items-center">
-                        <p>{email.userId.name}</p>
-                        <p className="text-gray-400 ml-2 text-sm">
-                          {"<<"}
-                          {email.userId.email}
-                          {">>"}
+                        <p className="font-medium text-gray-900">
+                          {email.status === "sent"
+                            ? email.userId.name
+                            : `${customer.firstName} ${customer.lastName}`}
+                        </p>
+                        <p className="text-sm text-gray-500 ml-2">
+                          {`<${
+                            email.status === "sent"
+                              ? email.userId.email
+                              : customer.email
+                          }>`}
                         </p>
                       </div>
-                    ) : (
-                      <div className="flex items-center">
-                        <p>{`${customer.firstName} ${customer.lastName}`}</p>
-                        <p className="text-gray-400 ml-2 text-sm">
-                          {"<<"}
-                          {customer.email}
-                          {">>"}
-                        </p>
-                      </div>
-                    )}
-                    {/* delete btn */}
-                    <p onClick={() => handleDeleteEmail(email._id)}>
-                      <CloseIcon
-                        className={
-                          "w-5 h-5 p-1 bg-gray-100 rounded-md hover:bg-gray-300 cursor-pointer"
-                        }
-                      />
-                    </p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        To:{" "}
+                        {email.status === "sent"
+                          ? email.to
+                          : email.userId.email}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteEmail(email._id)}
+                      className="p-1.5 hover:bg-gray-200 rounded-full transition-colors duration-200"
+                    >
+                      <CloseIcon className="w-4 h-4 text-gray-500" />
+                    </button>
                   </div>
 
-                  <p>
-                    <span className="text-gray-400">To:</span>{" "}
-                    {email.status === "sent" ? email.to : email.userId.email}
-                  </p>
-                  <p className="">{email.subject}</p>
-                  <hr className="my-2 border-gray-300" />
-                  <div className="text-sm whitespace-pre-line max-h-[250px] overflow-y-auto">
-                    <EmailDisplay emailText={email.message} />
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">
+                    {email.subject}
+                  </h3>
+                  <div className="border-t border-gray-200 pt-3">
+                    <div className="text-gray-700 text-sm whitespace-pre-line max-h-[250px] overflow-y-auto">
+                      <EmailDisplay emailText={email.message} />
+                    </div>
                   </div>
-                  <div className="flex items-center overflow-x-auto w-full">
-                    {email.attachments &&
-                      email.attachments.map((attachment) => (
-                        <div
+
+                  {email.attachments && email.attachments.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {email.attachments.map((attachment) => (
+                        <a
                           key={attachment._id}
-                          className="mt-2 mx-2 bg-gray-300 w-fit px-4 py-1 rounded-lg text-black cursor-pointer hover:text-blue-500"
+                          href={attachment.path}
+                          target="_blank"
+                          className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-sm text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                         >
-                          <a
-                            href={attachment.path}
-                            target="_blank"
-                            className="underline cursor-pointer"
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                           >
-                            {attachment.filename}
-                          </a>
-                        </div>
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                            />
+                          </svg>
+                          {attachment.filename}
+                        </a>
                       ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-export default Email;
-
 const EmailDisplay = ({ emailText }) => {
-  // Split lines and process them
   const lines = emailText.split("\r\n").map((line, index) => {
     let depth = 0;
-
-    // Detect nested quotes and calculate depth
     const match = line.match(/^(>+)/);
     if (match) {
-      depth = match[0].length; // Count leading '>' to determine depth
-      line = line.substring(depth).trim(); // Remove '>' and trim
+      depth = match[0].length;
+      line = line.substring(depth).trim();
     }
 
-    // Format prefix based on depth
-    const prefix = depth > 0 ? `${"  ".repeat(depth - 1)}|` : "";
-
-    // Convert email addresses to clickable links
     const emailPattern = /([\w.-]+@[\w.-]+\.\w+)/g;
     const processedLine = line.replace(
       emailPattern,
-      (match) => `<a href="mailto:${match}">${match}</a>`
+      (match) =>
+        `<a href="mailto:${match}" class="text-blue-500 hover:underline">${match}</a>`
     );
 
     return (
       <div
         key={index}
-        style={{
-          paddingLeft: `${depth * 10}px`, // Indentation for nested replies
-          // borderLeft: depth > 0 ? "2px solid #ccc" : "none", // Border for replies
-          marginLeft: depth > 0 ? "5px" : "0",
-          // paddingBottom: "5px",
-          whiteSpace: "pre-wrap", // Preserve formatting
-        }}
+        className={`pl-${depth * 4} ${
+          depth > 0 ? "border-l-2 border-gray-200 ml-2" : ""
+        }`}
       >
-        {prefix} <span dangerouslySetInnerHTML={{ __html: processedLine }} />
+        <span dangerouslySetInnerHTML={{ __html: processedLine }} />
       </div>
     );
   });
 
-  return (
-    <div style={{ fontFamily: "Arial, sans-serif", lineHeight: "1.5" }}>
-      {lines}
-    </div>
-  );
+  return <div className="font-sans leading-relaxed">{lines}</div>;
 };
+
+export default Email;

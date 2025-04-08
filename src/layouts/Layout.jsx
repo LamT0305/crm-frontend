@@ -29,7 +29,7 @@ const Layout = () => {
   }
 
   const token = getToken();
-  const BASE_URL = "https://crm-backend-bz03.onrender.com/";
+  const BASE_URL = "http://localhost:3000";
   const { fetchNotifications } = useNotification();
   useEffect(() => {
     const socket = io(BASE_URL, {
@@ -57,11 +57,13 @@ const Layout = () => {
       console.error("Socket connection error:", error);
     });
 
+    //email
     socket.on("newEmail", (data) => {
       fetchNotifications();
       notify.info("New email received!");
     });
 
+    //workspace
     socket.on("notiInvite", (data) => {
       notify.info("New invitation received!");
       fetchNotifications();
@@ -99,13 +101,27 @@ const Layout = () => {
       notify.info(data.data.message || "Workspace removed!");
     });
 
+    //message
+    socket.on("newGroupNoti", (data) => {
+      fetchNotifications();
+      notify.info(data.data.message);
+    });
+
+    socket.on("newMessage", (data) => {
+      console.log(data);
+      fetchNotifications();
+      // check window href
+      if (!window.location.href.includes("/messages")) {
+        notify.info(data.notification.title);
+      }
+    });
     return () => {
       socket.disconnect();
     };
   }, [token]);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex w-screen h-screen bg-gray-100">
       {/* Sidebar Navigation */}
       <Sidebar setAddWS={setAddWS} />
       {/* Dynamic Page Content */}

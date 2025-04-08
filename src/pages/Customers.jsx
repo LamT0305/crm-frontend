@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import useCustomer from "../hooks/useCustomer";
 import Filter from "../components/Filter";
 import CustomerBody from "../components/CustomerBody";
+import useWorkspace from "../hooks/useWorkspace";
+import { useNavigate } from "react-router-dom";
 
 function Customers() {
+  const { currentWorkspace, workspaceLoading } = useWorkspace();
+  const { navigate } = useNavigate();
   const {
     handleFilterCustomers,
     handleSortCustomers,
@@ -12,6 +16,17 @@ function Customers() {
   } = useCustomer();
   const [isOpen, setIsOpen] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [hasCheckedWorkspace, setHasCheckedWorkspace] = useState(true);
+
+  useEffect(() => {
+    if (workspaceLoading && hasCheckedWorkspace) {
+      if (!currentWorkspace) {
+        navigate("/welcome");
+      }
+      setHasCheckedWorkspace(false);
+    }
+  }, [currentWorkspace, workspaceLoading]);
+
   useEffect(() => {
     const initializeData = async () => {
       await handleSetCustomers();
@@ -61,7 +76,7 @@ function Customers() {
 
   if (isLoading && isInitialLoad) {
     return (
-      <div className="flex items-center justify-center h-screen w-[80%]">
+      <div className="flex flex-col items-center justify-center h-screen w-[80%]">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );

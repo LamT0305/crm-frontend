@@ -16,6 +16,7 @@ import analyticSlice from "./slice/analyticSlice";
 import workspaceSlice from "./slice/workspaceSlice";
 import category from "./slice/categorySlice";
 import userSLice from "./slice/userSlice";
+import messageSlice from "./slice/messageSlice";
 
 export const configStore = configureStore({
   reducer: {
@@ -36,6 +37,7 @@ export const configStore = configureStore({
     workspace: workspaceSlice,
     category: category,
     user: userSLice,
+    message: messageSlice,
   },
 });
 

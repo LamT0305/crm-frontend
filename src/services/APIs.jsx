@@ -5,6 +5,7 @@ export const GET_API = (id) => {
     profile: "/auth/profile",
     userProfile: "/user/profile",
     userList: "/user/list",
+    workspaceUsers: "/user/list/workspace",
     getUserById: `/user/${id}`,
 
     // Customer & Leads
@@ -77,6 +78,13 @@ export const GET_API = (id) => {
 
     //category
     category: "/category",
+
+    // Messages
+    conversations: "/message/conversations",
+    messages: `/message/user/${id}`,
+    groupMessages: `/message/group/${id}/messages`,
+    groups: "/message/list/groups",
+    groupDetails: `/message/group/details/${id}`,
   };
 };
 
@@ -103,6 +111,11 @@ export const POST_API = () => {
     notification: "/notification",
     upload: "/upload",
     category: "/category",
+    // Messages
+    sendMessage: "/message/send",
+    createGroup: "/message/group/new", 
+    sendGroupMessage: `/message/group/message`,
+    addGroupMember: "/message/group/:groupId/member", 
   };
 };
 
@@ -119,6 +132,8 @@ export const PUT_API = (id) => {
     notificationRead: `/notification/${id}/read`,
     allNotificationsRead: "/notification/mark-all-read",
     updateWorkspaceName: "/workspace/update-name",
+    // Messages
+    markMessageRead: `/message/message/read/${id}`, 
   };
 };
 
@@ -140,5 +155,9 @@ export const DELETE_API = (id) => {
     deleteWorkspace: `/workspace/delete/${id}`,
     leaveWorkspace: `/workspace/leave/${id}`,
     kickMember: `/workspace/member/${id}`,
+    // Messages
+    deleteMessage: `/message/message/${id}`, 
+    deleteGroupMessage: `/message/group/message/${id}`, 
+    deleteGroup: `/message/group/${id}`, 
   };
 };

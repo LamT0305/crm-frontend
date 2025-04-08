@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import useWorkspace from "../hooks/useWorkspace";
 import { notify } from "../utils/Toastify";
 import { useAuth } from "../context/AuthContext";
-import { CircularProgress } from "@mui/material";
 
 function JoinWorkSpace() {
   const { token } = useParams();
@@ -38,7 +37,7 @@ function JoinWorkSpace() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600">Loading...</p>
+        <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -51,7 +50,12 @@ function JoinWorkSpace() {
             Joining Workspace
           </h2>
           {isLoading ? (
-            <p className="text-gray-600">Processing your invitation...</p>
+            <div className="space-y-4">
+              <div className="flex justify-center">
+                <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+              </div>
+              <p className="text-gray-600">Processing your invitation...</p>
+            </div>
           ) : error ? (
             <div className="text-red-500">
               <p>{error}</p>
@@ -63,12 +67,14 @@ function JoinWorkSpace() {
               </button>
             </div>
           ) : (
-            <>
-              <CircularProgress />
+            <div className="space-y-4">
+              <div className="flex justify-center">
+                <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+              </div>
               <p className="text-gray-600">
                 You will be redirected to the dashboard shortly...
               </p>
-            </>
+            </div>
           )}
         </div>
       </div>

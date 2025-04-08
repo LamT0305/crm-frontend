@@ -44,7 +44,7 @@ function Data({ customerId }) {
       sourceId: _source.sourceId.key,
     };
     handleUpdateCustomer(customerId, data);
-    console.log(data)
+    console.log(data);
     setSave(false);
   };
 

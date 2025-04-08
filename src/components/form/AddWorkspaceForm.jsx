@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import useWorkspace from "../../hooks/useWorkspace";
 import { notify } from "../../utils/Toastify";
+import { useAuth } from "../../context/AuthContext";
 
 const AddWorkspaceForm = ({ setWS }) => {
   const [name, setName] = useState("");
   const { handleCreateWorkspace, isLoading } = useWorkspace();
+  const { user, updateUser } = useAuth();
 
   const createRef = useRef(null);
 
@@ -18,6 +20,11 @@ const AddWorkspaceForm = ({ setWS }) => {
     const success = await handleCreateWorkspace({ name });
     if (success) {
       setWS(false);
+      const updatedUser = {
+        ...user,
+        hasCompletedOnboarding: true,
+      };
+      updateUser(updatedUser);
     }
   };
 

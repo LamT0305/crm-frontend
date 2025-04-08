@@ -44,11 +44,8 @@ const useEmail = () => {
     });
 
     socket.on("updateEmails", (data) => {
-      console.log("📩 New email received:", data);
       handleGetEmails(data.customerId);
-      notify.info(
-        `New email received: ${data?.email?.subject || "New message"}`
-      );
+      
     });
 
     socket.on("error", (error) => {

@@ -15,7 +15,7 @@ const AuthSuccess = () => {
     if (token) {
       storeToken(token);
       setAuthenticated(true);
-      navigate("/"); // Redirect to dashboard
+      navigate("/check-workspace"); // Redirect to check workspace page after successful login
     } else {
       navigate("/login");
     }

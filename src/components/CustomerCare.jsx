@@ -48,43 +48,57 @@ function CustomerCare({ customerId }) {
           customerId={customerId}
         />
       )}
-      <div className="flex items-center justify-between shadow-md py-2 px-8">
-        <p className="font-bold text-lg">Customer care</p>
-        <div className="flex items-center">
-          <div className="flex items-center justify-evenly mr-4">
-            <label className="flex items-center mx-2 text-md">
-              Type
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Customer Care
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <input
                 type="text"
                 value={type}
                 onChange={(e) => handleFilter("type", e.target.value)}
-                className="bg-gray-100 px-2 py-1 rounded-xl ml-2 text-sm"
-                placeholder="enter type..."
+                className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg
+                         text-gray-900 placeholder-gray-400 text-sm
+                         focus:outline-none focus:ring-1 focus:ring-blue-500
+                         transition-colors duration-200"
+                placeholder="Filter by type..."
               />
-            </label>
-            <label className="flex items-center mx-2 text-md">
-              Notes
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => handleFilter("notes", e.target.value)}
-                className="bg-gray-100 px-2 py-1 rounded-xl ml-2 text-sm"
-                placeholder="enter notes..."
+                className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg
+                         text-gray-900 placeholder-gray-400 text-sm
+                         focus:outline-none focus:ring-1 focus:ring-blue-500
+                         transition-colors duration-200"
+                placeholder="Search in notes..."
               />
-            </label>
+              <button
+                onClick={handleSort}
+                className="px-4 py-2 bg-gray-50 text-gray-700 rounded-lg
+                         border border-gray-200 hover:bg-gray-100
+                         transition-colors duration-200"
+              >
+                {sortByDate === "asc" ? "↑ Oldest first" : "↓ Newest first"}
+              </button>
+            </div>
+
             <button
-              onClick={handleSort}
-              className="bg-gray-100 px-2 py-1 rounded-xl text-sm cursor-pointer"
+              onClick={() => setOpenFormInteraction(true)}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg
+                       hover:bg-blue-600 transition-colors duration-200
+                       flex items-center gap-2"
             >
-              Sort by date ({sortByDate === "asc" ? "↑" : "↓"})
+              <span>+</span>
+              New Interaction
             </button>
           </div>
-          <button
-            onClick={() => setOpenFormInteraction(true)}
-            className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white hover:bg-gray-200 hover:text-black"
-          >
-            + New interaction
-          </button>
         </div>
       </div>
 
@@ -98,7 +112,7 @@ function CustomerCare({ customerId }) {
           {interactions.map((e) => (
             <div
               key={e._id}
-              className="border border-gray-300 hover:bg-gray-300 cursor-pointer rounded-2xl px-6 py-3 mb-8"
+              className="border border-gray-100 shadow-md hover:bg-gray-300 cursor-pointer rounded-2xl px-6 py-3 mb-8"
             >
               <div
                 className="w-full flex justify-end"

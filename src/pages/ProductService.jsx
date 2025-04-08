@@ -3,8 +3,13 @@ import Filter from "../components/Filter";
 import CreateProductForm from "../components/form/CreateProductForm";
 import ProductBody from "../components/ProductBody";
 import useProduct from "../hooks/useProduct";
+import useWorkspace from "../hooks/useWorkspace";
+import { useNavigate } from "react-router-dom";
 
 function ProductService() {
+  const { currentWorkspace, isLoading: workspaceLoading } = useWorkspace();
+  const navigate = useNavigate();
+
   const {
     handleFilterProducts,
     handleSortProducts,
@@ -12,6 +17,16 @@ function ProductService() {
     isLoading,
   } = useProduct();
   const [productId, setProductId] = useState(null);
+  const [hasCheckedWorkspace, setHasCheckedWorkspace] = useState(true);
+
+  useEffect(() => {
+    if (workspaceLoading && hasCheckedWorkspace) {
+      if (!currentWorkspace) {
+        navigate("/welcome");
+      }
+      setHasCheckedWorkspace(false);
+    }
+  }, [currentWorkspace, workspaceLoading]);
 
   const STORAGE_KEY = "selectedColumnsProductService";
   const defaultColumns = [

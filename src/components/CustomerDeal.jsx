@@ -110,64 +110,79 @@ function CustomerDeal({ customerId, columns }) {
           customerId={customerId}
         />
       )}
-      <div className="flex flex-col justify-between h-full">
-        {/* header */}
-        <div className="flex items-center justify-between shadow-md py-2 px-8">
-          <p className="font-bold text-lg">Deal history</p>
-          <div className="flex items-center">
-            <label className="bg-gray-200 text-black px-2 py-1 rounded-xl mr-4">
-              Status:
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="flex items-center justify-between py-2 px-8">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Deal History
+            </h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="relative">
               <input
-                className="bg-gray-200 px-2 rounded-xl ml-3"
+                className="pl-4 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-lg
+                           text-gray-900 placeholder-gray-400 text-sm
+                           focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
+                           transition-colors duration-200"
                 type="text"
+                placeholder="Filter by status..."
                 onChange={handleFilter}
               />
-            </label>
-            <p
+            </div>
+            <button
               onClick={handleSort}
-              className="bg-black text-white px-2 py-1 rounded-xl cursor-pointer font-semibold hover:bg-gray-200 hover:text-black"
+              className="px-4 py-2 bg-gray-50 text-gray-700 rounded-lg
+                         border border-gray-200 hover:bg-gray-100
+                         transition-colors duration-200 flex items-center gap-2"
             >
-              Sort by: {sortOrder ? "Newest" : "Latest"}
-            </p>
+              <span>Sort:</span>
+              {sortOrder ? "Newest" : "Latest"}
+            </button>
           </div>
         </div>
-        {/* body table */}
+
+        {/* Table */}
         <div className="overflow-auto px-2 h-[65vh]">
-          <table className="table-auto border-collapse w-full">
+          <table className="w-full">
             <thead>
-              <tr className="bg-gray-100 text-gray-500 text-xs font-thin">
+              <tr>
                 {columns.map((col) => (
-                  <th key={col.key} className="p-2 relative">
+                  <th
+                    key={col.key}
+                    className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-t-lg"
+                  >
                     {col.value}
                   </th>
                 ))}
-                <th className="p-2 relative">Actions</th>
+                <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-t-lg">
+                  Actions
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100 text-center">
               {deals?.map((deal) => (
                 <tr
                   key={deal._id}
-                  className="border-b cursor-pointer hover:bg-gray-200"
+                  className="hover:bg-gray-50 transition-colors duration-150"
                 >
                   {columns.map((col) => (
                     <td
                       onClick={() => onOpenDeal(deal._id)}
                       key={col.key}
-                      className="px-3 py-4 border-b border-gray-300 whitespace-nowrap text-center"
+                      className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 cursor-pointer"
                     >
                       {renderCellContent(deal, col.key)}
                     </td>
                   ))}
-                  <td className="px-3 py-4 border-b border-gray-300 whitespace-nowrap text-center">
-                    <div className="flex justify-center">
-                      <div
-                        className="w-fit"
-                        onClick={() => onDeleteDeal(deal._id)}
-                      >
-                        <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
-                      </div>
-                    </div>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                    <button
+                      onClick={() => onDeleteDeal(deal._id)}
+                      className="p-1 hover:bg-red-50 rounded-lg transition-colors duration-200 group"
+                    >
+                      <CloseIcon className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -175,16 +190,18 @@ function CustomerDeal({ customerId, columns }) {
           </table>
         </div>
 
-        <div className="flex justify-center items-center gap-2 mb-13">
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-2 p-4 border-t border-gray-100">
           <button
             onClick={() => {
               setPage(page - 1);
               handleChangePage(page - 1);
             }}
             disabled={page === 1}
-            className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
+            className="p-2 text-gray-500 hover:bg-gray-50 rounded-lg transition-colors duration-200 
+                     disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {"<"}
+            ←
           </button>
 
           {displayedPages.map((pageNum) => (
@@ -194,11 +211,12 @@ function CustomerDeal({ customerId, columns }) {
                 setPage(pageNum);
                 handleChangePage(pageNum);
               }}
-              className={`px-3 py-1 rounded-lg cursor-pointer ${
-                pageNum === page
-                  ? "bg-blue-400 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200
+                         ${
+                           pageNum === page
+                             ? "bg-blue-500 text-white"
+                             : "text-gray-700 hover:bg-gray-50"
+                         }`}
             >
               {pageNum}
             </button>
@@ -210,9 +228,10 @@ function CustomerDeal({ customerId, columns }) {
               handleChangePage(page + 1);
             }}
             disabled={page >= totalPages}
-            className="px-2 bg-gray-200 rounded-lg cursor-pointer disabled:opacity-50"
+            className="p-2 text-gray-500 hover:bg-gray-50 rounded-lg transition-colors duration-200
+                     disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {">"}
+            →
           </button>
         </div>
       </div>

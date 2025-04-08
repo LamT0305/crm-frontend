@@ -7,11 +7,12 @@ import CloseIcon from "../assets/CloseIcon";
 function Notification({ setOpenNoti }) {
   const { notifications, fetchNotifications, deleteNotificationHandler } =
     useNotification();
+  const notiRef = useRef(null);
+
   useEffect(() => {
     fetchNotifications();
   }, []);
 
-  const notiRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (notiRef.current && !notiRef.current.contains(e.target)) {
@@ -22,58 +23,76 @@ function Notification({ setOpenNoti }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  console.log(notifications);
   return (
-    <div className="absolute left-full top-0 w-[100vw] h-full bg-black/10 z-1000">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 transition-all duration-300">
       <div
         ref={notiRef}
-        className="w-[30%] h-full bg-white border-l border-gray-300 flex flex-col"
+        className="absolute right-0 top-0 w-[400px] h-full bg-white shadow-2xl animate-slide-in"
       >
-        {/* header */}
-        <div className="p-4 flex items-center justify-between">
-          <p className="text-xl font-bold text-gray-500">Notifications</p>
-          <div className="flex items-center">
-            <div onClick={() => fetchNotifications()}>
-              <ReloadIcon
-                className={
-                  "w-6 h-6 bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-100 mr-3"
-                }
-              />
-            </div>
-            <div onClick={() => setOpenNoti(false)}>
-              <CloseIcon
-                className={
-                  "w-6 h-6 bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-100"
-                }
-              />
-            </div>
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
+          <div className="flex items-center space-x-2">
+            <NotiIcon className="w-6 h-6 text-blue-600" />
+            <h2 className="text-xl font-semibold text-gray-800">
+              Notifications
+            </h2>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => fetchNotifications()}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+            >
+              <ReloadIcon className="w-5 h-5 text-gray-600" />
+            </button>
+            <button
+              onClick={() => setOpenNoti(false)}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+            >
+              <CloseIcon className="w-5 h-5 text-gray-600" />
+            </button>
           </div>
         </div>
-        {/* body */}
+
+        {/* Body */}
         {notifications.length === 0 ? (
-          <div className="flex flex-col h-full items-center justify-center">
-            <NotiIcon className={"w-[30px] h-[30px] mr-2"} />
-            <p>No notifications</p>
+          <div className="flex flex-col items-center justify-center h-[calc(100%-80px)] space-y-4 text-gray-500">
+            <NotiIcon className="w-16 h-16 text-gray-300" />
+            <p className="text-lg font-medium">No notifications yet</p>
+            <p className="text-sm">We'll notify you when something arrives</p>
           </div>
         ) : (
-          <div className="h-[85vh] overflow-y-auto">
+          <div className="h-[calc(100%-80px)] overflow-y-auto">
             {notifications.map((notification) => (
               <div
                 key={notification._id}
-                onClick={() => {
-                  if (notification.link !== "") {
-                    window.location.href = notification.link;
-                  }
-                }}
-                className="px-4 py-2 border-b border-gray-200 cursor-pointer flex items-center justify-between hover:bg-gray-100"
+                className="group relative hover:bg-gray-50 transition-all duration-200"
               >
-                <div>
-                  <p className="font-semibold text-sm">{notification.title}</p>
-                  <p className="text-gray-400 text-xs mt-1">
+                <div
+                  onClick={() => {
+                    if (notification.link && notification.link !== "") {
+                      window.location.href = notification.link;
+                    }
+                  }}
+                  className="p-6 border-b border-gray-100 cursor-pointer"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium text-gray-900">
+                      {notification.title}
+                    </h3>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteNotificationHandler(notification._id);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-full transition-all duration-200"
+                    >
+                      <CloseIcon className="w-4 h-4 text-gray-500" />
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">
                     {notification.message}
                   </p>
-
-                  <p className="text-xs bg-gray-100 w-fit px-2 py-1 rounded-lg">
+                  <time className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                     {new Date(notification.createdAt).toLocaleDateString(
                       "en-US",
                       {
@@ -82,22 +101,28 @@ function Notification({ setOpenNoti }) {
                         day: "numeric",
                       }
                     )}
-                  </p>
-                </div>
-                <div
-                  onClick={() => deleteNotificationHandler(notification._id)}
-                >
-                  <CloseIcon
-                    className={
-                      "w-5 h-5 bg-gray-200 p-1 rounded-lg cursor-pointer hover:bg-gray-100"
-                    }
-                  />
+                  </time>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        .animate-slide-in {
+          animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

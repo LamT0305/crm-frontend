@@ -60,14 +60,26 @@ function Task({ customerId, user }) {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between shadow-md py-2 px-8">
-        <p className="font-bold text-lg">Tasks</p>
-        <p
-          onClick={() => setOpenForm(true)}
-          className="bg-black py-1 px-2 cursor-pointer rounded-xl text-white hover:bg-gray-200 hover:text-black"
-        >
-          + New task
-        </p>
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <CheckmarkIcon className="w-5 h-5 text-blue-500" />
+              Tasks
+            </h2>
+          </div>
+
+          <button
+            onClick={() => setOpenForm(true)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg
+                     hover:bg-blue-600 transition-all duration-200
+                     flex items-center gap-2 font-medium"
+          >
+            <span>+</span>
+            New Task
+          </button>
+        </div>
       </div>
 
       {/* body */}
@@ -138,7 +150,7 @@ function Task({ customerId, user }) {
                 onClick={() => onDelete(task._id, task.title)}
                 className="bg-white mr-4 text-xs text-gray-500 p-1 rounded-lg hover:bg-red-400 hover:text-white"
               >
-                <CloseIcon className={"w-4 h-4"}/>
+                <CloseIcon className={"w-4 h-4"} />
               </p>
             </div>
           ))}

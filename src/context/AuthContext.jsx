@@ -5,9 +5,10 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { GET_API, POST_API } from "../services/APIs";
+import { GET_API } from "../services/APIs";
 import axiosInstance from "../services/Axios";
 import { getToken, removeToken } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 const baseURL = "https://crm-backend-bz03.onrender.com/api/v1";
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setAuthenticated] = useState(!!getToken());
+  const navigate = useNavigate();
 
   // ✅ Fetch user info using token
   const getUser = useCallback(async () => {
@@ -25,7 +27,6 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return;
     }
-
     try {
       const res = await axiosInstance.get(GET_API().profile, {
         headers: { Authorization: `Bearer ${token}` }, // 🔥 Use token in headers
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     removeToken();
     setUser(null);
     setAuthenticated(false);
-    window.location.reload();
+    navigate("/");
   };
 
   return (

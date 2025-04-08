@@ -7,6 +7,9 @@ import SaveIcon from "../assets/SaveIcon";
 import useUser from "../hooks/useUser";
 import ConfirmModal from "../components/ConfirmModal";
 import { notify } from "../utils/Toastify";
+import AddWorkspaceForm from "../components/form/AddWorkspaceForm";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Setting() {
   const {
@@ -23,8 +26,15 @@ function Setting() {
     handleLeaveWorkspace,
     handleDeleteMember,
   } = useWorkspace();
-
-  const { users, handleGetUsers, handleFilterUsers } = useUser();
+  const {
+    users,
+    handleGetUsers,
+    handleFilterUsers,
+    handleGetUser,
+    handleUpdateUserProfile,
+    user,
+    loading,
+  } = useUser();
 
   const [activeTab, setActiveTab] = useState("workspace");
   const [inviteEmail, setInviteEmail] = useState("");
@@ -35,11 +45,27 @@ function Setting() {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showKickMemberModal, setShowKickMemberModal] = useState(false);
   const [member, setMember] = useState();
+  const [addNewWS, setAddNewWS] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    handleGetUserWorkspaces();
-    handleGetWorkspaceDetails();
-    handleGetUsers();
+    if (!loading && user) {
+      console.log(user.hasCompletedOnboarding);
+      if (!user.hasCompletedOnboarding) {
+        navigate("/welcome");
+      }
+    }
+  }, [loading, user, workspaces]);
+
+  useEffect(() => {
+    const initializeData = async () => {
+      await handleGetUserWorkspaces();
+      await handleGetWorkspaceDetails();
+      await handleGetUsers();
+      await handleGetUser();
+    };
+
+    initializeData();
   }, []);
 
   useEffect(() => {
@@ -60,7 +86,7 @@ function Setting() {
 
   const handleSearchUser = (value) => {
     setInviteEmail(value);
-    handleFilterUsers(value);
+    handleFilterUsers("email", value);
   };
 
   const onSaveNewName = (workspaceId, name) => {
@@ -73,6 +99,14 @@ function Setting() {
 
   const onDeleteWorkspace = () => {
     handleDeleteWorkspace(workspace.workspace?._id);
+    if (workspaces.length <= 1) {
+      const updatedUser = {
+        ...user,
+        hasCompletedOnboarding: false,
+      };
+      handleUpdateUserProfile(updatedUser);
+      navigate("/welcome");
+    }
     setShowDeleteModal(false);
   };
 
@@ -121,6 +155,7 @@ function Setting() {
         confirmText="Yes, remove"
         cancelText="Cancel"
       />
+      {addNewWS && <AddWorkspaceForm setWS={setAddNewWS} />}
       <div className="flex items-center gap-2 mb-6 bg-white p-6">
         <h2 className="text-xl font-bold">Settings</h2>
       </div>
@@ -174,9 +209,7 @@ function Setting() {
                       <div>
                         {editName ? (
                           <div
-                            onClick={() =>
-                              onSaveNewName(workspace.workspace?._id, name)
-                            }
+                            onClick={() => onSaveNewName(workspace._id, name)}
                           >
                             <SaveIcon
                               className={
@@ -277,15 +310,15 @@ function Setting() {
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
                                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                                    {member.user.name?.charAt(0)}
+                                    {member.user?.name?.charAt(0)}
                                   </div>
                                   <div className="text-sm font-medium text-gray-900">
-                                    {member.user.name}
+                                    {member.user?.name}
                                   </div>
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {member.user.email}
+                                {member.user?.email}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -331,7 +364,10 @@ function Setting() {
                   <h2 className="text-lg font-semibold">All spaces</h2>
                 </div>
 
-                <p className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-grey-800 hover:bg-green-500 hover:text-white">
+                <p
+                  onClick={() => setAddNewWS(true)}
+                  className="px-2 py-1 cursor-pointer mb-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-grey-800 hover:bg-green-500 hover:text-white"
+                >
                   New
                 </p>
               </div>

@@ -4,14 +4,17 @@ import Filter from "../components/Filter";
 import LeadBody from "../components/LeadBody";
 import CreateLeadForm from "../components/form/CreateLeadForm";
 import useLead from "../hooks/useLead";
+import useWorkspace from "../hooks/useWorkspace";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const { currentWorkspace, isLoading: workspaceLoading } = useWorkspace();
   const { handleFilterleads, handleSortLeads, handleSetLeads, isLoading } =
     useLead();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const initializeData = async () => {
       await handleSetLeads();
@@ -19,6 +22,17 @@ function Dashboard() {
     };
     initializeData();
   }, []);
+
+  const [hasCheckedWorkspace, setHasCheckedWorkspace] = useState(true);
+
+  useEffect(() => {
+    if (workspaceLoading && hasCheckedWorkspace) {
+      if (!currentWorkspace) {
+        navigate("/welcome");
+      }
+      setHasCheckedWorkspace(false);
+    }
+  }, [currentWorkspace, workspaceLoading]);
 
   const STORAGE_KEY = "selectedColumns";
 
