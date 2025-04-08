@@ -37,7 +37,7 @@ function Activity({ id }) {
   };
 
   return (
-    <div className="bg-white shadow-sm h-full p-6">
+    <div className="bg-white h-full shadow-sm flex flex-col p-6">
       <div className="flex items-center mb-6">
         <h2 className="text-xl font-bold text-gray-800">Activity Timeline</h2>
         <span className="ml-3 px-3 py-1 text-sm bg-gray-100 rounded-full text-gray-600">
@@ -53,7 +53,7 @@ function Activity({ id }) {
         </div>
       ) : (
         <div className="flex flex-col h-full">
-          <div className="max-h-[clamp(200px,75vh,75vh)] flex flex-col overflow-y-auto pr-4 space-y-4">
+          <div className="max-h-[clamp(200px,75vh,75vh)] flex flex-col overflow-y-auto pr-4">
             {activities.map((activity) => (
               <div
                 key={activity._id}

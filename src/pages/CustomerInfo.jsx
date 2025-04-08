@@ -58,7 +58,7 @@ function CustomerInfo() {
 
       <CustomerHeader name={customer?.firstName} setOpenDeal={setOpenDeal} />
       <div className="w-full h-full flex ">
-        <div className="w-[80%] h-[100%] border-r border-gray-300 relative flex flex-col">
+        <div className="w-[80%] h-full border-r border-gray-300 relative flex flex-col">
           <CustomerNavigation tagName={tagName} setTagName={setTagName} />
           {tagName === "activity" ? <Activity id={id} /> : null}
           {tagName === "email" ? (
