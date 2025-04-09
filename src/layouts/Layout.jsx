@@ -42,12 +42,10 @@ const Layout = () => {
     });
 
     socket.on("connect", () => {
-      console.log("Connected to notification socket");
       if (token) {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.id;
         if (userId) {
-          console.log("Joining room with userId:", userId);
           socket.emit("join", userId);
         }
       }

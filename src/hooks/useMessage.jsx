@@ -24,6 +24,7 @@ import {
   deleteGroup,
   updateConversationUnreadCount,
   updateGroupUnreadCount,
+  setAttachments,
 } from "../redux/slice/messageSlice";
 import io from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
@@ -40,6 +41,7 @@ const useMessage = () => {
     currentChat,
     unreadCount,
     group,
+    attachments
   } = useSelector((state) => state.message);
   const token = getToken();
   const BASE_URL = "http://localhost:3000";
@@ -56,12 +58,10 @@ const useMessage = () => {
     });
 
     socket.on("connect", () => {
-      console.log("Connected to message socket");
       if (token) {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.id;
         if (userId) {
-          console.log("Joining room with userId:", userId);
           socket.emit("join", userId);
         }
       }
@@ -390,6 +390,51 @@ const useMessage = () => {
     }
     dispatch(setLoading(false));
   };
+
+  const handleGetAttachmentsInDirectMS = async (userId) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await axiosInstance.get(
+        GET_API(userId).getAttachmentsInDirectMS,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        dispatch(setAttachments(response.data.data));
+      }
+    } catch (error) {
+      dispatch(setError(error.response?.data?.message));
+      notify.error(
+        error.response?.data?.message || "Failed to fetch attachments"
+      );
+      throw error;
+    }
+    dispatch(setLoading(false));
+  };
+
+  const handleGetAttachmentsInGroupMS = async (groupId) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await axiosInstance.get(
+        GET_API(groupId).getAttachmentsInGroupMS,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        dispatch(setAttachments(response.data.data));
+      }
+    } catch (error) {
+      dispatch(setError(error.response?.data?.message));
+      notify.error(
+        error.response?.data?.message || "Failed to fetch attachments"
+      );
+      throw error;
+    }
+    dispatch(setLoading(false));
+  };
+
   return {
     // State
     messages,
@@ -399,6 +444,8 @@ const useMessage = () => {
     loading,
     error,
     currentChat,
+    group,
+    attachments,
 
     // Direct Message Methods
     sendMessage,
@@ -406,6 +453,9 @@ const useMessage = () => {
     getConversations,
     markMessageAsRead,
     removeMessage,
+    // Attachments Methods
+    handleGetAttachmentsInDirectMS,
+    handleGetAttachmentsInGroupMS,
 
     // Group Message Methods
     createGroup,

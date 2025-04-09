@@ -5,6 +5,7 @@ import AnalyticNavigation from "../components/AnalyticNavigation";
 import DealAnalytic from "../components/DealAnalytic";
 import InteractionAnalytic from "../components/InteractionAnalytic";
 import SaleAnalytic from "../components/SaleAnalytic";
+import useWorkspace from "../hooks/useWorkspace";
 
 function Statistic() {
   const {
@@ -19,10 +20,11 @@ function Statistic() {
   } = useAnalytic();
   const [selectedDate, setSelectedDate] = useState("");
   const [tag, setTag] = useState("customer-analytics");
+  const { currentWorkspace } = useWorkspace();
 
   useEffect(() => {
     fetchAllAnalytics();
-  }, []);
+  }, [currentWorkspace]);
 
   const handleDateChange = (e) => {
     const date = e.target.value;

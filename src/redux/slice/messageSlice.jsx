@@ -10,6 +10,7 @@ const initialState = {
   currentChat: null,
   unreadCount: 0,
   group: {},
+  attachments: [],
 };
 
 const messageSlice = createSlice({
@@ -135,6 +136,10 @@ const messageSlice = createSlice({
         group.unreadCount = unreadCount;
       }
     },
+
+    setAttachments: (state, action) => {
+      state.attachments = action.payload;
+    },
   },
 });
 
@@ -161,6 +166,7 @@ export const {
   deleteGroup,
   updateConversationUnreadCount,
   updateGroupUnreadCount,
+  setAttachments,
 } = messageSlice.actions;
 
 export default messageSlice.reducer;

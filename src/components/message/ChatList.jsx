@@ -7,6 +7,8 @@ const ChatList = ({ conversations, currentChat, onSelectChat }) => {
   const { handleGetWorkspaceUsers, handleFilterUsers, users } = useUser();
   const [showSearch, setShowSearch] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
+  
   useEffect(() => {
     handleGetWorkspaceUsers();
   }, []);

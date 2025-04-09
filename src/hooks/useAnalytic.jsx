@@ -47,7 +47,9 @@ const useAnalytic = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      dispatch(setCustomerStatusDistribution(response.data.data));
+      if (response.status === 200) {
+        dispatch(setCustomerStatusDistribution(response.data.data));
+      }
     } catch (error) {
       console.error("Error fetching status distribution:", error);
       dispatch(setError(error.message));

@@ -85,6 +85,8 @@ export const GET_API = (id) => {
     groupMessages: `/message/group/${id}/messages`,
     groups: "/message/list/groups",
     groupDetails: `/message/group/details/${id}`,
+    getAttachmentsInDirectMS: `/message/user/${id}/attachments`,
+    getAttachmentsInGroupMS: `/message/group/${id}/attachments`,
   };
 };
 
@@ -113,9 +115,9 @@ export const POST_API = () => {
     category: "/category",
     // Messages
     sendMessage: "/message/send",
-    createGroup: "/message/group/new", 
+    createGroup: "/message/group/new",
     sendGroupMessage: `/message/group/message`,
-    addGroupMember: "/message/group/:groupId/member", 
+    addGroupMember: "/message/group/:groupId/member",
   };
 };
 
@@ -133,7 +135,7 @@ export const PUT_API = (id) => {
     allNotificationsRead: "/notification/mark-all-read",
     updateWorkspaceName: "/workspace/update-name",
     // Messages
-    markMessageRead: `/message/message/read/${id}`, 
+    markMessageRead: `/message/message/read/${id}`,
   };
 };
 
@@ -156,8 +158,8 @@ export const DELETE_API = (id) => {
     leaveWorkspace: `/workspace/leave/${id}`,
     kickMember: `/workspace/member/${id}`,
     // Messages
-    deleteMessage: `/message/message/${id}`, 
-    deleteGroupMessage: `/message/group/message/${id}`, 
-    deleteGroup: `/message/group/${id}`, 
+    deleteMessage: `/message/message/${id}`,
+    deleteGroupMessage: `/message/group/message/${id}`,
+    deleteGroup: `/message/group/${id}`,
   };
 };
