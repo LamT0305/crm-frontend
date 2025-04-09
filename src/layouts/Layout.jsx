@@ -1,5 +1,5 @@
 // src/components/Layout.js
-import { Outlet, useNavigate } from "react-router-dom";
+import { data, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import { useEffect, useState } from "react";
@@ -106,12 +106,15 @@ const Layout = () => {
     });
 
     socket.on("newMessage", (data) => {
-      console.log(data);
       fetchNotifications();
-      // check window href
       if (!window.location.href.includes("/messages")) {
         notify.info(data.notification.title);
       }
+    });
+
+    socket.on("addedToGroup", (data) => {
+      fetchNotifications();
+      notify.success(data.noti.title);
     });
     return () => {
       socket.disconnect();

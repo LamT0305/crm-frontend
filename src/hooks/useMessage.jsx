@@ -41,7 +41,7 @@ const useMessage = () => {
     currentChat,
     unreadCount,
     group,
-    attachments
+    attachments,
   } = useSelector((state) => state.message);
   const token = getToken();
   const BASE_URL = "http://localhost:3000";
@@ -69,6 +69,13 @@ const useMessage = () => {
 
     // Direct message events
     socket.on("newMessage", (data) => {
+      const messageId = data.message._id;
+      const isDuplicate = messages.some((msg) => msg._id === messageId);
+
+      if (isDuplicate) {
+        return;
+      }
+
       dispatch(addMessage(data.message));
       if (data.message.receiver === currentChat?._id) {
         markMessageAsRead(data.message._id);
@@ -106,6 +113,17 @@ const useMessage = () => {
     });
 
     socket.on("newGroupMessage", ({ groupId, message }) => {
+      if (currentChat?._id === groupId) {
+        const messageId = message._id;
+        if (groupMessages && groupMessages[groupId]) {
+          const isDuplicate = groupMessages[groupId].some(
+            (msg) => msg._id === messageId
+          );
+          if (isDuplicate) {
+            return;
+          }
+        }
+      }
       dispatch(addGroupMessage({ groupId, message }));
       if (currentChat?._id !== groupId) {
         dispatch(incrementUnreadCount());
@@ -123,8 +141,8 @@ const useMessage = () => {
       }
     });
 
-    socket.on("addedToGroup", (group) => {
-      dispatch(addGroup(group));
+    socket.on("addedToGroup", (data) => {
+      dispatch(addGroup(data.group));
     });
 
     socket.on("groupUpdated", (group) => {
@@ -144,8 +162,9 @@ const useMessage = () => {
       socket.off("groupMessagesRead");
       socket.off("addedToGroup");
       socket.off("groupUpdated");
+      socket.disconnect();
     };
-  }, [dispatch, token, currentChat]);
+  }, [dispatch, token, currentChat, messages, groupMessages]);
 
   // Direct Messages
   const sendMessage = async (content) => {
@@ -282,12 +301,24 @@ const useMessage = () => {
       if (!content) {
         return;
       }
-      await axiosInstance.post(POST_API().sendGroupMessage, content, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axiosInstance.post(
+        POST_API().sendGroupMessage,
+        content,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(
+          addGroupMessage({
+            groupId: content.get("groupId"),
+            message: res.data.data,
+          })
+        );
+      }
     } catch (error) {
       dispatch(setError(error.response?.data?.message));
       notify.error(

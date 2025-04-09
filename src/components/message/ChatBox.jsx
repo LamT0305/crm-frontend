@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
-import { formatDistanceToNow, set } from "date-fns";
+import React, { useState, useRef, useEffect, use } from "react";
+import { formatDistanceToNow, getHours, set } from "date-fns";
 import { notify } from "../../utils/Toastify";
 import ExclamationMark from "../../assets/ExclamationMark";
 import useMessage from "../../hooks/useMessage";
 import AddUserIcon from "../../assets/AddUserIcon";
 import useUser from "../../hooks/useUser";
+import { useAuth } from "../../context/AuthContext";
 
 const ChatBox = ({
   currentUser,
@@ -150,6 +151,7 @@ const ChatBox = ({
           chatref={chatContainerRef}
           messageEndRef={messagesEndRef}
           isOwnMessage={isOwnMessage}
+          onDeleteMessage={onDeleteMessage}
         />
       ) : (
         <DetailsModal
@@ -268,7 +270,13 @@ const ChatBox = ({
 
 export default ChatBox;
 
-const MessageArea = ({ messages, chatref, messageEndRef, isOwnMessage }) => {
+const MessageArea = ({
+  messages,
+  chatref,
+  messageEndRef,
+  isOwnMessage,
+  onDeleteMessage,
+}) => {
   return (
     <div
       ref={chatref}
@@ -380,11 +388,16 @@ const DetailsModal = ({
     attachments,
     handleGetAttachmentsInDirectMS,
     handleGetAttachmentsInGroupMS,
+    addMemberToGroup,
   } = useMessage();
   const { users, handleGetWorkspaceUsers } = useUser();
+  const [openForm, setOpenForm] = useState(false);
+  const { user } = useAuth();
 
   const handleAddMember = () => {
     // Logic to add a member goes here
+    setOpenForm(true);
+    handleGetWorkspaceUsers();
     console.log("Add member button clicked");
   };
 
@@ -442,17 +455,30 @@ const DetailsModal = ({
           </div>
         </div>
 
+        {openForm && (
+          <AddMemberForm
+            openForm={openForm}
+            setOpenForm={setOpenForm}
+            users={users}
+            members={group?.members || []}
+            handleAddMember={addMemberToGroup}
+            group={group}
+          />
+        )}
         <h2 className="text-2xl font-bold mb-4 text-gray-800 w-full text-center">
           {currentChat.name}
         </h2>
 
-        {currentChat.type === "group" && (
-          <div className="flex justify-center" onClick={handleAddMember}>
-            <AddUserIcon
-              className={"w-15 h-15 border p-3 rounded-full cursor-pointer"}
-            />
-          </div>
-        )}
+        {currentChat.type === "group" &&
+          group &&
+          user &&
+          group.creator === user._id && (
+            <div className="flex justify-center" onClick={handleAddMember}>
+              <AddUserIcon
+                className={"w-15 h-15 border p-3 rounded-full cursor-pointer"}
+              />
+            </div>
+          )}
 
         <h3
           onClick={() => onViewAttachments()}
@@ -470,7 +496,7 @@ const DetailsModal = ({
             ) : (
               <>
                 {attachments && (
-                  <div className="mt-4 space-y-2">
+                  <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto">
                     {attachments.map((a) => (
                       <div
                         key={a._id}
@@ -522,36 +548,75 @@ const DetailsModal = ({
                   </div>
                 ) : (
                   group && (
-                    <div className="overflow-x-auto mt-4">
-                      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                        <thead>
-                          <tr className="bg-gray-100">
-                            <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
-                              Name
-                            </th>
-                            <th className="py-2 px-4 text-left text-sm font-semibold text-gray-700">
-                              Email
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {group.members?.map((member, index) => (
-                            <tr
-                              key={member._id}
-                              className={`hover:bg-gray-50 transition-colors duration-200 ${
-                                index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                              }`}
-                            >
-                              <td className="py-2 px-4 text-sm text-gray-700">
-                                {member.name}
-                              </td>
-                              <td className="py-2 px-4 text-sm text-gray-700">
-                                {member.email}
-                              </td>
+                    <div className="mt-4 bg-white rounded-xl shadow-sm overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Name
+                              </th>
+                              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Email
+                              </th>
+                              {group.creator &&
+                                user &&
+                                group.creator === user._id && (
+                                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Action
+                                  </th>
+                                )}
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {[...group.members]
+                              ?.sort((a, b) => {
+                                if (a._id === group.creator) return -1;
+                                if (b._id === group.creator) return 1;
+                                return 0;
+                              })
+                              .map((member, index) => (
+                                <tr
+                                  key={member._id}
+                                  className="hover:bg-gray-50 transition-colors duration-200"
+                                >
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <span className="text-blue-600 font-medium text-sm">
+                                          {member.name.charAt(0)}
+                                        </span>
+                                      </div>
+                                      <div className="ml-4">
+                                        <div className="text-sm font-medium text-gray-900">
+                                          {member.name}
+                                        </div>
+                                        {member._id === group.creator && (
+                                          <div className="text-xs text-blue-600">
+                                            Group Admin
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {member.email}
+                                  </td>
+                                  {group.creator &&
+                                    user &&
+                                    group.creator === user._id &&
+                                    member._id !== group.creator && (
+                                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-start">
+                                        <button className="text-red-600 hover:text-red-900 transition-colors duration-200">
+                                          Remove
+                                        </button>
+                                      </td>
+                                    )}
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   )
                 )}
@@ -564,4 +629,165 @@ const DetailsModal = ({
   );
 };
 
+const AddMemberForm = ({
+  setOpenForm,
+  users,
+  members,
+  handleAddMember,
+  group,
+}) => {
+  const [text, setText] = useState("");
+  const [userId, setUserId] = useState("");
+  const [viewListUser, setViewListUser] = useState(false);
+  const formRef = useRef(null);
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (formRef.current && !formRef.current.contains(event.target)) {
+        setOpenForm(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (group && text && userId) {
+      console.log(group._id);
+      console.log(userId);
+      handleAddMember(group._id, userId);
+      setText("");
+      setUserId("");
+      setOpenForm(false);
+    } else {
+      notify.error("Please provide an email!");
+    }
+  };
+
+  const filterUsers = users?.filter(
+    (user) => !members?.some((us) => us._id === user._id)
+  );
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+      <div
+        ref={formRef}
+        className="bg-white rounded-2xl p-8 shadow-2xl w-full max-w-md"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">Add a new member</h2>
+          <button
+            onClick={() => setOpenForm(false)}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Email address
+            </label>
+            <div className="relative">
+              <input
+                onClick={() => setViewListUser(true)}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                type="email"
+                id="email"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                placeholder="Search by email..."
+              />
+              {text && (
+                <button
+                  type="button"
+                  onClick={() => setText("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {viewListUser && text.length > 0 && (
+              <div className="mt-2 max-h-[240px] overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
+                <ul className="divide-y divide-gray-200">
+                  {filterUsers &&
+                    filterUsers
+                      .filter((user) =>
+                        user.email.toLowerCase().includes(text.toLowerCase())
+                      )
+                      .map((user) => (
+                        <li
+                          key={user._id}
+                          className="p-4 hover:bg-gray-50 cursor-pointer transition-colors duration-150 flex items-center space-x-3"
+                          onClick={() => {
+                            setText(user.email);
+                            setUserId(user._id);
+                            setViewListUser(false);
+                          }}
+                        >
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="text-blue-600 font-medium text-sm">
+                              {user.email.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <span className="text-gray-700">{user.email}</span>
+                        </li>
+                      ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={() => setOpenForm(false)}
+              className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+            >
+              Add member
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
