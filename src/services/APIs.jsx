@@ -161,5 +161,6 @@ export const DELETE_API = (id) => {
     deleteMessage: `/message/message/${id}`,
     deleteGroupMessage: `/message/group/message/${id}`,
     deleteGroup: `/message/group/${id}`,
+    removeGroupMember: `/message/group/${id}/member`,
   };
 };

@@ -282,92 +282,93 @@ const MessageArea = ({
       ref={chatref}
       className="flex-1 overflow-auto p-6 space-y-6 bg-gradient-to-b from-gray-50 to-white"
     >
-      {messages.map((message) => (
-        <div
-          key={message._id}
-          className={`flex gap-3 group ${
-            isOwnMessage(message) ? "flex-row-reverse" : "flex-row"
-          }`}
-        >
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 overflow-hidden">
-            {message.sender.avatar ? (
-              <img
-                src={message.sender.avatar}
-                alt={message.sender.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="w-full h-full flex items-center justify-center text-blue-600 font-medium">
-                {message.sender.name.charAt(0)}
-              </span>
-            )}
-          </div>
+      {Array.isArray(messages) &&
+        messages.map((message) => (
           <div
-            className={`max-w-[70%] flex flex-col ${
-              isOwnMessage(message) ? "items-end" : "items-start"
+            key={message._id}
+            className={`flex gap-3 group ${
+              isOwnMessage(message) ? "flex-row-reverse" : "flex-row"
             }`}
           >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm font-medium text-gray-700">
-                {message.sender.name}
-              </span>
-              <span className="text-xs text-gray-500">
-                {formatDistanceToNow(new Date(message.createdAt), {
-                  addSuffix: true,
-                })}
-              </span>
-            </div>
-            <div
-              className={`p-3 rounded-2xl shadow-sm max-w-[25vw] break-words ${
-                isOwnMessage(message)
-                  ? "bg-blue-600 text-white"
-                  : "bg-white border border-gray-100 text-gray-800"
-              }`}
-            >
-              <p className="leading-relaxed">{message.content}</p>
-            </div>
-            <div>
-              {message.attachments && message.attachments.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {message.attachments.map((attachment) => (
-                    <div key={attachment._id}>
-                      <a
-                        href={attachment.path || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500! hover:text-blue-700! underline!"
-                      >
-                        {attachment.filename}
-                      </a>
-                    </div>
-                  ))}
-                </div>
+            <div className="w-8 h-8 rounded-full bg-blue-100 flex-shrink-0 overflow-hidden">
+              {message.sender.avatar ? (
+                <img
+                  src={message.sender.avatar}
+                  alt={message.sender.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="w-full h-full flex items-center justify-center text-blue-600 font-medium">
+                  {message.sender?.name?.charAt(0)}
+                </span>
               )}
             </div>
-            {isOwnMessage(message) && (
-              <button
-                onClick={() => onDeleteMessage(message._id)}
-                className="text-gray-400 hover:text-red-500 transition-colors duration-200 p-1 mt-1 opacity-0 group-hover:opacity-100"
-                title="Delete message"
+            <div
+              className={`max-w-[70%] flex flex-col ${
+                isOwnMessage(message) ? "items-end" : "items-start"
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-medium text-gray-700">
+                  {message.sender.name}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {formatDistanceToNow(new Date(message.createdAt), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </div>
+              <div
+                className={`p-3 rounded-2xl shadow-sm max-w-[25vw] break-words ${
+                  isOwnMessage(message)
+                    ? "bg-blue-600 text-white"
+                    : "bg-white border border-gray-100 text-gray-800"
+                }`}
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <p className="leading-relaxed">{message.content}</p>
+              </div>
+              <div>
+                {message.attachments && message.attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {message.attachments.map((attachment) => (
+                      <div key={attachment._id}>
+                        <a
+                          href={attachment.path || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500! hover:text-blue-700! underline!"
+                        >
+                          {attachment.filename}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {isOwnMessage(message) && (
+                <button
+                  onClick={() => onDeleteMessage(message._id)}
+                  className="text-gray-400 hover:text-red-500 transition-colors duration-200 p-1 mt-1 opacity-0 group-hover:opacity-100"
+                  title="Delete message"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            )}
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
       <div ref={messageEndRef} />
     </div>
   );
@@ -389,6 +390,7 @@ const DetailsModal = ({
     handleGetAttachmentsInDirectMS,
     handleGetAttachmentsInGroupMS,
     addMemberToGroup,
+    handleRemoveMember,
   } = useMessage();
   const { users, handleGetWorkspaceUsers } = useUser();
   const [openForm, setOpenForm] = useState(false);
@@ -398,7 +400,6 @@ const DetailsModal = ({
     // Logic to add a member goes here
     setOpenForm(true);
     handleGetWorkspaceUsers();
-    console.log("Add member button clicked");
   };
 
   useEffect(() => {
@@ -472,7 +473,7 @@ const DetailsModal = ({
         {currentChat.type === "group" &&
           group &&
           user &&
-          group.creator === user._id && (
+          group.creator?._id === user._id && (
             <div className="flex justify-center" onClick={handleAddMember}>
               <AddUserIcon
                 className={"w-15 h-15 border p-3 rounded-full cursor-pointer"}
@@ -561,7 +562,7 @@ const DetailsModal = ({
                               </th>
                               {group.creator &&
                                 user &&
-                                group.creator === user._id && (
+                                group.creator._id === user._id && (
                                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                     Action
                                   </th>
@@ -571,8 +572,8 @@ const DetailsModal = ({
                           <tbody className="bg-white divide-y divide-gray-200">
                             {[...group.members]
                               ?.sort((a, b) => {
-                                if (a._id === group.creator) return -1;
-                                if (b._id === group.creator) return 1;
+                                if (a._id === group.creator._id) return -1;
+                                if (b._id === group.creator._id) return 1;
                                 return 0;
                               })
                               .map((member, index) => (
@@ -591,7 +592,7 @@ const DetailsModal = ({
                                         <div className="text-sm font-medium text-gray-900">
                                           {member.name}
                                         </div>
-                                        {member._id === group.creator && (
+                                        {member._id === group.creator._id && (
                                           <div className="text-xs text-blue-600">
                                             Group Admin
                                           </div>
@@ -604,10 +605,18 @@ const DetailsModal = ({
                                   </td>
                                   {group.creator &&
                                     user &&
-                                    group.creator === user._id &&
-                                    member._id !== group.creator && (
+                                    group.creator._id === user._id &&
+                                    member._id !== group.creator._id && (
                                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-start">
-                                        <button className="text-red-600 hover:text-red-900 transition-colors duration-200">
+                                        <button
+                                          onClick={() =>
+                                            handleRemoveMember(
+                                              group._id,
+                                              member._id
+                                            )
+                                          }
+                                          className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                                        >
                                           Remove
                                         </button>
                                       </td>
@@ -656,8 +665,6 @@ const AddMemberForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (group && text && userId) {
-      console.log(group._id);
-      console.log(userId);
       handleAddMember(group._id, userId);
       setText("");
       setUserId("");

@@ -25,6 +25,7 @@ import {
   updateConversationUnreadCount,
   updateGroupUnreadCount,
   setAttachments,
+  updateGroup,
 } from "../redux/slice/messageSlice";
 import io from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
@@ -142,13 +143,19 @@ const useMessage = () => {
     });
 
     socket.on("addedToGroup", (data) => {
-      dispatch(addGroup(data.group));
+      getGroups();
     });
 
     socket.on("groupUpdated", (group) => {
-      dispatch(
-        setGroups((prev) => prev.map((g) => (g._id === group._id ? group : g)))
-      );
+      getGroups();
+    });
+
+    socket.on("removedFromGroup", (data) => {
+      dispatch(deleteGroup(data.group?._id));
+      getGroups();
+      if (currentChat?._id === data.group?._id) {
+        dispatch(setCurrentChat(null));
+      }
     });
 
     return () => {
@@ -373,6 +380,9 @@ const useMessage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      if (response.status === 200) {
+        dispatch(updateGroup(response.data.data));
+      }
     } catch (error) {
       notify.error(
         error.response?.data?.message || "Failed to add member to group"
@@ -466,6 +476,36 @@ const useMessage = () => {
     dispatch(setLoading(false));
   };
 
+  const handleRemoveMember = async (groupId, memberId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to remove this member from the group?"
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    dispatch(setLoading(true));
+    try {
+      const res = await axiosInstance.delete(
+        `${DELETE_API(groupId).removeGroupMember}/${memberId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (res.status === 200) {
+        notify.success("Member removed successfully");
+        dispatch(updateGroup(res.data.data));
+      }
+    } catch (error) {
+      dispatch(setError(error.response?.data?.message));
+      notify.error(error.response?.data?.message || "Failed to remove member");
+      dispatch(setLoading(false));
+      throw error;
+    }
+    dispatch(setLoading(false));
+  };
+
   return {
     // State
     messages,
@@ -497,6 +537,7 @@ const useMessage = () => {
     addMemberToGroup,
     setGroupDetails,
     handleDeleteGroup,
+    handleRemoveMember,
 
     // Utility Methods
     setActiveChat,

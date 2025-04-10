@@ -140,6 +140,11 @@ const messageSlice = createSlice({
     setAttachments: (state, action) => {
       state.attachments = action.payload;
     },
+
+    updateGroup: (state, action) => {
+      
+      state.group = action.payload;
+    },
   },
 });
 
@@ -167,6 +172,7 @@ export const {
   updateConversationUnreadCount,
   updateGroupUnreadCount,
   setAttachments,
+  updateGroup,
 } = messageSlice.actions;
 
 export default messageSlice.reducer;

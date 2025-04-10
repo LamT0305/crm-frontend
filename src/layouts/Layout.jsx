@@ -116,6 +116,12 @@ const Layout = () => {
       fetchNotifications();
       notify.success(data.noti.title);
     });
+
+    socket.on("removedFromGroup", (data) => {
+      fetchNotifications();
+      notify.error(data.noti.title);
+    });
+    
     return () => {
       socket.disconnect();
     };
