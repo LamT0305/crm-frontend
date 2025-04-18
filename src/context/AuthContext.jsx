@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
   // ✅ Login & store token
   const loginWithGoogle = () => {
-    window.location.href = `${baseURL}${GET_API().login}`;
+    window.location.href = "/api/v1/auth/google";
   };
 
   // ✅ Logout user & clear token

@@ -9,12 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(
-  <Provider store={configStore}>
-    <BrowserRouter>
-      <AuthProvider>
+    <Provider store={configStore}>
+      <BrowserRouter>
+        <AuthProvider>
           <ToastContainer />
           <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </Provider>
+        </AuthProvider>
+      </BrowserRouter>
+    </Provider>
 );

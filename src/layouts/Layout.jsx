@@ -29,7 +29,9 @@ const Layout = () => {
   }
 
   const token = getToken();
-  const BASE_URL = "http://localhost:3000";
+  const BASE_URL = "https://crm-backend-bz03.onrender.com";
+  // https://crm-backend-bz03.onrender.com
+  // http://localhost:3000
   const { fetchNotifications } = useNotification();
   useEffect(() => {
     const socket = io(BASE_URL, {

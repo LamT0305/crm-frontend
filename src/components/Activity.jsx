@@ -53,7 +53,7 @@ function Activity({ id }) {
         </div>
       ) : (
         <div className="flex flex-col h-full">
-          <div className="max-h-[clamp(200px,75vh,75vh)] flex flex-col overflow-y-auto pr-4">
+          <div className="max-h-[clamp(200px,70vh,70vh)] flex flex-col overflow-y-auto pr-4">
             {activities.map((activity) => (
               <div
                 key={activity._id}

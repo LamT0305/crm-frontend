@@ -39,7 +39,7 @@ function Statistic() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen w-full">
+      <div className="flex items-center justify-center h-screen w-[80%]">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -52,7 +52,7 @@ function Statistic() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 h-full w-full overflow-auto">
+    <div className="p-6 bg-gray-50 h-full w-[80%] overflow-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
         <div className="flex items-center gap-4">

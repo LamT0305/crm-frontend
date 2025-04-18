@@ -83,7 +83,7 @@ const CreateLeadForm = ({ setIsOpen }) => {
     }
 
     // Industry validation
-    if (!/^[a-zA-Z\s]{2,50}$/.test(formData.industry.trim())) {
+    if (!/^[a-zA-Z\s\W]{2,50}$/.test(formData.industry.trim())) {
       newErrors.industry = "Industry should be 2-50 characters";
     }
 

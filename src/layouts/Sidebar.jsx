@@ -126,7 +126,13 @@ const Sidebar = ({ setAddWS }) => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/leads" item="leads">
+            <NavLink to="/statistic" item="statistics">
+              <StatisticIcon className="w-[25px] h-[25px] mr-3 text-gray-600" />
+              <span className="text-gray-700">Statistics</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/" item="leads">
               <UserIcon className="w-[25px] h-[25px] mr-3 text-gray-600" />
               <span className="text-gray-700">Leads</span>
             </NavLink>
@@ -149,12 +155,7 @@ const Sidebar = ({ setAddWS }) => {
               <span className="text-gray-700">Product Services</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/statistic" item="statistics">
-              <StatisticIcon className="w-[25px] h-[25px] mr-3 text-gray-600" />
-              <span className="text-gray-700">Statistics</span>
-            </NavLink>
-          </li>
+
           <li>
             <NavLink to="/messages" item="messages">
               <MessageIcon className="w-[25px] h-[25px] mr-3 text-gray-600" />

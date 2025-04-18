@@ -2,11 +2,12 @@ import React from "react";
 import Logo from "../assets/logo.png";
 import GoogleImg from "../assets/googleImg.png";
 import background from "../assets/background.png";
-import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const { loginWithGoogle } = useAuth();
+
   return (
     <div
       className="min-h-screen min-w-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -28,7 +29,7 @@ function Login() {
         </div>
 
         <button
-          onClick={loginWithGoogle}
+          onClick={() => loginWithGoogle()}
           className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white rounded-lg hover:bg-gray-50 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           <img src={GoogleImg} alt="Google" className="w-6 h-6" />

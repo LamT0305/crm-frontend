@@ -226,6 +226,38 @@ function Data({ customerId }) {
                 )}
               </div>
             </div>
+            <hr className="border-gray-300 my-10" />
+            <div className="grid grid-cols-2 gap-10 mt-5">
+              <div>
+                <p className="text-gray-500 text-sm mb-2">Total Revenue:</p>
+                <p className="px-3 py-1 bg-gray-100 rounded-xl text-md text-gray-500 w-[50%]">
+                  $8500
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm mb-2">Tags:</p>
+                <div className="grid grid-cols-5 gap-2">
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium h-fit">
+                    VIP
+                  </span>
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium h-fit">
+                    High Engagement 
+                  </span>
+                  <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium h-fit">
+                    Potential
+                  </span>
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-sm font-medium h-fit">
+                    Enterprise
+                  </span>
+                  <span className="px-3 py-1 bg-red-100 text-red-800 rounded-lg text-sm font-medium h-fit">
+                    Frequent Buyer
+                  </span>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm font-medium h-fit">
+                    Support Heavy
+                  </span>
+                </div>
+              </div>
+            </div>
           </form>
         </div>
       )}
