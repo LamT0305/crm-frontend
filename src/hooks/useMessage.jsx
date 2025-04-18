@@ -45,8 +45,7 @@ const useMessage = () => {
     attachments,
   } = useSelector((state) => state.message);
   const token = getToken();
-  const BASE_URL = "https://crm-backend-bz03.onrender.com";
-  // https://crm-backend-bz03.onrender.com
+  const BASE_URL = "https://auth.leadmastercrm.pro";
   // http://localhost:3000
   // Socket event handlers
   useEffect(() => {

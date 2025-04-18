@@ -29,8 +29,7 @@ const Layout = () => {
   }
 
   const token = getToken();
-  const BASE_URL = "https://crm-backend-bz03.onrender.com";
-  // https://crm-backend-bz03.onrender.com
+  const BASE_URL = "https://auth.leadmastercrm.pro";
   // http://localhost:3000
   const { fetchNotifications } = useNotification();
   useEffect(() => {

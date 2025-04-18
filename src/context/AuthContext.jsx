@@ -11,7 +11,7 @@ import { getToken, removeToken } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
-const baseURL = "https://crm-backend-bz03.onrender.com/api/v1";
+const baseURL = "https://auth.leadmastercrm.pro/api/v1";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
