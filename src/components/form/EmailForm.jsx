@@ -13,6 +13,7 @@ function EmailForm({ customerEmail, setOpenEmail, customerId }) {
   const [viewAttached, setView] = useState(false);
 
   const viewRef = useRef(null);
+  const emailRef = useRef(null);
 
   const handleFilesSelect = (files) => {
     setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
@@ -53,8 +54,22 @@ function EmailForm({ customerEmail, setOpenEmail, customerId }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    // handle click outside
+    const handleClickOutside = (e) => {
+      if (emailRef.current && !emailRef.current.contains(e.target)) {
+        setOpenEmail(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div
+      ref={emailRef}
+      className="bg-white rounded-lg shadow-lg absolute w-[80%] bottom-0 z-100"
+    >
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">

@@ -15,6 +15,8 @@ import DealForm from "../components/form/DealForm";
 import CustomerCare from "../components/CustomerCare";
 import CustomerDeal from "../components/CustomerDeal";
 import useWorkspace from "../hooks/useWorkspace";
+import EmailForm from "../components/form/EmailForm";
+import CommentForm from "../components/form/CommentInput";
 function CustomerInfo() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -51,15 +53,29 @@ function CustomerInfo() {
     );
   }
   return (
-    <div className="w-[80%] h-full flex flex-col">
+    <div className="w-[80%] h-screen flex flex-col overflow-hidden">
       {openDeal && (
         <DealForm setOpenDeal={setOpenDeal} customerId={customer._id} />
       )}
 
       <CustomerHeader name={customer?.firstName} setOpenDeal={setOpenDeal} />
-      <div className="w-full h-full flex ">
-        <div className="w-[100%] h-full border-r border-gray-300 relative flex flex-col">
-          <CustomerNavigation tagName={tagName} setTagName={setTagName} />
+
+      {openForm && !openComment && (
+        <EmailForm
+          customerEmail={customer?.email}
+          customerId={customer?._id}
+          setOpenEmail={setOpen}
+        />
+      )}
+
+      {!openForm && openComment && (
+        <CommentForm customerId={customer?._id} setOpenCmt={setOpenCmt} />
+      )}
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <CustomerNavigation tagName={tagName} setTagName={setTagName} />
+
+        <div className="flex-1 overflow-auto">
           {tagName === "activity" ? <Activity id={id} /> : null}
           {tagName === "email" ? (
             <Email customer={customer} setOpenEmailForm={setOpen} />
@@ -78,20 +94,7 @@ function CustomerInfo() {
           {tagName === "deal" ? (
             <CustomerDeal customerId={customer._id} columns={defaultColumns} />
           ) : null}
-          <div className="absolute bottom-0 w-[100%]">
-            <CustomerFooter
-              customerEmail={customer?.email}
-              id={customer._id}
-              openFormEmail={openForm}
-              setOpenEmail={setOpen}
-              openCommentForm={openComment}
-              setOpenCommentForm={setOpenCmt}
-            />
-          </div>
         </div>
-        {/* <div className="w-[20%]">
-          <CustomerDetails customerId={customer._id} />
-        </div> */}
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ function CustomerCare({ customerId }) {
 
   const [type, setType] = useState("");
   const [notes, setNotes] = useState("");
-  const [sortByDate, setSortByDate] = useState("asc");
+  const [sortByDate, setSortByDate] = useState(false);
 
   const handleFilter = (field, value) => {
     if (field === "type") {
@@ -30,9 +30,8 @@ function CustomerCare({ customerId }) {
   };
 
   const handleSort = () => {
-    const newOrder = sortByDate === "asc" ? "desc" : "asc";
-    setSortByDate(newOrder);
-    handleSortByDate(newOrder);
+    setSortByDate(!sortByDate);
+    handleSortByDate(!sortByDate ? "asc" : "desc");
   };
 
   useEffect(() => {
@@ -41,15 +40,16 @@ function CustomerCare({ customerId }) {
   }, [customerId]);
 
   return (
-    <div className="w-full h-full bg-white flex flex-col">
+    <div className="w-full h-full bg-white flex flex-col overflow-hidden">
       {openFormInteraction && (
         <CreateInteractionForm
           setIsOpen={setOpenFormInteraction}
           customerId={customerId}
         />
       )}
+
       <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
             <h2 className="text-xl font-semibold text-gray-900">
@@ -57,68 +57,57 @@ function CustomerCare({ customerId }) {
             </h2>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap gap-3">
               <input
                 type="text"
                 value={type}
                 onChange={(e) => handleFilter("type", e.target.value)}
-                className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg
-                         text-gray-900 placeholder-gray-400 text-sm
-                         focus:outline-none focus:ring-1 focus:ring-blue-500
-                         transition-colors duration-200"
+                className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
                 placeholder="Filter by type..."
               />
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => handleFilter("notes", e.target.value)}
-                className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg
-                         text-gray-900 placeholder-gray-400 text-sm
-                         focus:outline-none focus:ring-1 focus:ring-blue-500
-                         transition-colors duration-200"
+                className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
                 placeholder="Search in notes..."
               />
               <button
                 onClick={handleSort}
-                className="px-4 py-2 bg-gray-50 text-gray-700 rounded-lg
-                         border border-gray-200 hover:bg-gray-100
-                         transition-colors duration-200"
+                className="px-4 py-2 bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-200"
               >
-                {sortByDate === "asc" ? "↑ Oldest first" : "↓ Newest first"}
+                {!sortByDate ? "↑ Newest first" : "↓ Oldest first"}
               </button>
             </div>
 
             <button
               onClick={() => setOpenFormInteraction(true)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg
-                       hover:bg-blue-600 transition-colors duration-200
-                       flex items-center gap-2"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center gap-2"
             >
-              <span>+</span>
-              New Interaction
+              <span>+</span> New Interaction
             </button>
           </div>
         </div>
       </div>
 
       {interactions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full text-xl text-gray-400">
-          <CustomerCareIcon className={"h-10 w-10"} />
+        <div className="flex flex-col items-center justify-center flex-1 text-xl text-gray-400">
+          <CustomerCareIcon className="h-10 w-10" />
           No interactions
         </div>
       ) : (
-        <div className="px-10 py-8 max-h-[clamp(200px,75vh,75vh)] overflow-auto">
+        <div className="flex-1 overflow-y-auto px-10 py-8 space-y-6">
           {interactions.map((e) => (
             <div
               key={e._id}
-              className="border border-gray-100 shadow-md hover:bg-gray-300 cursor-pointer rounded-2xl px-6 py-3 mb-8"
+              className="border border-gray-100 shadow-md  cursor-pointer rounded-2xl px-6 py-3"
             >
-              <div
-                className="w-full flex justify-end"
-                onClick={() => handleDeleteInteraction(e._id, e)}
-              >
-                <CloseIcon className="w-6 h-6 p-1 bg-gray-100 rounded-md hover:bg-gray-300 cursor-pointer" />
+              <div className="w-full flex justify-end">
+                <CloseIcon
+                  onClick={() => handleDeleteInteraction(e._id, e)}
+                  className="w-6 h-6 p-1 bg-gray-100 rounded-md hover:bg-gray-300 cursor-pointer"
+                />
               </div>
               <div>
                 <p className="text-sm mb-2">
@@ -135,13 +124,17 @@ function CustomerCare({ customerId }) {
                   <p className="text-gray-500 text-xs font-semibold mb-2">
                     Interaction type:
                   </p>
-                  <p className="bg-gray-100 px-2 py-1 rounded-lg">{e.type}</p>
+                  <p className="bg-gray-100 px-2 py-1 rounded-lg break-words">
+                    {e.type}
+                  </p>
                 </div>
                 <div className="mb-2">
                   <p className="text-gray-500 text-xs font-semibold mb-2">
                     Notes:
                   </p>
-                  <p className="bg-gray-100 px-2 py-1 rounded-lg">{e.notes}</p>
+                  <p className="bg-gray-100 px-2 py-1 rounded-lg break-words">
+                    {e.notes}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-500 text-xs font-semibold mb-2">

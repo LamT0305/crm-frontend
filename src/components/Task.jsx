@@ -33,8 +33,7 @@ function Task({ customerId, user }) {
     const day = String(utcDate.getUTCDate()).padStart(2, "0");
     const month = String(utcDate.getUTCMonth() + 1).padStart(2, "0");
     const year = utcDate.getUTCFullYear();
-
-    return `${day}/${month}/${year}`; // Format as "DD/MM/YYYY"
+    return `${day}/${month}/${year}`;
   };
 
   const onDelete = (id, content) => {
@@ -46,8 +45,9 @@ function Task({ customerId, user }) {
     };
     handleAddActivity(activity);
   };
+
   return (
-    <div className="bg-white h-full flex flex-col relative">
+    <div className="bg-white h-full flex flex-col overflow-hidden">
       {openForm && (
         <TaskForm
           taskId={taskId}
@@ -72,9 +72,7 @@ function Task({ customerId, user }) {
 
           <button
             onClick={() => setOpenForm(true)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg
-                     hover:bg-blue-600 transition-all duration-200
-                     flex items-center gap-2 font-medium"
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 flex items-center gap-2 font-medium"
           >
             <span>+</span>
             New Task
@@ -84,74 +82,75 @@ function Task({ customerId, user }) {
 
       {/* body */}
       {tasks.length === 0 ? (
-        <div className="flex flex-col items-center justify-center flex-grow text-2xl text-gray-400">
+        <div className="flex flex-col items-center justify-center flex-1 text-2xl text-gray-400">
           <CheckmarkIcon className="w-10 h-10 text-gray-400" />
           No tasks
         </div>
       ) : (
-        <div className="px-10 py-8 max-h-[clamp(200px,75vh,75vh)] overflow-auto">
+        <div className="flex-1 overflow-y-auto px-10 py-8 space-y-6">
           {tasks.map((task) => (
             <div
               key={task._id}
-              className=" mb-8 bg-gray-100 hover:bg-gray-300 px-6 py-3 rounded-xl cursor-pointer flex justify-between items-center"
+              className="bg-gray-100 hover:bg-gray-200 px-6 py-3 rounded-xl cursor-pointer flex justify-between items-start gap-4"
             >
               <div
                 onClick={() => {
                   setTaskId(task._id);
                   setOpenForm(true);
                 }}
-                className="w-[90%]"
+                className="w-full"
               >
                 <p className="font-bold text-sm">{task.title}</p>
                 <p className="text-md py-2">{task.description}</p>
-                <div className="flex items-center">
+                <div className="flex flex-wrap items-center gap-3">
                   {/* status */}
-                  <div className="flex items-center bg-white mr-4 text-xs text-gray-500 px-2 py-1 rounded-lg">
+                  <div className="flex items-center bg-white text-xs text-gray-500 px-2 py-1 rounded-lg">
                     <p>
-                      {task.status === "Backlog" ? (
-                        <BacklogIcon className={"w-4 h-4"} />
-                      ) : null}
-                      {task.status === "Todo" ? (
-                        <TodoIcon className={"w-4 h-4"} />
-                      ) : null}
-                      {task.status === "InProgress" ? (
-                        <InProgressIcon className={"w-4 h-4"} />
-                      ) : null}
-                      {task.status === "Completed" ? (
-                        <DoneIcon className={"w-4 h-4"} />
-                      ) : null}
-                      {task.status === "Canceled" ? (
-                        <CanceledIcon className={"w-4 h-4"} />
-                      ) : null}
+                      {task.status === "Backlog" && (
+                        <BacklogIcon className="w-4 h-4" />
+                      )}
+                      {task.status === "Todo" && (
+                        <TodoIcon className="w-4 h-4" />
+                      )}
+                      {task.status === "InProgress" && (
+                        <InProgressIcon className="w-4 h-4" />
+                      )}
+                      {task.status === "Completed" && (
+                        <DoneIcon className="w-4 h-4" />
+                      )}
+                      {task.status === "Canceled" && (
+                        <CanceledIcon className="w-4 h-4" />
+                      )}
                     </p>
                     <p className="ml-2">{task.status}</p>
                   </div>
-                  {/* priority */}
-                  <div className="flex items-center bg-white mr-4 text-xs text-gray-500 px-2 py-1 rounded-lg">
-                    {task.priority === "Low" ? (
-                      <p className="bg-green-500 rounded-2xl p-2"></p>
-                    ) : null}
-                    {task.priority === "Medium" ? (
-                      <p className="bg-yellow-500 rounded-2xl p-2"></p>
-                    ) : null}
-                    {task.priority === "High" ? (
-                      <p className="bg-red-500 rounded-2xl p-2"></p>
-                    ) : null}
 
-                    <p className="ml-2">{task.priority}</p>
+                  {/* priority */}
+                  <div className="flex items-center bg-white text-xs text-gray-500 px-2 py-1 rounded-lg">
+                    {task.priority === "Low" && (
+                      <span className="bg-green-500 rounded-full w-2 h-2 mr-2"></span>
+                    )}
+                    {task.priority === "Medium" && (
+                      <span className="bg-yellow-500 rounded-full w-2 h-2 mr-2"></span>
+                    )}
+                    {task.priority === "High" && (
+                      <span className="bg-red-500 rounded-full w-2 h-2 mr-2"></span>
+                    )}
+                    <p>{task.priority}</p>
                   </div>
+
                   {/* dueDate */}
-                  <p className="bg-white mr-4 text-xs text-gray-500 px-2 py-1 rounded-lg">
+                  <p className="bg-white text-xs text-gray-500 px-2 py-1 rounded-lg">
                     {formatDate(task.dueDate)}
                   </p>
                 </div>
               </div>
-              <p
+              <button
                 onClick={() => onDelete(task._id, task.title)}
-                className="bg-white mr-4 text-xs text-gray-500 p-1 rounded-lg hover:bg-red-400 hover:text-white"
+                className="bg-white text-xs text-gray-500 p-1 rounded-lg hover:bg-red-400 hover:text-white"
               >
-                <CloseIcon className={"w-4 h-4"} />
-              </p>
+                <CloseIcon className="w-4 h-4" />
+              </button>
             </div>
           ))}
         </div>

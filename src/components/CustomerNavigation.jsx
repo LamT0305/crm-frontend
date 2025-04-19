@@ -11,7 +11,7 @@ function CustomerNavigation({ tagName, setTagName }) {
   ];
 
   return (
-    <nav className="w-full border-b border-gray-200">
+    <nav className="w-full border-b border-gray-200 flex-shrink-0">
       <ul className="flex items-center gap-2 px-6 bg-white">
         {navItems.map(({ id, label }) => (
           <li key={id}>

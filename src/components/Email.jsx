@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useEmail from "../hooks/useEmail";
 import MailIcon from "../assets/mailIcon";
 import userAvatar from "../assets/user-avatar.png";
@@ -15,6 +15,7 @@ function Email({ customer, setOpenEmailForm }) {
     handleFilterEmails,
     handleSortEmails,
   } = useEmail();
+
   const [sortOrder, setSortOrder] = useState(true);
 
   const handleSort = () => {
@@ -22,25 +23,24 @@ function Email({ customer, setOpenEmailForm }) {
     setSortOrder(!sortOrder);
   };
 
-  useState(() => {
+  useEffect(() => {
     if (customer) handleGetEmails(customer._id);
   }, [customer]);
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen w-full">
+      <div className="flex items-center justify-center h-full w-full">
         <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white h-full flex flex-col">
+    <div className="bg-white h-full flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-100 shadow-sm">
         <h2 className="text-xl font-bold text-gray-800 flex items-center">
-          <MailIcon className="w-6 h-6 mr-2 text-blue-500" />
-          Emails
+          <MailIcon className="w-6 h-6 mr-2 text-blue-500" /> Emails
         </h2>
         <div className="flex items-center space-x-4">
           <div className="relative">
@@ -77,8 +77,7 @@ function Email({ customer, setOpenEmailForm }) {
             onClick={() => setOpenEmailForm(true)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center"
           >
-            <span className="mr-2">+</span>
-            New Email
+            <span className="mr-2">+</span> New Email
           </button>
 
           <button
@@ -99,9 +98,9 @@ function Email({ customer, setOpenEmailForm }) {
           </p>
         </div>
       ) : (
-        <div className="max-h-[clamp(200px,75vh,75vh)] flex flex-col overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {emails.map((email) => (
-            <div key={email._id} className="flex mb-6 last:mb-0">
+            <div key={email._id} className="flex">
               <div className="w-12 flex-shrink-0">
                 <img
                   src={email.status === "sent" ? userAvatar : customerAvatar}
@@ -113,7 +112,7 @@ function Email({ customer, setOpenEmailForm }) {
                 <div className="bg-gray-50 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <div className="flex items-center">
+                      <div className="flex items-center flex-wrap">
                         <p className="font-medium text-gray-900">
                           {email.status === "sent"
                             ? email.userId.name
@@ -145,13 +144,14 @@ function Email({ customer, setOpenEmailForm }) {
                   <h3 className="text-lg font-medium text-gray-800 mb-2">
                     {email.subject}
                   </h3>
+
                   <div className="border-t border-gray-200 pt-3">
                     <div className="text-gray-700 text-sm whitespace-pre-line max-h-[250px] overflow-y-auto">
                       <EmailDisplay emailText={email.message} />
                     </div>
                   </div>
 
-                  {email.attachments && email.attachments.length > 0 && (
+                  {email.attachments?.length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {email.attachments.map((attachment) => (
                         <a

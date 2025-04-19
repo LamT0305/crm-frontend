@@ -24,7 +24,7 @@ function Notification({ setOpenNoti }) {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 transition-all duration-300">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-100 transition-all duration-300">
       <div
         ref={notiRef}
         className="absolute right-0 top-0 w-[400px] h-full bg-white shadow-2xl animate-slide-in"

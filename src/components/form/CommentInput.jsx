@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useComment from "../../hooks/useComment";
 
 function CommentForm({ setOpenCmt, customerId }) {
@@ -17,8 +17,22 @@ function CommentForm({ setOpenCmt, customerId }) {
     setOpenCmt(false);
   };
 
+  const cmtRef = useRef(null);
+  useEffect(() => {
+    //handle click outside
+    const handleClickOutside = (e) => {
+      if (cmtRef.current && !cmtRef.current.contains(e.target)) {
+        setOpenCmt(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
   return (
-    <div className="bg-white rounded-lg shadow-lg">
+    <div
+      ref={cmtRef}
+      className="bg-white rounded-lg shadow-lg absolute bottom-0 w-[80%]"
+    >
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">

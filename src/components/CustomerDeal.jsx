@@ -144,7 +144,7 @@ function CustomerDeal({ customerId, columns }) {
         </div>
 
         {/* Table */}
-        <div className="overflow-auto px-2 h-[65vh]">
+        <div className="overflow-auto px-2 h-[75vh]">
           <table className="w-full">
             <thead>
               <tr>

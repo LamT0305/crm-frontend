@@ -58,23 +58,25 @@ function Data({ customerId }) {
       });
     }
   }, [customer]);
+
   return (
-    <div className="h-full w-full bg-white">
+    <div className="h-full w-full bg-white flex flex-col overflow-hidden">
       {customer && (
-        <div className="px-5 py-6">
-          <form onSubmit={onSubmit}>
+        <div className="flex-1 overflow-y-auto px-5 py-6">
+          <form onSubmit={onSubmit} className="space-y-10">
             <div className="flex items-center justify-between">
               <p className="text-xl font-bold pb-4 text-gray-500">Personal</p>
               <button
                 type="submit"
                 className={`px-2 py-1 rounded-lg text-sm font-semibold cursor-pointer ${
                   save ? "bg-gray-500 text-white" : "bg-gray-200 text-gray-400"
-                } `}
+                }`}
               >
                 Save
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-10 mt-5">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="cursor-pointer">
                 <p className="text-gray-500 text-sm mb-2">First name:</p>
                 {save ? (
@@ -109,7 +111,6 @@ function Data({ customerId }) {
                   </p>
                 )}
               </div>
-
               <div className="cursor-pointer">
                 <p className="text-gray-500 text-sm mb-2">Phone number:</p>
                 {save ? (
@@ -127,7 +128,6 @@ function Data({ customerId }) {
                   </p>
                 )}
               </div>
-
               <div className="cursor-pointer">
                 <p className="text-gray-500 text-sm mb-2">Gender:</p>
                 {save ? (
@@ -146,9 +146,10 @@ function Data({ customerId }) {
                 )}
               </div>
             </div>
-            <hr className="border-gray-300 my-10" />
-            <p className="text-xl font-bold pb-4 text-gray-500">Details</p>
-            <div className="grid grid-cols-3 gap-10 mt-5">
+
+            <hr className="border-gray-300" />
+            <p className="text-xl font-bold text-gray-500">Details</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
               <div className="cursor-pointer">
                 <p className="text-gray-500 text-sm mb-2">Email:</p>
                 {save ? (
@@ -166,7 +167,6 @@ function Data({ customerId }) {
                   </p>
                 )}
               </div>
-
               <div className="cursor-pointer">
                 <p className="text-gray-500 text-sm mb-2">Industry:</p>
                 {save ? (
@@ -184,7 +184,6 @@ function Data({ customerId }) {
                   </p>
                 )}
               </div>
-
               <div className="cursor-pointer">
                 <p className="text-gray-500 text-sm mb-2">Monthly Income:</p>
                 {save ? (
@@ -215,7 +214,6 @@ function Data({ customerId }) {
                     {_source.sourceId.value}
                   </p>
                 </div>
-
                 {save && openSource && (
                   <Source
                     sources={sources}
@@ -226,33 +224,34 @@ function Data({ customerId }) {
                 )}
               </div>
             </div>
-            <hr className="border-gray-300 my-10" />
-            <div className="grid grid-cols-2 gap-10 mt-5">
+
+            <hr className="border-gray-300" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <p className="text-gray-500 text-sm mb-2">Total Revenue:</p>
-                <p className="px-3 py-1 bg-gray-100 rounded-xl text-md text-gray-500 w-[50%]">
+                <p className="px-3 py-1 bg-gray-100 rounded-xl text-md text-gray-500 w-fit">
                   $8500
                 </p>
               </div>
               <div>
                 <p className="text-gray-500 text-sm mb-2">Tags:</p>
-                <div className="grid grid-cols-5 gap-2">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium h-fit">
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium">
                     VIP
                   </span>
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium h-fit">
-                    High Engagement 
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium">
+                    High Engagement
                   </span>
-                  <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium h-fit">
+                  <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium">
                     Potential
                   </span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-sm font-medium h-fit">
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-sm font-medium">
                     Enterprise
                   </span>
-                  <span className="px-3 py-1 bg-red-100 text-red-800 rounded-lg text-sm font-medium h-fit">
+                  <span className="px-3 py-1 bg-red-100 text-red-800 rounded-lg text-sm font-medium">
                     Frequent Buyer
                   </span>
-                  <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm font-medium h-fit">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm font-medium">
                     Support Heavy
                   </span>
                 </div>
@@ -261,7 +260,6 @@ function Data({ customerId }) {
           </form>
         </div>
       )}
-      {/* data form */}
     </div>
   );
 }
