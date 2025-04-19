@@ -29,7 +29,7 @@ const useEmail = () => {
   const currentRecipientRef = useRef(null);
 
   useEffect(() => {
-    const socket = io("https://crm-backend-bz03.onrender.com");
+    const socket = io("https://auth.leadmastercrm.pro");
 
     socket.on("connect", () => {
       console.log("📧 Connected to email socket");
