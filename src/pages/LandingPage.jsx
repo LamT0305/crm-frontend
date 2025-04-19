@@ -1,5 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import LeadView from "../assets/leadview.png";
+import dealTracking from "../assets/deal-tracking.png";
+import email from "../assets/email-integration.png";
+import productView from "../assets/Productview.png";
+import analytic1 from "../assets/analytic1.png";
 
 function LandingPage() {
   return (
@@ -50,9 +55,9 @@ function LandingPage() {
                   </li>
                 </ul>
               </div>
-              <div className="flex items-center space-x-4 mt-8">
+              <div className="flex items-center space-x-4 mt-8 animate-fadeIn">
                 <Link
-                  to="/register"
+                  to="/login"
                   className="px-8 py-4 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-700 hover:shadow-lg transform hover:translate-y-[-2px] transition-all duration-300"
                 >
                   Start Free Trial
@@ -63,14 +68,49 @@ function LandingPage() {
               </div>
             </div>
           </div>
-          <div className="md:w-1/2 mt-8 md:mt-0 transform hover:scale-105 transition-transform duration-500 relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-lg blur opacity-20"></div>
-            <img
-              src="/dashboard-preview.png"
-              alt="Dashboard Preview"
-              className="relative rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
-            />
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/10 to-transparent rounded-lg"></div>
+          <div className="md:w-1/2 mt-8 md:mt-0 relative perspective-1000">
+            <div className="grid grid-cols-2 gap-4 animate-float">
+              <div className="space-y-4">
+                <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
+                  <img
+                    src={LeadView}
+                    alt="Lead Management"
+                    className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                  />
+                </div>
+                <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
+                  <img
+                    src={dealTracking}
+                    alt="Deal Tracking"
+                    className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4 mt-8">
+                <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
+                  <img
+                    src={email}
+                    alt="Email Integration"
+                    className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                  />
+                </div>
+                <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
+                  <img
+                    src={productView}
+                    alt="Product View"
+                    className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                  />
+                </div>
+                <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
+                  <img
+                    src={analytic1}
+                    alt="Analytics"
+                    className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent rounded-lg pointer-events-none"></div>
           </div>
         </div>
       </div>
@@ -78,136 +118,481 @@ function LandingPage() {
       {/* Features Section */}
       <div className="bg-white py-16">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16 relative">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full blur-sm"></div>
+          <div className="text-center mb-16 relative overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full blur-sm animate-pulse"></div>
             <span className="inline-flex items-center bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wider uppercase animate-fadeIn">
-              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-              Innovation Meets Simplicity
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-ping"></span>
+              Core Features
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-6 mb-6 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent leading-tight">
-              Elevate Your Business with
+            <h2 className="text-4xl md:text-5xl font-bold mt-6 mb-6 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent leading-tight animate-slideUp">
+              Everything You Need for
               <span className="block mt-2 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                Intelligent CRM Solutions
+                Modern Customer Management
               </span>
             </h2>
-            <p className="text-gray-600 text-lg max-w-3xl mx-auto leading-relaxed">
-              Discover how our cutting-edge features transform complex customer
-              relationships into
-              <span className="text-blue-600 font-semibold">
-                {" "}
-                seamless experiences
-              </span>
-              . Built for modern businesses that demand
-              <span className="text-blue-600 font-semibold"> excellence</span>.
+            <p className="text-gray-600 text-lg max-w-3xl mx-auto leading-relaxed animate-fadeIn">
+              Our comprehensive suite of features helps you manage customer
+              relationships, track deals, and grow your business
+              <span className="text-blue-600 font-semibold"> efficiently</span>.
             </p>
-            <div className="flex justify-center gap-4 mt-6 text-sm text-gray-500">
-              <span className="flex items-center">
-                <svg
-                  className="w-5 h-5 text-green-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                99.9% Uptime
-              </span>
-              <span className="flex items-center">
-                <svg
-                  className="w-5 h-5 text-green-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                24/7 Support
-              </span>
-              <span className="flex items-center">
-                <svg
-                  className="w-5 h-5 text-green-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Enterprise Security
-              </span>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Smart Email Integration",
-                description:
-                  "Connect your Gmail account instantly. Auto-organize customer emails, track responses, and never miss important communications.",
-                icon: "📧",
-                highlight: "Instant Setup",
-              },
-              {
-                title: "360° Customer Management",
-                description:
-                  "Get a complete view of your customers. Track interactions, manage profiles, and access history with just one click.",
-                icon: "👥",
-                highlight: "Real-time Updates",
-              },
-              {
-                title: "Seamless Team Collaboration",
-                description:
-                  "Work together effortlessly. Share customer insights, assign tasks, and maintain clear communication across your team.",
-                icon: "🤝",
-                highlight: "Built for Teams",
-              },
-              {
-                title: "Powerful Analytics",
-                description:
-                  "Make data-driven decisions with comprehensive analytics. Track KPIs and generate insightful reports instantly.",
-                icon: "📊",
-                highlight: "Visual Reports",
-              },
-              {
-                title: "Task Automation",
-                description:
-                  "Automate repetitive tasks and workflows. Save time and focus on what matters most - your customers.",
-                icon: "⚡️",
-                highlight: "Time Saving",
-              },
-              {
-                title: "Secure & Reliable",
-                description:
-                  "Enterprise-grade security for your data. Regular backups and 99.9% uptime guarantee for peace of mind.",
-                icon: "🔒",
-                highlight: "Enterprise Grade",
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="p-8 border border-gray-100 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 bg-white relative group"
-              >
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-                <span className="text-4xl mb-6 block">{feature.icon}</span>
-                <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-medium inline-block mb-4">
-                  {feature.highlight}
-                </span>
-                <h3 className="text-xl font-bold text-gray-800 mb-3">
-                  {feature.title}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+              <div className="p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg
+                    className="w-10 h-10 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                  Smart Communication Hub
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Integrated email system with template support
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Real-time customer interaction tracking
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Automated notification system
+                  </li>
+                </ul>
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600">
+                    Instant Setup
+                  </span>
+                </div>
               </div>
-            ))}
+
+              <div className="p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg
+                    className="w-10 h-10 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                  Advanced Deal Management
+                </h3>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Visual deal pipeline tracking
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Automated quotation management
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Real-time sales analytics
+                  </li>
+                </ul>
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600">
+                    Real-time Updates
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg
+                    className="w-10 h-10 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                  Comprehensive Activity Center
+                </h3>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Task management & reminders
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Customer interaction history
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Team collaboration tools
+                  </li>
+                </ul>
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600">
+                    Always Updated
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg
+                    className="w-10 h-10 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                  Analytics & Reporting
+                </h3>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Custom dashboard creation
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Performance metrics tracking
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Export & share reports
+                  </li>
+                </ul>
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600">
+                    Data-Driven
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg
+                    className="w-10 h-10 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                  Customer Care Center
+                </h3>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Support ticket management
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Customer feedback tracking
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Service quality monitoring
+                  </li>
+                </ul>
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600">
+                    Customer Success
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-8 bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg
+                    className="w-10 h-10 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                  Smart Scheduling
+                </h3>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Automated calendar sync
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Meeting reminders
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mr-2 mt-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Team availability tracking
+                  </li>
+                </ul>
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-600">
+                    Time Optimization
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
