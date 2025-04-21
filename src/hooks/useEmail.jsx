@@ -32,20 +32,17 @@ const useEmail = () => {
     const socket = io("https://auth.leadmastercrm.pro");
 
     socket.on("connect", () => {
-      console.log("📧 Connected to email socket");
       if (token) {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.id;
         if (userId) {
           socket.emit("join", userId);
-          console.log("🔗 Joined email room:", userId);
         }
       }
     });
 
     socket.on("updateEmails", (data) => {
       handleGetEmails(data.customerId);
-      
     });
 
     socket.on("error", (error) => {
@@ -54,15 +51,12 @@ const useEmail = () => {
     });
 
     socket.on("disconnect", () => {
-      console.log("❌ Disconnected from email socket");
     });
 
     socket.on("connect_error", (error) => {
-      console.error("Connection error:", error);
     });
 
     return () => {
-      console.log("🔌 Cleaning up socket connection");
       socket.disconnect();
       currentRecipientRef.current = null;
     };

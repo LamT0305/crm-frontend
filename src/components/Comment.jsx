@@ -60,7 +60,9 @@ function Comment({ customerId, setOpenForm }) {
                   added a <span className="font-bold text-black">comment</span>
                 </p>
                 <div className="flex items-center justify-between bg-gray-100 w-full px-5 py-3 rounded-xl text-black">
-                  <p className="break-words mr-4">{cmt.content}</p>
+                  <p className="break-words mr-4 whitespace-pre-wrap">
+                    {cmt.content}
+                  </p>
                   <div
                     onClick={() => onDelete(cmt._id, cmt.content)}
                     className="w-fit flex-shrink-0"

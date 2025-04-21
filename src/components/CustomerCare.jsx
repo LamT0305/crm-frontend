@@ -104,10 +104,9 @@ function CustomerCare({ customerId }) {
               className="border border-gray-100 shadow-md  cursor-pointer rounded-2xl px-6 py-3"
             >
               <div className="w-full flex justify-end">
-                <CloseIcon
-                  onClick={() => handleDeleteInteraction(e._id, e)}
-                  className="w-6 h-6 p-1 bg-gray-100 rounded-md hover:bg-gray-300 cursor-pointer"
-                />
+                <span onClick={() => handleDeleteInteraction(e._id, e)}>
+                  <CloseIcon className="w-6 h-6 p-1 bg-gray-100 rounded-md hover:bg-gray-300 cursor-pointer" />
+                </span>
               </div>
               <div>
                 <p className="text-sm mb-2">
@@ -132,7 +131,7 @@ function CustomerCare({ customerId }) {
                   <p className="text-gray-500 text-xs font-semibold mb-2">
                     Notes:
                   </p>
-                  <p className="bg-gray-100 px-2 py-1 rounded-lg break-words">
+                  <p className="bg-gray-100 px-2 py-1 rounded-lg break-words whitespace-pre-wrap">
                     {e.notes}
                   </p>
                 </div>
