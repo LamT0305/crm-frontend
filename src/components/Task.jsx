@@ -101,7 +101,9 @@ function Task({ customerId, user }) {
                 className="w-full"
               >
                 <p className="font-bold text-sm">{task.title}</p>
-                <p className="text-md py-2">{task.description}</p>
+                <p className="text-md py-2 whitespace-pre-wrap">
+                  {task.description}
+                </p>
                 <div className="flex flex-wrap items-center gap-3">
                   {/* status */}
                   <div className="flex items-center bg-white text-xs text-gray-500 px-2 py-1 rounded-lg">

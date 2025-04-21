@@ -76,6 +76,10 @@ function LandingPage() {
                     src={LeadView}
                     alt="Lead Management"
                     className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="300"
                   />
                 </div>
                 <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
@@ -83,6 +87,10 @@ function LandingPage() {
                     src={dealTracking}
                     alt="Deal Tracking"
                     className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="300"
                   />
                 </div>
               </div>
@@ -92,6 +100,10 @@ function LandingPage() {
                     src={email}
                     alt="Email Integration"
                     className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="300"
                   />
                 </div>
                 <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
@@ -99,6 +111,10 @@ function LandingPage() {
                     src={productView}
                     alt="Product View"
                     className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="300"
                   />
                 </div>
                 <div className="transform hover:scale-105 transition-transform duration-300 hover:z-10">
@@ -106,6 +122,10 @@ function LandingPage() {
                     src={analytic1}
                     alt="Analytics"
                     className="rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="300"
                   />
                 </div>
               </div>

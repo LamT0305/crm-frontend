@@ -21,6 +21,10 @@ function Login() {
             src={Logo}
             alt="Logo"
             className="w-24 h-24 transform hover:scale-105 transition-transform duration-300"
+            loading="eager"
+            decoding="async"
+            width="96"
+            height="96"
           />
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
@@ -32,7 +36,15 @@ function Login() {
           onClick={() => loginWithGoogle()}
           className="w-full flex items-center justify-center space-x-3 px-6 py-3 bg-white rounded-lg hover:bg-gray-50 transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
         >
-          <img src={GoogleImg} alt="Google" className="w-6 h-6" />
+          <img
+            src={GoogleImg}
+            alt="Google"
+            className="w-6 h-6"
+            loading="eager"
+            decoding="async"
+            width="24"
+            height="24"
+          />
           <span className="text-gray-800 font-medium">
             Continue with Google
           </span>

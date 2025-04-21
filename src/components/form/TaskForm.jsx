@@ -122,7 +122,7 @@ export const TaskForm = ({
               onChange={(e) => setDescription(e.target.value)}
               ref={textAreaRef}
               type="text"
-              className="w-full p-2 rounded-md text-md resize-none focus:outline-none bg-gray-100 text-black mt-3"
+              className="w-full p-2 rounded-md text-md resize-none focus:outline-none bg-gray-100 text-black mt-3 whitespace-pre-wrap"
               rows="6"
               placeholder="Type your message here..."
               required
