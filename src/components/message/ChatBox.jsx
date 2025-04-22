@@ -478,13 +478,15 @@ const DetailsModal = ({
             <div className="flex justify-center">
               <div onClick={handleAddMember}>
                 <AddUserIcon
-                  className={"w-15 h-15 border p-3 rounded-full cursor-pointer"}
+                  className={
+                    "w-15 h-15 border p-3 rounded-full cursor-pointer mr-2"
+                  }
                 />
               </div>
 
               <div>
                 <svg
-                  className="w-15 h-15 border p-3 rounded-full cursor-pointer text-red-500 hover:text-red-600 transition-colors duration-200"
+                  className="w-15 h-15 border p-3 rounded-full cursor-pointer text-red-500 hover:text-red-600 transition-colors duration-200 ml-2"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
