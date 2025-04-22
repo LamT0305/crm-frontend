@@ -163,6 +163,10 @@ const useMessage = () => {
       }
     });
 
+    socket.on("groupDeleted", (data) => {
+      getGroups();
+    });
+
     return () => {
       socket.off("newMessage");
       socket.off("messageRead");

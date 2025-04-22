@@ -391,6 +391,7 @@ const DetailsModal = ({
     handleGetAttachmentsInGroupMS,
     addMemberToGroup,
     handleRemoveMember,
+    handleDeleteGroup,
   } = useMessage();
   const { users, handleGetWorkspaceUsers } = useUser();
   const [openForm, setOpenForm] = useState(false);
@@ -474,10 +475,37 @@ const DetailsModal = ({
           group &&
           user &&
           group.creator?._id === user._id && (
-            <div className="flex justify-center" onClick={handleAddMember}>
-              <AddUserIcon
-                className={"w-15 h-15 border p-3 rounded-full cursor-pointer"}
-              />
+            <div className="flex justify-center">
+              <div onClick={handleAddMember}>
+                <AddUserIcon
+                  className={"w-15 h-15 border p-3 rounded-full cursor-pointer"}
+                />
+              </div>
+
+              <div>
+                <svg
+                  className="w-15 h-15 border p-3 rounded-full cursor-pointer text-red-500 hover:text-red-600 transition-colors duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this group? This action cannot be undone."
+                      )
+                    ) {
+                      handleDeleteGroup(group._id);
+                    }
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </div>
             </div>
           )}
 
