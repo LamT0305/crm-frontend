@@ -432,6 +432,7 @@ const useMessage = () => {
       });
       if (res.status === 200) {
         dispatch(deleteGroup(groupId));
+        dispatch(setCurrentChat(null));
       }
     } catch (error) {
       dispatch(setError(error.response?.data?.message));
