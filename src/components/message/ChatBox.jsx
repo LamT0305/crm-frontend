@@ -462,7 +462,6 @@ const DetailsModal = ({
             openForm={openForm}
             setOpenForm={setOpenForm}
             users={users}
-            members={group?.members || []}
             handleAddMember={addMemberToGroup}
             group={group}
           />
@@ -671,7 +670,6 @@ const DetailsModal = ({
 const AddMemberForm = ({
   setOpenForm,
   users,
-  members,
   handleAddMember,
   group,
 }) => {
@@ -704,9 +702,7 @@ const AddMemberForm = ({
     }
   };
 
-  const filterUsers = users?.filter(
-    (user) => !members?.some((us) => us._id === user._id)
-  );
+  const filterUsers = users
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
