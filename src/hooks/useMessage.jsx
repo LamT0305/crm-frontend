@@ -110,12 +110,7 @@ const useMessage = () => {
 
     // Group message events
     socket.on("newGroup", (group) => {
-      const groupId = group._id;
-      const idDuplicate = groups.some((group) => group._id === groupId);
-      if (idDuplicate) {
-        return;
-      }
-      dispatch(addGroup(group));
+      getGroups();
     });
 
     socket.on("newGroupMessage", ({ groupId, message }) => {
