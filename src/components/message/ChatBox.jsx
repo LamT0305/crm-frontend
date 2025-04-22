@@ -462,6 +462,7 @@ const DetailsModal = ({
             openForm={openForm}
             setOpenForm={setOpenForm}
             users={users}
+            members={group?.members || []}
             handleAddMember={addMemberToGroup}
             group={group}
           />
@@ -477,9 +478,7 @@ const DetailsModal = ({
             <div className="flex justify-center">
               <div onClick={handleAddMember}>
                 <AddUserIcon
-                  className={
-                    "w-15 h-15 border p-3 rounded-full cursor-pointer mr-2"
-                  }
+                  className={"w-15 h-15 border p-3 rounded-full cursor-pointer mr-2"}
                 />
               </div>
 
@@ -670,6 +669,7 @@ const DetailsModal = ({
 const AddMemberForm = ({
   setOpenForm,
   users,
+  members,
   handleAddMember,
   group,
 }) => {
@@ -702,7 +702,9 @@ const AddMemberForm = ({
     }
   };
 
-  const filterUsers = users
+  const filterUsers = users?.filter(
+    (user) => !members?.some((us) => us._id === user._id)
+  );
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">

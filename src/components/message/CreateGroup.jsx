@@ -4,11 +4,11 @@ import useUser from "../../hooks/useUser";
 const CreateGroup = ({ open, onClose, onCreate }) => {
   const [groupName, setGroupName] = useState("");
   const [selectedMembers, setSelectedMembers] = useState([]);
-  const { users, handleGetUsers } = useUser();
+  const { users, handleGetWorkspaceUsers } = useUser();
 
   useEffect(() => {
     if (open) {
-      handleGetUsers();
+      handleGetWorkspaceUsers();
     }
   }, [open]);
 
@@ -19,7 +19,7 @@ const CreateGroup = ({ open, onClose, onCreate }) => {
         selectedMembers.map((member) => member._id)
       );
 
-      console.log(selectedMembers.map((member) => member._id))
+      console.log(selectedMembers.map((member) => member._id));
       handleReset();
     }
   };
