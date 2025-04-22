@@ -16,6 +16,18 @@ function LandingPage() {
         </div>
         <div className="space-x-4">
           <Link
+            to="/privacy"
+            className="px-4 py-2 text-gray-600 hover:text-blue-600 transition-all duration-300"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            to="/terms"
+            className="px-4 py-2 text-gray-600 hover:text-blue-600 transition-all duration-300"
+          >
+            Terms of Service
+          </Link>
+          <Link
             to="/login"
             className="px-6 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-300"
           >
