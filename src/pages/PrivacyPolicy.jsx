@@ -144,6 +144,33 @@ function PrivacyPolicy() {
                   <li>Personalizing user experience</li>
                 </ul>
               </div>
+
+              <div>
+                <h3 className="font-medium text-gray-700 mb-2">
+                  2.3 Use of Google User Data
+                </h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>
+                    We access Google user data (email, profile information,
+                    Gmail access) only for features authorized by the user such
+                    as sending emails, retrieving customer replies, and
+                    organizing email communication in LeadMasterCRM.
+                  </li>
+                  <li>
+                    Gmail data is accessed in real-time and is not stored unless
+                    necessary for functionality (e.g., storing sent email
+                    metadata).
+                  </li>
+                  <li>
+                    We do not sell, share, or transfer Google user data to third
+                    parties.
+                  </li>
+                  <li>
+                    Access is limited to the minimum scopes required and used
+                    only for user-requested actions.
+                  </li>
+                </ul>
+              </div>
             </div>
           </section>
 
@@ -248,7 +275,8 @@ function PrivacyPolicy() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <p className="text-sm text-gray-500 text-center">
             This privacy policy is regularly reviewed and updated to ensure
-            compliance with applicable laws and regulations.
+            compliance with applicable laws, Google API Services User Data
+            Policy, and data protection regulations.
           </p>
         </div>
       </div>
