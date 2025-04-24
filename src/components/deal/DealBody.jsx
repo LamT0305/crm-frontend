@@ -3,6 +3,7 @@ import CloseIcon from "../../assets/CloseIcon";
 import useDeal from "../../hooks/useDeal";
 import useActivity from "../../hooks/useActivity";
 import useWorkspace from "../../hooks/useWorkspace";
+import { useAuth } from "../../context/AuthContext";
 
 function DealBody({ columns, setOpenDealForm, setDealId }) {
   const {
@@ -14,6 +15,7 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
   } = useDeal();
   const { handleAddActivity } = useActivity();
   const { currentWorkspace } = useWorkspace();
+  const { user } = useAuth();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
@@ -102,7 +104,11 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
                   {col.value}
                 </th>
               ))}
-              <th className="p-2 relative">Actions</th>
+              {currentWorkspace &&
+                user &&
+                currentWorkspace.owner === user._id && (
+                  <th className="p-2 relative">Actions</th>
+                )}
             </tr>
           </thead>
           <tbody>
@@ -120,18 +126,23 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
                     {renderCellContent(deal, col.key)}
                   </td>
                 ))}
-                <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
-                  <div className="flex justify-center">
-                    <div
-                      onClick={() =>
-                        onDeleteDeal(deal._id, deal.customerId._id)
-                      }
-                      className="w-fit"
-                    >
-                      <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
-                    </div>
-                  </div>
-                </td>
+
+                {currentWorkspace &&
+                  user &&
+                  currentWorkspace.owner === user._id && (
+                    <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
+                      <div className="flex justify-center">
+                        <div
+                          onClick={() =>
+                            onDeleteDeal(deal._id, deal.customerId._id)
+                          }
+                          className="w-fit"
+                        >
+                          <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
+                        </div>
+                      </div>
+                    </td>
+                  )}
               </tr>
             ))}
           </tbody>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import WorkspaceIcon from "../../assets/Workspace";
 import Menu from "../../assets/Menu";
 import EditIcon from "../../assets/EditIcon";
 import SaveIcon from "../../assets/SaveIcon";
+import { useAuth } from "../../context/AuthContext";
 
 const WorkspaceSettings = ({
   workspace,
@@ -18,11 +19,15 @@ const WorkspaceSettings = ({
   onAddNewWorkspace,
   onInviteMember,
   users,
+  setMemberRole,
 }) => {
   const [inviteEmail, setInviteEmail] = useState("");
   const [name, setName] = useState("");
   const [editName, setEditName] = useState(false);
   const [displayResults, setDisplayResults] = useState(false);
+  const [showSelectRole, setShowSelectRole] = useState(false);
+  const [memberId, setMemberId] = useState("");
+  const [dropdownDirection, setDropdownDirection] = useState("bottom");
 
   const handleInvite = async (e) => {
     e.preventDefault();
@@ -38,6 +43,28 @@ const WorkspaceSettings = ({
     onSaveNewName(workspace.workspace._id, name);
     setEditName(false);
     setName("");
+  };
+
+  const toggleShowSelectRole = (memberId, event) => {
+    const buttonRect = event.currentTarget.getBoundingClientRect();
+    const dropdownHeight = 140; // estimated height of RoleSelection
+    const spaceBelow = window.innerHeight - buttonRect.bottom;
+
+    if (spaceBelow < dropdownHeight) {
+      setDropdownDirection("top");
+    } else {
+      setDropdownDirection("bottom");
+    }
+
+    setMemberId(memberId);
+    setShowSelectRole(true);
+  };
+
+  const handleRoleChange = (memberId, role) => {
+    if (role && memberId) {
+      setShowSelectRole(false);
+      setMemberRole(workspace.workspace._id, memberId, role);
+    }
   };
 
   return (
@@ -83,17 +110,19 @@ const WorkspaceSettings = ({
                   </p>
                 )}
 
-                <div>
-                  {editName ? (
-                    <div onClick={handleSaveNewName}>
-                      <SaveIcon className="w-[30px] h-[30px] cursor-pointer hover:text-gray-400" />
-                    </div>
-                  ) : (
-                    <div onClick={() => setEditName(true)}>
-                      <EditIcon className="w-[30px] h-[30px] cursor-pointer hover:text-gray-400" />
-                    </div>
-                  )}
-                </div>
+                {workspace.isOwner && (
+                  <div>
+                    {editName ? (
+                      <div onClick={handleSaveNewName}>
+                        <SaveIcon className="w-[30px] h-[30px] cursor-pointer hover:text-gray-400" />
+                      </div>
+                    ) : (
+                      <div onClick={() => setEditName(true)}>
+                        <EditIcon className="w-[30px] h-[30px] cursor-pointer hover:text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -104,45 +133,49 @@ const WorkspaceSettings = ({
               </p>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Invite Team Member</h3>
-              <form
-                onSubmit={handleInvite}
-                className="flex justify-between relative"
-              >
-                <input
-                  type="email"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  placeholder="Enter email address"
-                  className="px-4 py-2 rounded-lg border w-[75%]"
-                  onClick={() => setDisplayResults(true)}
-                />
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+            {workspace.isOwner && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">
+                  Invite Team Member
+                </h3>
+                <form
+                  onSubmit={handleInvite}
+                  className="flex justify-between relative"
                 >
-                  {isLoading ? "Sending..." : "Send Invite"}
-                </button>
-                {inviteEmail.length > 0 && displayResults && (
-                  <div className="absolute bg-white shadow-md w-full left-0 top-full p-4 max-h-[30vh] mt-2">
-                    {users.map((user) => (
-                      <div
-                        onClick={() => {
-                          setInviteEmail(user.email);
-                          setDisplayResults(false);
-                        }}
-                        key={user._id}
-                        className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                      >
-                        <p>{user.email}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </form>
-            </div>
+                  <input
+                    type="email"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    placeholder="Enter email address"
+                    className="px-4 py-2 rounded-lg border w-[75%]"
+                    onClick={() => setDisplayResults(true)}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+                  >
+                    {isLoading ? "Sending..." : "Send Invite"}
+                  </button>
+                  {inviteEmail.length > 0 && displayResults && (
+                    <div className="absolute bg-white shadow-md w-full left-0 top-full p-4 max-h-[30vh] mt-2">
+                      {users.map((user) => (
+                        <div
+                          onClick={() => {
+                            setInviteEmail(user.email);
+                            setDisplayResults(false);
+                          }}
+                          key={user._id}
+                          className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                        >
+                          <p>{user.email}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </form>
+              </div>
+            )}
 
             <div>
               <h3 className="text-lg font-semibold mb-3">Team Members</h3>
@@ -185,10 +218,64 @@ const WorkspaceSettings = ({
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {member.user?.email}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        <td className="px-6 py-4 whitespace-nowrap relative">
+                          <div
+                            onClick={(e) =>
+                              workspace.isOwner &&
+                              member.role !== "Admin" &&
+                              toggleShowSelectRole(member._id, e)
+                            }
+                            className={`px-2 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${
+                              member.role === "Admin"
+                                ? "bg-purple-100 text-purple-800"
+                                : member.role === "Sales"
+                                ? "bg-green-100 text-green-800"
+                                : member.role === "Support"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800"
+                            } ${
+                              workspace.isOwner && member.role !== "Admin"
+                                ? "cursor-pointer hover:bg-opacity-80"
+                                : ""
+                            }`}
+                          >
                             {member.role}
-                          </span>
+                            {workspace.isOwner && member.role !== "Admin" && (
+                              <svg
+                                className="w-3 h-3"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          {memberId === member._id &&
+                            showSelectRole &&
+                            workspace.isOwner &&
+                            member.role !== "Admin" && (
+                              <div
+                                className={`absolute z-10 w-32 bg-white rounded-md shadow-lg  ${
+                                  dropdownDirection === "top"
+                                    ? "bottom-15"
+                                    : "mt-1"
+                                }`}
+                              >
+                                <RoleSelection
+                                  selected={member.role}
+                                  onSelect={(role) => {
+                                    handleRoleChange(member.user?._id, role);
+                                    setShowSelectRole(false);
+                                  }}
+                                />
+                              </div>
+                            )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -259,3 +346,45 @@ const WorkspaceSettings = ({
 };
 
 export default WorkspaceSettings;
+
+const RoleSelection = ({ onSelect }) => {
+  const roles = [
+    // { label: "Member", color: "bg-gray-500", text: "text-gray-700" },
+    { label: "Sales", color: "bg-green-500", text: "text-green-700" },
+    { label: "Support", color: "bg-blue-500", text: "text-blue-700" },
+  ];
+  const ref = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        onSelect("");
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      document.addEventListener("click", handleClickOutside);
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={ref} className="py-2 rounded-lg shadow-md  w-full">
+      {roles.map((role) => (
+        <div
+          key={role.label}
+          onClick={() => onSelect(role.label)}
+          className={`flex items-center justify-between px-4 py-2 text-sm cursor-pointer transition-all duration-150 hover:bg-gray-100 ${role.text}`}
+        >
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${role.color}`}></span>
+            {role.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};

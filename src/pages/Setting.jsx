@@ -21,6 +21,7 @@ function Setting() {
     handleDeleteWorkspace,
     handleLeaveWorkspace,
     handleDeleteMember,
+    handleSetMemberRole,
   } = useWorkspace();
 
   const {
@@ -173,6 +174,7 @@ function Setting() {
             onAddNewWorkspace={() => handleModalState("addNewWS", true)}
             onInviteMember={handleInviteMember}
             users={users}
+            setMemberRole={handleSetMemberRole}
           />
         ) : (
           <Feedback />

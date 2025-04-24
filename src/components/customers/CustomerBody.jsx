@@ -3,10 +3,14 @@ import useCustomer from "../../hooks/useCustomer";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "../../assets/CloseIcon";
 import useActivity from "../../hooks/useActivity";
+import useWorkspace from "../../hooks/useWorkspace";
+import { useAuth } from "../../context/AuthContext";
 
 function CustomerBody({ columns }) {
   const navigate = useNavigate();
   const { handleAddActivity } = useActivity();
+  const { currentWorkspace } = useWorkspace();
+  const { user } = useAuth();
   const {
     customers,
     totalPages,
@@ -19,7 +23,7 @@ function CustomerBody({ columns }) {
 
   useEffect(() => {
     handleSetCustomers();
-  }, []);
+  }, [currentWorkspace]);
 
   useEffect(() => {
     handleChangePage(page);
@@ -92,7 +96,11 @@ function CustomerBody({ columns }) {
                   {col.value}
                 </th>
               ))}
-              <th className="p-2 relative">Actions</th>
+              {currentWorkspace &&
+                user &&
+                currentWorkspace.owner === user._id && (
+                  <th className="p-2 relative">Actions</th>
+                )}
             </tr>
           </thead>
           <tbody>
@@ -110,16 +118,20 @@ function CustomerBody({ columns }) {
                     {renderCellContent(customer, col.key)}
                   </td>
                 ))}
-                <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
-                  <div className="flex justify-center">
-                    <div
-                      onClick={() => onDeleteCustomer(customer._id)}
-                      className="w-fit"
-                    >
-                      <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
-                    </div>
-                  </div>
-                </td>
+                {currentWorkspace &&
+                  user &&
+                  currentWorkspace.owner === user._id && (
+                    <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
+                      <div className="flex justify-center">
+                        <div
+                          onClick={() => onDeleteCustomer(customer._id)}
+                          className="w-fit"
+                        >
+                          <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
+                        </div>
+                      </div>
+                    </td>
+                  )}
               </tr>
             ))}
           </tbody>

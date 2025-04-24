@@ -9,9 +9,9 @@ import {
   setWorkspaces,
   setCurrentWorkspace,
   addWorkspace,
-  setOnboardingStatus,
   clearWorkspaceState,
   setWorkspaceDetails,
+  updateWorkspaceDetails,
 } from "../redux/slice/workspaceSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -309,6 +309,30 @@ const useWorkspace = () => {
     }
   };
 
+  const handleSetMemberRole = async (workspaceId, memberId, role) => {
+    try {
+      dispatch(setLoading(true));
+      const res = await axiosInstance.put(
+        PUT_API().setMemberRole,
+        { workspaceId: workspaceId, userId: memberId, role: role },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(updateWorkspaceDetails(res.data.data.workspace));
+        notify.success("Member role updated successfully");
+      }
+    } catch (error) {
+      console.error(error);
+      notify.error(error.response?.data?.error || "Failed to set member role");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   return {
     workspaces,
     currentWorkspace,
@@ -327,6 +351,7 @@ const useWorkspace = () => {
     handleDeleteWorkspace,
     handleLeaveWorkspace,
     handleDeleteMember,
+    handleSetMemberRole,
   };
 };
 

@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import CloseIcon from "../../assets/CloseIcon";
 import useActivity from "../../hooks/useActivity";
 import useWorkspace from "../../hooks/useWorkspace";
+import { useAuth } from "../../context/AuthContext";
 
 function LeadBody({ columns }) {
   const navigate = useNavigate();
-  const { handleAddActivity } = useActivity();
+  const { user } = useAuth();
   const { currentWorkspace } = useWorkspace();
   const {
     leads,
@@ -54,9 +55,9 @@ function LeadBody({ columns }) {
     return formatValue(value, key);
   };
 
-  const onDeleteLead = async (id, customerId) => {
+  const onDeleteLead = async (id) => {
     await handleDeleteLead(id);
-    
+
     handleChangePage(page);
   };
 
@@ -93,7 +94,11 @@ function LeadBody({ columns }) {
                   {col.value}
                 </th>
               ))}
-              <th className="p-2 relative">Actions</th>
+              {currentWorkspace &&
+                user &&
+                currentWorkspace.owner === user._id && (
+                  <th className="p-2 relative">Actions</th>
+                )}
             </tr>
           </thead>
           <tbody>
@@ -111,18 +116,20 @@ function LeadBody({ columns }) {
                     {renderCellContent(lead, col.key)}
                   </td>
                 ))}
-                <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
-                  <div className="flex justify-center">
-                    <div
-                      onClick={() =>
-                        onDeleteLead(lead._id, lead.customerId?._id)
-                      }
-                      className="w-fit"
-                    >
-                      <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
-                    </div>
-                  </div>
-                </td>
+                {currentWorkspace &&
+                  user &&
+                  currentWorkspace.owner === user._id && (
+                    <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
+                      <div className="flex justify-center">
+                        <div
+                          onClick={() => onDeleteLead(lead._id)}
+                          className="w-fit"
+                        >
+                          <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
+                        </div>
+                      </div>
+                    </td>
+                  )}
               </tr>
             ))}
           </tbody>

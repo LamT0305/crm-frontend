@@ -137,6 +137,7 @@ export const PUT_API = (id) => {
     updateWorkspaceName: "/workspace/update-name",
     markAsRead: `/notification/${id}/read`,
     markAllAsRead: "/notification/read-all",
+    setMemberRole: "/workspace/set-member-role",
     // Messages
     markMessageRead: `/message/message/read/${id}`,
   };
