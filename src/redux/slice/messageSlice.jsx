@@ -50,7 +50,7 @@ const messageSlice = createSlice({
       state.groups = action.payload;
     },
     addGroup: (state, action) => {
-      state.groups.push(action.payload);
+      state.groups.unshift(action.payload);
     },
     setGroupMessages: (state, action) => {
       const { groupId, messages } = action.payload;
