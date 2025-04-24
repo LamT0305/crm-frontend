@@ -12,7 +12,7 @@ function LandingPage() {
       {/* Navigation */}
       <nav className="px-6 py-4 flex justify-between items-center fixed w-full bg-white/80 backdrop-blur-sm z-50">
         <div className="text-2xl font-bold text-blue-600 hover:scale-105 transition-transform">
-          CRM System
+          LeadMaster CRM
         </div>
         <div className="space-x-4">
           <Link
