@@ -5,8 +5,13 @@ import NotiIcon from "../assets/NotiIcon";
 import CloseIcon from "../assets/CloseIcon";
 
 function Notification({ setOpenNoti }) {
-  const { notifications, fetchNotifications, deleteNotificationHandler } =
-    useNotification();
+  const {
+    notifications,
+    fetchNotifications,
+    deleteNotificationHandler,
+    markAsRead,
+    markNotiAllAsRead,
+  } = useNotification();
   const notiRef = useRef(null);
 
   useEffect(() => {
@@ -39,6 +44,25 @@ function Notification({ setOpenNoti }) {
           </div>
           <div className="flex items-center space-x-2">
             <button
+              onClick={() => markNotiAllAsRead()}
+              className="p-2 text-sm font-medium hover:bg-gray-100 rounded-lg transition-colors duration-200 flex items-center gap-2 relative group"
+              title="Mark all read"
+            >
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </button>
+            <button
               onClick={() => fetchNotifications()}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
             >
@@ -69,11 +93,16 @@ function Notification({ setOpenNoti }) {
               >
                 <div
                   onClick={() => {
+                    markAsRead(notification._id);
                     if (notification.link && notification.link !== "") {
                       window.location.href = notification.link;
                     }
                   }}
-                  className="p-6 border-b border-gray-100 cursor-pointer"
+                  className={`p-6 border-b border-gray-100 cursor-pointer ${
+                    notification.status === "Unread"
+                      ? "bg-blue-50 border-l-4 border-l-blue-500"
+                      : "hover:bg-gray-50"
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium text-gray-900">

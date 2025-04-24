@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Filter from "../components/Filter";
 import CreateProductForm from "../components/form/CreateProductForm";
-import ProductBody from "../components/ProductBody";
 import useProduct from "../hooks/useProduct";
 import useWorkspace from "../hooks/useWorkspace";
 import { useNavigate } from "react-router-dom";
+import ProductBody from "../components/product/ProductBody";
 
 function ProductService() {
   const { currentWorkspace, isLoading: workspaceLoading } = useWorkspace();

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import LeadHeader from "../components/LeadHeader";
+import LeadHeader from "../components/lead/LeadHeader";
 import Filter from "../components/Filter";
-import LeadBody from "../components/LeadBody";
+import LeadBody from "../components/lead/LeadBody";
 import CreateLeadForm from "../components/form/CreateLeadForm";
 import useLead from "../hooks/useLead";
 import useWorkspace from "../hooks/useWorkspace";

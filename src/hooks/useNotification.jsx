@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { GET_API, DELETE_API } from "../services/APIs";
+import { GET_API, DELETE_API, PUT_API } from "../services/APIs";
 import { getToken } from "../utils/auth";
 import axiosInstance from "../services/Axios";
 import {
@@ -7,9 +7,11 @@ import {
   setError,
   setNotifications,
   removeNotification,
+  updateNotification,
+  markAllAsRead,
 } from "../redux/slice/notiSlice";
 import { useEffect } from "react";
-import useWorkspace from "./useWorkspace";
+import { notify } from "../utils/Toastify";
 
 const useNotification = () => {
   const dispatch = useDispatch();
@@ -17,8 +19,6 @@ const useNotification = () => {
     (state) => state.noti
   );
   const token = getToken();
-
-  
 
   const fetchNotifications = async () => {
     try {
@@ -53,6 +53,42 @@ const useNotification = () => {
     }
   };
 
+  const markAsRead = async (notificationId) => {
+    try {
+      const res = await axiosInstance.put(
+        PUT_API(notificationId).markAsRead,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(updateNotification(notificationId));
+      }
+    } catch (error) {
+      dispatch(setError(error.message));
+      notify.error(error.message);
+    }
+  };
+
+  const markNotiAllAsRead = async () => {
+    try {
+      const res = await axiosInstance.put(
+        PUT_API().markAllAsRead,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(markAllAsRead());
+      }
+    } catch (error) {
+      dispatch(setError(error.message));
+      notify.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       fetchNotifications();
@@ -66,6 +102,8 @@ const useNotification = () => {
     error,
     deleteNotificationHandler,
     fetchNotifications,
+    markAsRead,
+    markNotiAllAsRead,
   };
 };
 

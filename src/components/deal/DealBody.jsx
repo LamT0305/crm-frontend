@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
-import useCustomer from "../hooks/useCustomer";
-import { useNavigate } from "react-router-dom";
-import CloseIcon from "../assets/CloseIcon";
-import useActivity from "../hooks/useActivity";
+import CloseIcon from "../../assets/CloseIcon";
+import useDeal from "../../hooks/useDeal";
+import useActivity from "../../hooks/useActivity";
+import useWorkspace from "../../hooks/useWorkspace";
 
-function CustomerBody({ columns }) {
-  const navigate = useNavigate();
-  const { handleAddActivity } = useActivity();
+function DealBody({ columns, setOpenDealForm, setDealId }) {
   const {
-    customers,
+    deals,
     totalPages,
-    handleSetCustomers,
-    handleDeleteCustomer,
+    handleSetDeals,
+    handleDeleteDeal,
     handleChangePage,
-  } = useCustomer();
+  } = useDeal();
+  const { handleAddActivity } = useActivity();
+  const { currentWorkspace } = useWorkspace();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
-    handleSetCustomers();
-  }, []);
+    handleSetDeals();
+  }, [currentWorkspace]); // Fetch all deals once on mount
 
   useEffect(() => {
     handleChangePage(page);
-  }, [page]);
+  }, [page]); // Update displayed deals when page changes
+
+  const onOpenForm = (id) => {
+    setDealId(id);
+    setOpenDealForm(true);
+  };
 
   const getNestedValue = (obj, path) => {
     const keys = path.split(".");
@@ -37,25 +42,30 @@ function CustomerBody({ columns }) {
 
   const formatValue = (value, key) => {
     if (!value) return "-";
+
+    if (key.includes("Price")) {
+      return `$${Number(value).toFixed(2)}`;
+    }
     if (key === "createdAt" || key === "updatedAt") {
       return new Date(value).toLocaleDateString();
     }
     return value;
   };
 
-  const renderCellContent = (customer, key) => {
-    const value = getNestedValue(customer, key);
+  const renderCellContent = (deal, key) => {
+    const value = getNestedValue(deal, key);
     return formatValue(value, key);
   };
 
-  const onDeleteCustomer = async (id) => {
-    await handleDeleteCustomer(id);
+  const onDeleteDeal = async (id, customerId) => {
+    await handleDeleteDeal(id);
     const activity = {
-      customerId: id,
-      type: "customer",
-      subject: "deleted a customer",
+      customerId: customerId,
+      type: "deal",
+      subject: "delete a deal",
     };
     await handleAddActivity(activity);
+    // Refresh current page after deletion
     handleChangePage(page);
   };
 
@@ -96,24 +106,26 @@ function CustomerBody({ columns }) {
             </tr>
           </thead>
           <tbody>
-            {customers?.map((customer) => (
+            {deals?.map((deal) => (
               <tr
-                key={customer._id}
+                key={deal._id}
                 className="border-b cursor-pointer hover:bg-gray-200 h-fit"
               >
                 {columns.map((col) => (
                   <td
-                    onClick={() => navigate(`/customerinfo/${customer._id}`)}
+                    onClick={() => onOpenForm(deal._id)}
                     key={col.key}
                     className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center h-fit"
                   >
-                    {renderCellContent(customer, col.key)}
+                    {renderCellContent(deal, col.key)}
                   </td>
                 ))}
                 <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
                   <div className="flex justify-center">
                     <div
-                      onClick={() => onDeleteCustomer(customer._id)}
+                      onClick={() =>
+                        onDeleteDeal(deal._id, deal.customerId._id)
+                      }
                       className="w-fit"
                     >
                       <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
@@ -170,4 +182,4 @@ function CustomerBody({ columns }) {
   );
 }
 
-export default CustomerBody;
+export default DealBody;

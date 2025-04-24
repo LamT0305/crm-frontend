@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import DealForm from "../components/form/DealForm";
 import Filter from "../components/Filter";
-import DealBody from "../components/DealBody";
 import useDeal from "../hooks/useDeal";
 import useWorkspace from "../hooks/useWorkspace";
 import { useNavigate } from "react-router-dom";
+import DealBody from "../components/deal/DealBody";
 
 function Deal() {
   const { currentWorkspace, isLoading: workspaceLoading } = useWorkspace();

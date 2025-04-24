@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import useEmail from "../hooks/useEmail";
-import MailIcon from "../assets/mailIcon";
-import userAvatar from "../assets/user-avatar.png";
-import customerAvatar from "../assets/user.png";
-import ReloadIcon from "../assets/Reload";
-import CloseIcon from "../assets/CloseIcon";
+import useEmail from "../../hooks/useEmail";
+import MailIcon from "../../assets/mailIcon";
+import userAvatar from "../../assets/user-avatar.png";
+import customerAvatar from "../../assets/user.png";
+import ReloadIcon from "../../assets/Reload";
+import CloseIcon from "../../assets/CloseIcon";
 
 function Email({ customer, setOpenEmailForm }) {
   const {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CreateInteractionForm from "./form/CreateInteractionForm";
-import useCustomerCare from "../hooks/useCustomerCare";
-import CustomerCareIcon from "../assets/CustomerCareIcon";
-import CloseIcon from "../assets/CloseIcon";
+import CreateInteractionForm from "../form/CreateInteractionForm";
+import useCustomerCare from "../../hooks/useCustomerCare";
+import CustomerCareIcon from "../../assets/CustomerCareIcon";
+import CloseIcon from "../../assets/CloseIcon";
 
 function CustomerCare({ customerId }) {
   const [openFormInteraction, setOpenFormInteraction] = useState(false);

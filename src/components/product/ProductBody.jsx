@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from "react";
-import CloseIcon from "../assets/CloseIcon";
-import useDeal from "../hooks/useDeal";
-import useActivity from "../hooks/useActivity";
-import useWorkspace from "../hooks/useWorkspace";
+import { useNavigate } from "react-router-dom";
+import CloseIcon from "../../assets/CloseIcon";
+import useProduct from "../../hooks/useProduct";
+import useWorkspace from "../../hooks/useWorkspace";
 
-function DealBody({ columns, setOpenDealForm, setDealId }) {
+function ProductBody({ columns, setOpenForm, setProductId }) {
   const {
-    deals,
+    products,
     totalPages,
-    handleSetDeals,
-    handleDeleteDeal,
+    handleSetProducts,
+    handleDeleteProduct,
     handleChangePage,
-  } = useDeal();
-  const { handleAddActivity } = useActivity();
+  } = useProduct();
   const { currentWorkspace } = useWorkspace();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
-    handleSetDeals();
-  }, [currentWorkspace]); // Fetch all deals once on mount
+    handleSetProducts();
+  }, [currentWorkspace]); // Fetch all products once
 
   useEffect(() => {
     handleChangePage(page);
-  }, [page]); // Update displayed deals when page changes
+  }, [page]); // Update displayed products when page changes
 
   const onOpenForm = (id) => {
-    setDealId(id);
-    setOpenDealForm(true);
+    setProductId(id);
+    setOpenForm(true);
   };
 
   const getNestedValue = (obj, path) => {
@@ -42,31 +41,16 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
 
   const formatValue = (value, key) => {
     if (!value) return "-";
-
-    if (key.includes("Price")) {
-      return `$${Number(value).toFixed(2)}`;
-    }
+    if (key === "price") return `$${Number(value).toFixed(2)}`;
     if (key === "createdAt" || key === "updatedAt") {
       return new Date(value).toLocaleDateString();
     }
     return value;
   };
 
-  const renderCellContent = (deal, key) => {
-    const value = getNestedValue(deal, key);
+  const renderCellContent = (product, key) => {
+    const value = getNestedValue(product, key);
     return formatValue(value, key);
-  };
-
-  const onDeleteDeal = async (id, customerId) => {
-    await handleDeleteDeal(id);
-    const activity = {
-      customerId: customerId,
-      type: "deal",
-      subject: "delete a deal",
-    };
-    await handleAddActivity(activity);
-    // Refresh current page after deletion
-    handleChangePage(page);
   };
 
   useEffect(() => {
@@ -92,7 +76,7 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
   }, [page, totalPages]);
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col h-full justify-between">
       <div className="overflow-x-auto px-2 max-h-[72vh]">
         <table className="table-auto border-collapse w-full h-full">
           <thead>
@@ -106,26 +90,24 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
             </tr>
           </thead>
           <tbody>
-            {deals?.map((deal) => (
+            {products?.map((product) => (
               <tr
-                key={deal._id}
+                key={product._id}
                 className="border-b cursor-pointer hover:bg-gray-200 h-fit"
               >
                 {columns.map((col) => (
                   <td
-                    onClick={() => onOpenForm(deal._id)}
+                    onClick={() => onOpenForm(product._id)}
                     key={col.key}
                     className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center h-fit"
                   >
-                    {renderCellContent(deal, col.key)}
+                    {renderCellContent(product, col.key)}
                   </td>
                 ))}
                 <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
                   <div className="flex justify-center">
                     <div
-                      onClick={() =>
-                        onDeleteDeal(deal._id, deal.customerId._id)
-                      }
+                      onClick={() => handleDeleteProduct(product._id)}
                       className="w-fit"
                     >
                       <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
@@ -182,4 +164,4 @@ function DealBody({ columns, setOpenDealForm, setDealId }) {
   );
 }
 
-export default DealBody;
+export default ProductBody;

@@ -1,5 +1,5 @@
 import React from "react";
-import Plus from "../assets/Plus.png";
+import Plus from "../../assets/Plus.png";
 
 function LeadHeader({ setIsOpen }) {
   return (

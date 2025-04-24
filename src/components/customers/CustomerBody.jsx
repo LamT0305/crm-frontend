@@ -1,33 +1,29 @@
 import React, { useEffect, useState } from "react";
+import useCustomer from "../../hooks/useCustomer";
 import { useNavigate } from "react-router-dom";
-import CloseIcon from "../assets/CloseIcon";
-import useProduct from "../hooks/useProduct";
-import useWorkspace from "../hooks/useWorkspace";
+import CloseIcon from "../../assets/CloseIcon";
+import useActivity from "../../hooks/useActivity";
 
-function ProductBody({ columns, setOpenForm, setProductId }) {
+function CustomerBody({ columns }) {
+  const navigate = useNavigate();
+  const { handleAddActivity } = useActivity();
   const {
-    products,
+    customers,
     totalPages,
-    handleSetProducts,
-    handleDeleteProduct,
+    handleSetCustomers,
+    handleDeleteCustomer,
     handleChangePage,
-  } = useProduct();
-  const { currentWorkspace } = useWorkspace();
+  } = useCustomer();
   const [page, setPage] = useState(1);
   const [displayedPages, setDisplayedPages] = useState([]);
 
   useEffect(() => {
-    handleSetProducts();
-  }, [currentWorkspace]); // Fetch all products once
+    handleSetCustomers();
+  }, []);
 
   useEffect(() => {
     handleChangePage(page);
-  }, [page]); // Update displayed products when page changes
-
-  const onOpenForm = (id) => {
-    setProductId(id);
-    setOpenForm(true);
-  };
+  }, [page]);
 
   const getNestedValue = (obj, path) => {
     const keys = path.split(".");
@@ -41,16 +37,26 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
 
   const formatValue = (value, key) => {
     if (!value) return "-";
-    if (key === "price") return `$${Number(value).toFixed(2)}`;
     if (key === "createdAt" || key === "updatedAt") {
       return new Date(value).toLocaleDateString();
     }
     return value;
   };
 
-  const renderCellContent = (product, key) => {
-    const value = getNestedValue(product, key);
+  const renderCellContent = (customer, key) => {
+    const value = getNestedValue(customer, key);
     return formatValue(value, key);
+  };
+
+  const onDeleteCustomer = async (id) => {
+    await handleDeleteCustomer(id);
+    const activity = {
+      customerId: id,
+      type: "customer",
+      subject: "deleted a customer",
+    };
+    await handleAddActivity(activity);
+    handleChangePage(page);
   };
 
   useEffect(() => {
@@ -76,7 +82,7 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
   }, [page, totalPages]);
 
   return (
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col justify-between h-full">
       <div className="overflow-x-auto px-2 max-h-[72vh]">
         <table className="table-auto border-collapse w-full h-full">
           <thead>
@@ -90,24 +96,24 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
             </tr>
           </thead>
           <tbody>
-            {products?.map((product) => (
+            {customers?.map((customer) => (
               <tr
-                key={product._id}
+                key={customer._id}
                 className="border-b cursor-pointer hover:bg-gray-200 h-fit"
               >
                 {columns.map((col) => (
                   <td
-                    onClick={() => onOpenForm(product._id)}
+                    onClick={() => navigate(`/customerinfo/${customer._id}`)}
                     key={col.key}
                     className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center h-fit"
                   >
-                    {renderCellContent(product, col.key)}
+                    {renderCellContent(customer, col.key)}
                   </td>
                 ))}
                 <td className="px-3 py-4 border-b border-gray-300 w-max whitespace-nowrap text-center mx-auto">
                   <div className="flex justify-center">
                     <div
-                      onClick={() => handleDeleteProduct(product._id)}
+                      onClick={() => onDeleteCustomer(customer._id)}
                       className="w-fit"
                     >
                       <CloseIcon className="w-6 h-6 p-1 bg-gray-200 rounded-lg cursor-pointer hover:bg-red-400 hover:text-white" />
@@ -164,4 +170,4 @@ function ProductBody({ columns, setOpenForm, setProductId }) {
   );
 }
 
-export default ProductBody;
+export default CustomerBody;

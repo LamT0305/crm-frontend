@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import CloseIcon from "../assets/CloseIcon";
-import useDeal from "../hooks/useDeal";
-import DealForm from "./form/DealForm";
+import CloseIcon from "../../assets/CloseIcon";
+import useDeal from "../../hooks/useDeal";
+import DealForm from "../form/DealForm";
 
 function CustomerDeal({ customerId, columns }) {
   const {

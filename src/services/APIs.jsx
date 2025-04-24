@@ -48,6 +48,7 @@ export const GET_API = (id) => {
     // Notifications
     notifications: "/notification",
     unreadNotificationsCount: "/notification/unread/count",
+   
 
     // Quotations
     quotations: "/quotation",
@@ -134,6 +135,8 @@ export const PUT_API = (id) => {
     notificationRead: `/notification/${id}/read`,
     allNotificationsRead: "/notification/mark-all-read",
     updateWorkspaceName: "/workspace/update-name",
+    markAsRead: `/notification/${id}/read`,
+    markAllAsRead: "/notification/read-all",
     // Messages
     markMessageRead: `/message/message/read/${id}`,
   };

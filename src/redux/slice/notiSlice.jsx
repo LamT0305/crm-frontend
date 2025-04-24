@@ -39,18 +39,9 @@ const notificationSlice = createSlice({
 
     // Update notification
     updateNotification: (state, action) => {
-      const index = state.notifications.findIndex(
-        (notif) => notif._id === action.payload._id
+      state.notifications = state.notifications.map((notif) =>
+        notif._id === action.payload ? { ...notif, status: "Read" } : notif
       );
-      if (index !== -1) {
-        if (
-          state.notifications[index].status === "Unread" &&
-          action.payload.status === "Read"
-        ) {
-          state.unreadCount = Math.max(0, state.unreadCount - 1);
-        }
-        state.notifications[index] = action.payload;
-      }
     },
 
     // Remove notification

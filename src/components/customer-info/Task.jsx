@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import useTask from "../hooks/useTask";
-import CheckmarkIcon from "../assets/CheckmarkIcon";
-import { TaskForm } from "./form/TaskForm";
-import BacklogIcon from "../assets/BacklogIcon";
-import TodoIcon from "../assets/TodoIcon";
-import InProgressIcon from "../assets/InProgressIcon";
-import DoneIcon from "../assets/DoneIcon";
-import CanceledIcon from "../assets/CancelIcon";
-import CloseIcon from "../assets/CloseIcon";
-import useActivity from "../hooks/useActivity";
+import useTask from "../../hooks/useTask";
+import CheckmarkIcon from "../../assets/CheckmarkIcon";
+import { TaskForm } from "../form/TaskForm";
+import BacklogIcon from "../../assets/BacklogIcon";
+import TodoIcon from "../../assets/TodoIcon";
+import InProgressIcon from "../../assets/InProgressIcon";
+import DoneIcon from "../../assets/DoneIcon";
+import CanceledIcon from "../../assets/CancelIcon";
+import CloseIcon from "../../assets/CloseIcon";
+import useActivity from "../../hooks/useActivity";
 
 function Task({ customerId, user }) {
   const {

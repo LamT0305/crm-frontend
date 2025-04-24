@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import useComment from "../hooks/useComment";
-import ChatIcon from "../assets/commentIcon";
-import CloseIcon from "../assets/CloseIcon";
+import useComment from "../../hooks/useComment";
+import ChatIcon from "../../assets/commentIcon";
+import CloseIcon from "../../assets/CloseIcon";
 
 function Comment({ customerId, setOpenForm }) {
   const { isLoading, comments, handleGetComments, handleDeleteCmt } =

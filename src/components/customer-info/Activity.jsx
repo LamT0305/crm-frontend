@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import useActivity from "../hooks/useActivity";
-import TodoIcon from "../assets/TodoIcon";
-import ChatIcon from "../assets/commentIcon";
-import NoteIcon from "../assets/NoteIcon";
-import MailIcon from "../assets/mailIcon";
-import UserIcon from "../assets/UserIcon";
-import DealIcon from "../assets/DealIcon";
+import useActivity from "../../hooks/useActivity";
+import TodoIcon from "../../assets/TodoIcon";
+import ChatIcon from "../../assets/commentIcon";
+import NoteIcon from "../../assets/NoteIcon";
+import MailIcon from "../../assets/mailIcon";
+import UserIcon from "../../assets/UserIcon";
+import DealIcon from "../../assets/DealIcon";
 
 function Activity({ id }) {
   const { activities, handleGetActivities } = useActivity();

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import useAnalytic from "../hooks/useAnalytic";
-import CustomerStatistic from "../components/CustomerStatistic";
-import AnalyticNavigation from "../components/AnalyticNavigation";
-import DealAnalytic from "../components/DealAnalytic";
-import InteractionAnalytic from "../components/InteractionAnalytic";
-import SaleAnalytic from "../components/SaleAnalytic";
+import CustomerStatistic from "../components/analytic/CustomerStatistic";
+import AnalyticNavigation from "../components/analytic/AnalyticNavigation";
+import DealAnalytic from "../components/analytic/DealAnalytic";
+import InteractionAnalytic from "../components/analytic/InteractionAnalytic";
+import SaleAnalytic from "../components/analytic/SaleAnalytic";
 import useWorkspace from "../hooks/useWorkspace";
 
 function Statistic() {

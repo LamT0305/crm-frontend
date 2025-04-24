@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import useCustomer from "../hooks/useCustomer";
-import { InputChange } from "../utils/input";
-import { Source } from "../utils/source";
-import useSource from "../hooks/useSource";
+import useCustomer from "../../hooks/useCustomer";
+import { InputChange } from "../../utils/input";
+import { Source } from "../../utils/source";
+import useSource from "../../hooks/useSource";
 
 function Data({ customerId }) {
   const { customer, handleGetCustomerById, handleUpdateCustomer } =

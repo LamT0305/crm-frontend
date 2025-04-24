@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import useProduct from "../../hooks/useProduct";
 import useCategory from "../../hooks/useCategory";
-import Category from "../../components/Category";
 import CloseIcon from "../../assets/CloseIcon";
+import Category from "../product/Category";
 
 const CreateProductForm = ({ setIsOpen, productId, setProductId }) => {
   const {

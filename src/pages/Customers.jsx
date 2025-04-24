@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import useCustomer from "../hooks/useCustomer";
 import Filter from "../components/Filter";
-import CustomerBody from "../components/CustomerBody";
 import useWorkspace from "../hooks/useWorkspace";
 import { useNavigate } from "react-router-dom";
+import CustomerBody from "../components/customers/CustomerBody";
 
 function Customers() {
   const { currentWorkspace, workspaceLoading } = useWorkspace();

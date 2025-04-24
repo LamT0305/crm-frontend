@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import CustomerHeader from "../components/CustomerHeader";
-import CustomerNavigation from "../components/CustomerNavigation";
-import CustomerFooter from "../components/CustomerFooter";
-import CustomerDetails from "../components/CustomerDetails";
+import CustomerHeader from "../components/customer-info/CustomerHeader";
+import CustomerNavigation from "../components/customer-info/CustomerNavigation";
 import useLead from "../hooks/useLead";
-import Activity from "../components/Activity";
-import Email from "../components/Email";
-import Data from "../components/Data";
-import Task from "../components/Task";
-import Note from "../components/Note";
-import Comment from "../components/Comment";
+import Activity from "../components/customer-info/Activity";
+import Email from "../components/customer-info/Email";
+import Data from "../components/customer-info/Data";
+import Task from "../components/customer-info/Task";
+import Note from "../components/customer-info/Note";
+import Comment from "../components/customer-info/Comment";
 import DealForm from "../components/form/DealForm";
-import CustomerCare from "../components/CustomerCare";
-import CustomerDeal from "../components/CustomerDeal";
+import CustomerCare from "../components/customer-info/CustomerCare";
+import CustomerDeal from "../components/customer-info/CustomerDeal";
 import useWorkspace from "../hooks/useWorkspace";
 import EmailForm from "../components/form/EmailForm";
 import CommentForm from "../components/form/CommentInput";
 function CustomerInfo() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { customer, handleGetCustomerById, isLoading } = useLead();
   const { currentWorkspace } = useWorkspace();
   const [tagName, setTagName] = useState("activity"); // default
@@ -28,7 +25,6 @@ function CustomerInfo() {
   const [openComment, setOpenCmt] = useState(false);
 
   const defaultColumns = [
-    // { key: "customerId._id", value: "Customer ID" },
     { key: "customerId.firstName", value: "First Name" },
     { key: "customerId.lastName", value: "Last Name" },
     { key: "quotationId.totalPrice", value: "Total Amount" },

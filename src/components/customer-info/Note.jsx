@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import useNote from "../hooks/useNote";
-import NoteIcon from "../assets/NoteIcon";
-import NoteForm from "./form/NoteForm";
-import CloseIcon from "../assets/CloseIcon";
+import useNote from "../../hooks/useNote";
+import NoteIcon from "../../assets/NoteIcon";
+import NoteForm from "../form/NoteForm";
+import CloseIcon from "../../assets/CloseIcon";
 
 function Note({ customerId }) {
   const { notes, handleGetCustomerNotes, handleDeleteNote } = useNote();

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import useLead from "../hooks/useLead";
+import useLead from "../../hooks/useLead";
 import { useNavigate } from "react-router-dom";
-import CloseIcon from "../assets/CloseIcon";
-import useActivity from "../hooks/useActivity";
-import useWorkspace from "../hooks/useWorkspace";
+import CloseIcon from "../../assets/CloseIcon";
+import useActivity from "../../hooks/useActivity";
+import useWorkspace from "../../hooks/useWorkspace";
 
 function LeadBody({ columns }) {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import MailIcon from "../assets/mailIcon";
-import ChatIcon from "../assets/commentIcon";
-import EmailForm from "./form/EmailForm";
-import CommentForm from "./form/CommentInput";
+import MailIcon from "../../assets/mailIcon";
+import ChatIcon from "../../assets/commentIcon";
+import EmailForm from "../form/EmailForm";
+import CommentForm from "../form/CommentInput";
 
 function CustomerFooter({
   customerEmail,
