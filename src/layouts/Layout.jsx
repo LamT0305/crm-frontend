@@ -56,6 +56,11 @@ const Layout = () => {
       console.error("Socket connection error:", error);
     });
 
+    // task
+    socket.on("new_task", (data) => {
+      fetchNotifications();
+      notify.info("New task received!");
+    });
     //email
     socket.on("newEmail", (data) => {
       fetchNotifications();
@@ -122,7 +127,7 @@ const Layout = () => {
       fetchNotifications();
       notify.error(data.noti.title);
     });
-    
+
     return () => {
       socket.disconnect();
     };
