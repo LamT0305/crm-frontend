@@ -48,7 +48,6 @@ export const GET_API = (id) => {
     // Notifications
     notifications: "/notification",
     unreadNotificationsCount: "/notification/unread/count",
-   
 
     // Quotations
     quotations: "/quotation",
@@ -140,6 +139,9 @@ export const PUT_API = (id) => {
     setMemberRole: "/workspace/set-member-role",
     // Messages
     markMessageRead: `/message/message/read/${id}`,
+
+    addCustomerTag: `/customer/tags/${id}`,
+    removeCustomerTag: `/customer/removeTag/${id}`,
   };
 };
 

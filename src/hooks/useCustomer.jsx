@@ -10,6 +10,8 @@ import {
   setTotalPages,
   setLoading,
   setCurrentPage,
+  addCustomerTag,
+  removeCustomerTag,
 } from "../redux/slice/customerSlice";
 import axiosInstance from "../services/Axios";
 import { DELETE_API, GET_API, PUT_API } from "../services/APIs";
@@ -152,6 +154,53 @@ const useCustomer = () => {
     }
   };
 
+  const handleAddCustomerTag = async (id, tag) => {
+    dispatch(setLoading(true));
+    try {
+      const res = await axiosInstance.put(
+        PUT_API(id).addCustomerTag,
+        { tag: tag },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(addCustomerTag(tag));
+        notify.success("Tag added successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      notify.error("Failed to add tag");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleRemoveCustomerTag = async (id, tag) => {
+    dispatch(setLoading(true));
+    try {
+      const res = await axiosInstance.put(
+        PUT_API(id).removeCustomerTag,
+        { tag: tag },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        dispatch(removeCustomerTag(tag));
+        notify.success("Tag removed successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      notify.error("Failed to remove tag");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
   return {
     isLoading,
     customers: displayedCustomers,
@@ -166,6 +215,9 @@ const useCustomer = () => {
     handleClearCustomer,
     handleUpdateCustomer,
     handleChangePage,
+
+    handleAddCustomerTag,
+    handleRemoveCustomerTag,
   };
 };
 

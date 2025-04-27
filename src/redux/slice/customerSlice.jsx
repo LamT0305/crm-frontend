@@ -135,6 +135,16 @@ const customerSlice = createSlice({
     setTotalPages: (state, action) => {
       state.totalPages = action.payload;
     },
+
+    addCustomerTag: (state, action) => {
+      state.customer.tags.push(action.payload);
+    },
+
+    removeCustomerTag: (state, action) => {
+      state.customer.tags = state.customer.tags.filter(
+        (tag) => tag !== action.payload
+      );
+    },
   },
 });
 
@@ -149,6 +159,8 @@ export const {
   getCustomerById,
   updateCustomer,
   setTotalPages,
+  addCustomerTag,
+  removeCustomerTag,
 } = customerSlice.actions;
 
 export default customerSlice.reducer;

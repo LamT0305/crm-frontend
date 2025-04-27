@@ -3,10 +3,17 @@ import useCustomer from "../../hooks/useCustomer";
 import { InputChange } from "../../utils/input";
 import { Source } from "../../utils/source";
 import useSource from "../../hooks/useSource";
+import CloseIcon from "../../assets/CloseIcon";
+import TagModal from "./TagModal";
 
 function Data({ customerId }) {
-  const { customer, handleGetCustomerById, handleUpdateCustomer } =
-    useCustomer();
+  const {
+    customer,
+    handleGetCustomerById,
+    handleUpdateCustomer,
+    handleAddCustomerTag,
+    handleRemoveCustomerTag,
+  } = useCustomer();
   const { handleGetSources, sources } = useSource();
 
   const [save, setSave] = useState(false);
@@ -24,6 +31,8 @@ function Data({ customerId }) {
     },
   });
   const [openSource, setOpenSource] = useState(false);
+
+  const [openTagModal, setOpenTagModal] = useState(false);
 
   useEffect(() => {
     if (!customerId) return;
@@ -59,8 +68,16 @@ function Data({ customerId }) {
     }
   }, [customer]);
 
+  const onSaveTag = (tag) => {
+    handleAddCustomerTag(customerId, tag);
+  };
+
+  const onCloseModal = () => {
+    setOpenTagModal(false);
+  };
   return (
     <div className="h-full w-full bg-white flex flex-col overflow-hidden">
+      {openTagModal && <TagModal onClose={onCloseModal} onSave={onSaveTag} />}
       {customer && (
         <div className="flex-1 overflow-y-auto px-5 py-6">
           <form onSubmit={onSubmit} className="space-y-10">
@@ -234,27 +251,35 @@ function Data({ customerId }) {
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 text-sm mb-2">Tags:</p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium">
-                    VIP
-                  </span>
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium">
-                    High Engagement
-                  </span>
-                  <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-medium">
-                    Potential
-                  </span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-sm font-medium">
-                    Enterprise
-                  </span>
-                  <span className="px-3 py-1 bg-red-100 text-red-800 rounded-lg text-sm font-medium">
-                    Frequent Buyer
-                  </span>
-                  <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm font-medium">
-                    Support Heavy
-                  </span>
+                <div className="flex items-center justify-between pr-4">
+                  <p className="text-gray-500 text-sm mb-2">Tags:</p>
+                  <p
+                    onClick={() => setOpenTagModal(true)}
+                    className="text-xs bg-blue-300 w-fit px-2 py-1 text-white font-bold rounded-lg cursor-pointer hover:text-white hover:bg-blue-700"
+                  >
+                    Add Tag
+                  </p>
                 </div>
+                {customer.tags && (
+                  <div className="grid grid-cols-7 flex-wrap gap-2">
+                    {customer.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium relative mr-2 w-fit h-fit mb-2"
+                      >
+                        {tag}
+                        <div
+                          onClick={() =>
+                            handleRemoveCustomerTag(customerId, tag)
+                          }
+                          className="absolute bottom-[70%] left-[85%] bg-gray-200 rounded-full p-[2px] cursor-pointer"
+                        >
+                          <CloseIcon className={"w-3 h-3"} />
+                        </div>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </form>
