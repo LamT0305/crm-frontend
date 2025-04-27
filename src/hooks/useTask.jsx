@@ -11,6 +11,7 @@ import {
   updateTask,
   filterTask,
   sortTask,
+  filterByStatus,
 } from "../redux/slice/taskSlice";
 import { notify } from "../utils/Toastify";
 import useActivity from "./useActivity";
@@ -149,16 +150,20 @@ const useTask = () => {
     }
   };
 
-  const handleSortTasks = (field, order) => {
+  const handleSortTasks = (order) => {
     try {
-      if (!field || order === undefined) {
+      if (order === undefined) {
         return;
       }
-      dispatch(sortTask({ field, order }));
+      dispatch(sortTask({ order }));
     } catch (error) {
       console.log(error);
       notify.error("Error sorting tasks");
     }
+  };
+
+  const handleFilterByStatus = (status) => {
+    dispatch(filterByStatus({ status }));
   };
 
   return {
@@ -172,6 +177,7 @@ const useTask = () => {
     handleGetTaskById,
     handleFilterTasks,
     handleSortTasks,
+    handleFilterByStatus,
   };
 };
 

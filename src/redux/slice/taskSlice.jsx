@@ -19,19 +19,12 @@ const slice = createSlice({
       state.filteredTasks = action.payload;
     },
     sortTask: (state, action) => {
-      const { field, order } = action.payload;
-      if (!field) return;
-
+      const { order } = action.payload;
+      const field = "createdAt";
       const compareFunction = (a, b) => {
-        if (typeof a[field] === "string" && typeof b[field] === "string") {
-          return order === "asc"
-            ? a[field].localeCompare(b[field])
-            : b[field].localeCompare(a[field]);
-        }
-        if (typeof a[field] === "number" && typeof b[field] === "number") {
-          return order === "asc" ? a[field] - b[field] : b[field] - a[field];
-        }
-        return 0;
+        const dateA = new Date(a[field]).getTime();
+        const dateB = new Date(b[field]).getTime();
+        return order === "asc" ? dateA - dateB : dateB - dateA;
       };
 
       state.filteredTasks = [...state.filteredTasks].sort(compareFunction);
@@ -70,6 +63,17 @@ const slice = createSlice({
       state.tasks = updatedTasks;
       state.filteredTasks = [...updatedTasks];
     },
+
+    filterByStatus: (state, action) => {
+      const { status } = action.payload;
+      if (!status || status === "all") {
+        state.filteredTasks = state.tasks;
+        return;
+      }
+      state.filteredTasks = state.tasks.filter(
+        (task) => task.status === status
+      );
+    },
   },
 });
 
@@ -82,5 +86,6 @@ export const {
   deleteTask,
   getTask,
   updateTask,
+  filterByStatus,
 } = slice.actions;
 export default slice.reducer;

@@ -17,6 +17,8 @@ function Task({ customerId, user }) {
     handleGetTasksOfCustomer,
     handleAddTask,
     handleDeleteTask,
+    handleFilterByStatus,
+    handleSortTasks,
   } = useTask();
   const { handleAddActivity } = useActivity();
   const [openForm, setOpenForm] = useState(false);
@@ -29,10 +31,10 @@ function Task({ customerId, user }) {
   }, [customerId]);
 
   const formatDate = (date) => {
-    const utcDate = new Date(date);
-    const day = String(utcDate.getUTCDate()).padStart(2, "0");
-    const month = String(utcDate.getUTCMonth() + 1).padStart(2, "0");
-    const year = utcDate.getUTCFullYear();
+    const localDate = new Date(date);
+    const day = String(localDate.getDate()).padStart(2, "0");
+    const month = String(localDate.getMonth() + 1).padStart(2, "0");
+    const year = localDate.getFullYear();
     return `${day}/${month}/${year}`;
   };
 
@@ -70,13 +72,53 @@ function Task({ customerId, user }) {
             </h2>
           </div>
 
-          <button
-            onClick={() => setOpenForm(true)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 flex items-center gap-2 font-medium"
-          >
-            <span>+</span>
-            New Task
-          </button>
+          <div className="flex items-center gap-30">
+            {/* Sort */}
+            <div className="flex items-center gap-3">
+              <label htmlFor="sort" className="mr-2">
+                Sort by:
+              </label>
+              <select
+                id="sort"
+                name="sort"
+                className="bg-white px-2 py-1 rounded-lg text-sm text-gray-500 cursor-pointer border border-gray-300"
+                onChange={(e) => handleSortTasks(e.target.value)}
+              >
+                <option value="">Sort by</option>
+                <option value="dsc">Newest first</option>
+                <option value="asc">Oldest first</option>
+              </select>
+            </div>
+
+            {/* Search */}
+            <div className="flex items-center gap-3">
+              <label htmlFor="filter" className="mr-2">
+                Filter by:
+              </label>
+              <select
+                id="filter"
+                name="filter"
+                className="bg-white px-2 py-1 rounded-lg text-sm text-gray-500 cursor-pointer border border-gray-300"
+                onChange={(e) => handleFilterByStatus(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="Backlog">Backlog</option>
+                <option value="Todo">Todo</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Canceled">Canceled</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+            {/* Button */}
+            <button
+              onClick={() => setOpenForm(true)}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 flex items-center gap-2 font-medium"
+            >
+              <span>+</span>
+              New Task
+            </button>
+          </div>
         </div>
       </div>
 
@@ -144,6 +186,11 @@ function Task({ customerId, user }) {
                   {/* dueDate */}
                   <p className="bg-white text-xs text-gray-500 px-2 py-1 rounded-lg">
                     {formatDate(task.dueDate)}
+                  </p>
+
+                  {/* assignee */}
+                  <p className="bg-white text-xs text-gray-500 px-2 py-1 rounded-lg">
+                    {task.assignee.name}
                   </p>
                 </div>
               </div>
