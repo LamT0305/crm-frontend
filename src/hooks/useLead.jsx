@@ -10,6 +10,7 @@ import {
   setLoading,
   setCurrentPage,
   resetFilter,
+  filterByLeadTags,
 } from "../redux/slice/LeadSlice";
 import axiosInstance from "../services/Axios";
 import { DELETE_API, GET_API, POST_API } from "../services/APIs";
@@ -160,6 +161,19 @@ const useLead = () => {
     }
   };
 
+  const HandlefilterByLeadTags = (tags) => {
+    try {
+      if (!tags || tags.length === 0) {
+        dispatch(resetFilter());
+        return;
+      }
+      dispatch(filterByLeadTags(tags));
+    } catch (error) {
+      console.error("Error in filterByLeadTags:", error);
+      notify.error("Error filtering leads by tags");
+    }
+  };
+
   return {
     isLoading,
     leads: displayedLeads,
@@ -173,6 +187,8 @@ const useLead = () => {
     handleDeleteLead,
     handleGetCustomerById,
     handleChangePage,
+
+    HandlefilterByLeadTags,
   };
 };
 

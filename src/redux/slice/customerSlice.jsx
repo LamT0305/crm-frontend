@@ -140,6 +140,20 @@ const customerSlice = createSlice({
       state.customer.tags.push(action.payload);
     },
 
+    filterCustomerTags: (state, action) => {
+      const tag = action.payload;
+      if (!tag || tag.length === 0) {
+        state.filteredCustomers = state.allCustomers;
+        state.displayedCustomers = state.allCustomers.slice(0, 15);
+        state.totalPages = Math.ceil(state.allCustomers.length / 15);
+        return;
+      }
+      state.filteredCustomers = state.allCustomers.filter((customer) => {
+        return customer.tags?.some((t) => t.toLowerCase() === tag);
+      });
+      state.displayedCustomers = state.filteredCustomers.slice(0, 15);
+      state.totalPages = Math.ceil(state.filteredCustomers.length / 15);
+    },
     removeCustomerTag: (state, action) => {
       state.customer.tags = state.customer.tags.filter(
         (tag) => tag !== action.payload
@@ -161,6 +175,7 @@ export const {
   setTotalPages,
   addCustomerTag,
   removeCustomerTag,
+  filterCustomerTags,
 } = customerSlice.actions;
 
 export default customerSlice.reducer;

@@ -9,8 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const { currentWorkspace, isLoading: workspaceLoading } = useWorkspace();
-  const { handleFilterleads, handleSortLeads, handleSetLeads, isLoading } =
-    useLead();
+  const {
+    handleFilterleads,
+    handleSortLeads,
+    handleSetLeads,
+    isLoading,
+    HandlefilterByLeadTags,
+  } = useLead();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -90,15 +95,24 @@ function Dashboard() {
           {isOpen && <CreateLeadForm setIsOpen={setIsOpen} />}
 
           <LeadHeader setIsOpen={setIsOpen} />
-          <Filter
-            addColumn={addColumn}
-            removeColumn={removeColumn}
-            columns={columns}
-            defaultColumns={defaultColumns}
-            handleSort={handleSortLeads}
-            handleFilter={handleFilterleads}
-            handleSetDefaultData={handleSetLeads}
-          />
+          <div className="flex items-center justify-between">
+            <input
+              type="text"
+              className="border border-gray-300 ml-2 px-2 py-1 rounded-lg w-[15%] text-sm font-semibold"
+              placeholder="Search by Tags...."
+              onChange={(e) => HandlefilterByLeadTags(e.target.value)}
+            />
+            <Filter
+              addColumn={addColumn}
+              removeColumn={removeColumn}
+              columns={columns}
+              defaultColumns={defaultColumns}
+              handleSort={handleSortLeads}
+              handleFilter={handleFilterleads}
+              handleSetDefaultData={handleSetLeads}
+            />
+          </div>
+
           <LeadBody columns={columns} />
         </div>
       )}

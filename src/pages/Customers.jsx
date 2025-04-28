@@ -13,6 +13,7 @@ function Customers() {
     handleSortCustomers,
     handleSetCustomers,
     isLoading,
+    handleFilterCustomerTags,
   } = useCustomer();
   const [isOpen, setIsOpen] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -89,15 +90,23 @@ function Customers() {
       </div>
 
       {/* filter */}
-      <Filter
-        addColumn={addColumn}
-        removeColumn={removeColumn}
-        columns={columns}
-        defaultColumns={defaultColumns}
-        handleFilter={handleFilterCustomers}
-        handleSort={handleSortCustomers}
-        handleSetDefaultData={handleSetCustomers}
-      />
+      <div className="flex items-center justify-between">
+        <input
+          type="text"
+          className="border border-gray-300 ml-2 px-2 py-1 rounded-lg w-[15%] text-sm font-semibold"
+          placeholder="Search by Tags...."
+          onChange={(e) => handleFilterCustomerTags(e.target.value)}
+        />
+        <Filter
+          addColumn={addColumn}
+          removeColumn={removeColumn}
+          columns={columns}
+          defaultColumns={defaultColumns}
+          handleFilter={handleFilterCustomers}
+          handleSort={handleSortCustomers}
+          handleSetDefaultData={handleSetCustomers}
+        />
+      </div>
 
       {/* body */}
       <CustomerBody columns={columns} />

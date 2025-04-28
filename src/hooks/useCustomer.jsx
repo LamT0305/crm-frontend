@@ -12,6 +12,7 @@ import {
   setCurrentPage,
   addCustomerTag,
   removeCustomerTag,
+  filterCustomerTags,
 } from "../redux/slice/customerSlice";
 import axiosInstance from "../services/Axios";
 import { DELETE_API, GET_API, PUT_API } from "../services/APIs";
@@ -201,6 +202,13 @@ const useCustomer = () => {
       dispatch(setLoading(false));
     }
   };
+
+  const handleFilterCustomerTags = (tags) => {
+    if (!tags || tags.length === 0) {
+      return;
+    }
+    dispatch(filterCustomerTags(tags));
+  };
   return {
     isLoading,
     customers: displayedCustomers,
@@ -218,6 +226,7 @@ const useCustomer = () => {
 
     handleAddCustomerTag,
     handleRemoveCustomerTag,
+    handleFilterCustomerTags,
   };
 };
 

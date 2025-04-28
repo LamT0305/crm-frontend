@@ -126,6 +126,24 @@ const leadSlice = createSlice({
       state.totalPages = action.payload;
     },
 
+    filterByLeadTags: (state, action) => {
+      const tag = action.payload;
+      if (!tag || tag.length === 0) {
+        state.filteredLeads = state.allLeads;
+        state.displayedLeads = state.allLeads.slice(0, 15);
+        state.totalPages = Math.ceil(state.allLeads.length / 15);
+        return;
+      }
+
+      const filteredLeads = state.allLeads.filter((lead) => {
+        return lead.tags?.some((t) => t.toLowerCase() === tag);
+      });
+
+      state.filteredLeads = filteredLeads;
+      state.displayedLeads = filteredLeads.slice(0, 15);
+      state.totalPages = Math.ceil(filteredLeads.length / 15);
+    },
+
     resetFilter: (state) => {
       state.filteredLeads = state.allLeads;
       state.displayedLeads = state.allLeads.slice(0, 15);
@@ -145,6 +163,7 @@ export const {
   getLeadById,
   setTotalPages,
   resetFilter,
+  filterByLeadTags,
 } = leadSlice.actions;
 
 export default leadSlice.reducer;
