@@ -149,7 +149,7 @@ const customerSlice = createSlice({
         return;
       }
       state.filteredCustomers = state.allCustomers.filter((customer) => {
-        return customer.tags?.some((t) => t.toLowerCase() === tag);
+        return customer.tags?.some((t) => t.toLowerCase() === tag.toLowerCase());
       });
       state.displayedCustomers = state.filteredCustomers.slice(0, 15);
       state.totalPages = Math.ceil(state.filteredCustomers.length / 15);

@@ -136,7 +136,7 @@ const leadSlice = createSlice({
       }
 
       const filteredLeads = state.allLeads.filter((lead) => {
-        return lead.tags?.some((t) => t.toLowerCase() === tag);
+        return lead.tags?.some((t) => t.toLowerCase() === tag.toLowerCase());
       });
 
       state.filteredLeads = filteredLeads;
