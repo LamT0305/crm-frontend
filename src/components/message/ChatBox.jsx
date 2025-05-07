@@ -517,7 +517,7 @@ const DetailsModal = ({
         >
           View attachments
         </h3>
-        <div className="flex flex-col items-center max-h-[50vh] overflow-y-auto">
+        <div className="flex flex-col items-center w-full max-h-[50vh] overflow-y-auto">
           {viewAttachment && (
             <>
               {loading ? (
