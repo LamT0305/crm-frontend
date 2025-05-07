@@ -510,14 +510,13 @@ const DetailsModal = ({
               </div>
             </div>
           )}
-
-        <h3
-          onClick={() => onViewAttachments()}
-          className="text-lg mt-5 font-semibold mt-4 mb-2 text-gray-700 shadow-md px-3 py-4 rounded-3xl border border-gray-200 cursor-pointer"
-        >
-          View attachments
-        </h3>
         <div className="flex flex-col items-center w-full max-h-[50vh] overflow-y-auto">
+          <h3
+            onClick={() => onViewAttachments()}
+            className="text-lg font-semibold mt-4 mb-2 text-gray-700 shadow-md px-3 py-4 rounded-3xl border border-gray-200 cursor-pointer "
+          >
+            View attachments
+          </h3>
           {viewAttachment && (
             <>
               {loading ? (
