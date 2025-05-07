@@ -517,7 +517,7 @@ const DetailsModal = ({
         >
           View attachments
         </h3>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center max-h-[50vh] overflow-y-auto">
           {viewAttachment && (
             <>
               {loading ? (
@@ -527,7 +527,7 @@ const DetailsModal = ({
               ) : (
                 <>
                   {attachments && (
-                    <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto">
+                    <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto w-full">
                       {attachments.map((a) => (
                         <div
                           key={a._id}
@@ -579,7 +579,7 @@ const DetailsModal = ({
                     </div>
                   ) : (
                     group && (
-                      <div className="mt-4 bg-white rounded-xl shadow-sm overflow-hidden">
+                      <div className="mt-4 bg-white rounded-xl shadow-sm overflow-hidden w-full">
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
