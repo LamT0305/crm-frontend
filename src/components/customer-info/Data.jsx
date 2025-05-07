@@ -75,6 +75,12 @@ function Data({ customerId }) {
   const onCloseModal = () => {
     setOpenTagModal(false);
   };
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+  };
   return (
     <div className="h-full w-full bg-white flex flex-col overflow-hidden">
       {openTagModal && <TagModal onClose={onCloseModal} onSave={onSaveTag} />}
@@ -247,7 +253,7 @@ function Data({ customerId }) {
               <div>
                 <p className="text-gray-500 text-sm mb-2">Total Revenue:</p>
                 <p className="px-3 py-1 bg-gray-100 rounded-xl text-md text-gray-500 w-fit">
-                  $8500
+                  ${formatCurrency(customer.totalRevenue) || 0}
                 </p>
               </div>
               <div>
