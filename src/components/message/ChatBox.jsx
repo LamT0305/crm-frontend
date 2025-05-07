@@ -578,7 +578,7 @@ const DetailsModal = ({
                     </div>
                   ) : (
                     group && (
-                      <div className="mt-4 bg-white rounded-xl shadow-sm overflow-hidden w-full">
+                      <div className="mt-4 bg-white rounded-xl shadow-sm max-h-[40vh] overflow-y-auto w-full">
                         <div className="overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
