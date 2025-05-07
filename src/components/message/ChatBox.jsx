@@ -566,7 +566,7 @@ const DetailsModal = ({
             <>
               <h3
                 onClick={() => setViewMembers(!viewMembers)}
-                className="text-lg font-semibold mt-4 mb-2 text-gray-700 shadow-md px-3 py-4 rounded-3xl border border-gray-200 cursor-pointer"
+                className="text-lg font-semibold mt-4 mb-2 text-gray-700 shadow-md px-3 py-4 rounded-3xl border border-gray-200 cursor-pointer w-full"
               >
                 View group members
               </h3>
