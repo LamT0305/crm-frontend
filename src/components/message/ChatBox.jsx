@@ -478,7 +478,9 @@ const DetailsModal = ({
             <div className="flex justify-center">
               <div onClick={handleAddMember}>
                 <AddUserIcon
-                  className={"w-15 h-15 border p-3 rounded-full cursor-pointer mr-2"}
+                  className={
+                    "w-15 h-15 border p-3 rounded-full cursor-pointer mr-2"
+                  }
                 />
               </div>
 
@@ -515,152 +517,153 @@ const DetailsModal = ({
         >
           View attachments
         </h3>
-
-        {viewAttachment && (
-          <>
-            {loading ? (
-              <div className="flex justify-center items-center p-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-              </div>
-            ) : (
-              <>
-                {attachments && (
-                  <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto">
-                    {attachments.map((a) => (
-                      <div
-                        key={a._id}
-                        className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-colors duration-200"
-                      >
-                        <svg
-                          className="w-6 h-6 text-blue-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+        <div className="flex flex-col items-center">
+          {viewAttachment && (
+            <>
+              {loading ? (
+                <div className="flex justify-center items-center p-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              ) : (
+                <>
+                  {attachments && (
+                    <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto">
+                      {attachments.map((a) => (
+                        <div
+                          key={a._id}
+                          className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-colors duration-200"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                          />
-                        </svg>
-                        <a
-                          target="_blank"
-                          href={a.path || "#"}
-                          className="text-blue-600 hover:text-blue-800 underline"
-                        >
-                          {a.filename}
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-          </>
-        )}
-
-        {currentChat.type === "group" && (
-          <>
-            <h3
-              onClick={() => setViewMembers(!viewMembers)}
-              className="text-lg font-semibold mt-4 mb-2 text-gray-700 shadow-md px-3 py-4 rounded-3xl border border-gray-200 cursor-pointer"
-            >
-              View group members
-            </h3>
-
-            {viewMembers && (
-              <>
-                {loading ? (
-                  <div className="flex justify-center items-center p-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                  </div>
-                ) : (
-                  group && (
-                    <div className="mt-4 bg-white rounded-xl shadow-sm overflow-hidden">
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                Name
-                              </th>
-                              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                Email
-                              </th>
-                              {group.creator &&
-                                user &&
-                                group.creator._id === user._id && (
-                                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Action
-                                  </th>
-                                )}
-                            </tr>
-                          </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
-                            {[...group.members]
-                              ?.sort((a, b) => {
-                                if (a._id === group.creator._id) return -1;
-                                if (b._id === group.creator._id) return 1;
-                                return 0;
-                              })
-                              .map((member, index) => (
-                                <tr
-                                  key={member._id}
-                                  className="hover:bg-gray-50 transition-colors duration-200"
-                                >
-                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <span className="text-blue-600 font-medium text-sm">
-                                          {member.name.charAt(0)}
-                                        </span>
-                                      </div>
-                                      <div className="ml-4">
-                                        <div className="text-sm font-medium text-gray-900">
-                                          {member.name}
-                                        </div>
-                                        {member._id === group.creator._id && (
-                                          <div className="text-xs text-blue-600">
-                                            Group Admin
-                                          </div>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {member.email}
-                                  </td>
-                                  {group.creator &&
-                                    user &&
-                                    group.creator._id === user._id &&
-                                    member._id !== group.creator._id && (
-                                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-start">
-                                        <button
-                                          onClick={() =>
-                                            handleRemoveMember(
-                                              group._id,
-                                              member._id
-                                            )
-                                          }
-                                          className="text-red-600 hover:text-red-900 transition-colors duration-200"
-                                        >
-                                          Remove
-                                        </button>
-                                      </td>
-                                    )}
-                                </tr>
-                              ))}
-                          </tbody>
-                        </table>
-                      </div>
+                          <svg
+                            className="w-6 h-6 text-blue-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                            />
+                          </svg>
+                          <a
+                            target="_blank"
+                            href={a.path || "#"}
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            {a.filename}
+                          </a>
+                        </div>
+                      ))}
                     </div>
-                  )
-                )}
-              </>
-            )}
-          </>
-        )}
+                  )}
+                </>
+              )}
+            </>
+          )}
+
+          {currentChat.type === "group" && (
+            <>
+              <h3
+                onClick={() => setViewMembers(!viewMembers)}
+                className="text-lg font-semibold mt-4 mb-2 text-gray-700 shadow-md px-3 py-4 rounded-3xl border border-gray-200 cursor-pointer"
+              >
+                View group members
+              </h3>
+
+              {viewMembers && (
+                <>
+                  {loading ? (
+                    <div className="flex justify-center items-center p-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                  ) : (
+                    group && (
+                      <div className="mt-4 bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                  Name
+                                </th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                  Email
+                                </th>
+                                {group.creator &&
+                                  user &&
+                                  group.creator._id === user._id && (
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                      Action
+                                    </th>
+                                  )}
+                              </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                              {[...group.members]
+                                ?.sort((a, b) => {
+                                  if (a._id === group.creator._id) return -1;
+                                  if (b._id === group.creator._id) return 1;
+                                  return 0;
+                                })
+                                .map((member, index) => (
+                                  <tr
+                                    key={member._id}
+                                    className="hover:bg-gray-50 transition-colors duration-200"
+                                  >
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                      <div className="flex items-center">
+                                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                          <span className="text-blue-600 font-medium text-sm">
+                                            {member.name.charAt(0)}
+                                          </span>
+                                        </div>
+                                        <div className="ml-4">
+                                          <div className="text-sm font-medium text-gray-900">
+                                            {member.name}
+                                          </div>
+                                          {member._id === group.creator._id && (
+                                            <div className="text-xs text-blue-600">
+                                              Group Admin
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      {member.email}
+                                    </td>
+                                    {group.creator &&
+                                      user &&
+                                      group.creator._id === user._id &&
+                                      member._id !== group.creator._id && (
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-start">
+                                          <button
+                                            onClick={() =>
+                                              handleRemoveMember(
+                                                group._id,
+                                                member._id
+                                              )
+                                            }
+                                            className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                                          >
+                                            Remove
+                                          </button>
+                                        </td>
+                                      )}
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
