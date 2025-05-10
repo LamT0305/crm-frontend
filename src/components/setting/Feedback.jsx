@@ -1,6 +1,45 @@
 import React from "react";
+import { useAuth } from "../../context/AuthContext";
+import { notify } from "../../utils/Toastify";
+import axios from "axios";
 
 function Feedback() {
+  const [text, setText] = React.useState("");
+  const { user } = useAuth();
+
+  const handleSubmit = async () => {
+    if (!user || !user.email) {
+      alert("Please log in to submit feedback.");
+      return;
+    }
+    if (text.trim() === "") {
+      alert("Please enter your feedback.");
+      return;
+    }
+    try {
+      const res = await axios.post(
+        "https://admin.leadmastercrm.pro/api/v1/feedback",
+        {
+          email: user.email,
+          feedback: text,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.status === 201) {
+        notify.success("Feedback submitted successfully!");
+        setText("");
+      } else {
+        notify.error("Failed to submit feedback. Please try again.");
+      }
+    } catch (error) {
+      notify.error("Error submitting feedback. Please try again.");
+      console.error("Error submitting feedback:", error);
+    }
+  };
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm h-full">
       <div className="max-w-3xl mx-auto">
@@ -41,7 +80,10 @@ function Feedback() {
             />
 
             <div className="flex items-center justify-end">
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+              <button
+                onClick={() => handleSubmit()}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
+              >
                 Send Feedback
               </button>
             </div>
