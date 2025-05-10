@@ -75,6 +75,9 @@ function Feedback() {
 
           <div className="space-y-4">
             <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              rows="5"
               placeholder="Type your feedback here..."
               className="w-full h-52 p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             />
