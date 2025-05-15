@@ -286,6 +286,7 @@ function DealForm({ setOpenDeal, dealId, setDealId, customerId }) {
                 value={formData.status}
                 onChange={handleChangeValue}
                 required
+                disabled={!dealId}
                 name="status"
                 className={`py-1 px-4 mt-2 rounded-xl bg-gray-100 text-sm w-full ${
                   errors.status ? "border-2 border-red-500" : ""
